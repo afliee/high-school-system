@@ -1,0 +1,54 @@
+package com.highschool.highschoolsystem.entity;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.Collection;
+
+@Entity
+@Table(name = "class")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ClassEntity extends BaseEntity {
+    private String name;
+    private int present;
+
+    @ManyToOne(targetEntity = SemesterEntity.class)
+    @JoinColumn(name = "semester_id")
+    private SemesterEntity semester;
+
+    @ManyToOne(targetEntity = LevelEntity.class)
+    @JoinColumn(name = "level_id")
+    private LevelEntity level;
+
+    @OneToOne(targetEntity = TeacherEntity.class)
+    @JoinColumn(name = "chairman_id")
+    private TeacherEntity chairman;
+
+    @OneToMany(
+            mappedBy = "classEntity",
+            targetEntity = StudentEntity.class
+    )
+    private Collection<StudentEntity> students;
+
+    @OneToMany(
+            mappedBy = "classEntity",
+            targetEntity = AttendanceEntity.class
+    )
+    private Collection<AttendanceEntity> attendances;
+
+    @OneToMany(
+            mappedBy = "classEntity",
+            targetEntity = FaultEntity.class
+    )
+    private Collection<FaultEntity> faults;
+
+    @OneToMany(
+            mappedBy = "classEntity",
+            targetEntity = AssignmentEntity.class
+    )
+    private Collection<AssignmentEntity> assignments;
+}

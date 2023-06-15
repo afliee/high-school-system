@@ -3,20 +3,24 @@ package com.highschool.highschoolsystem.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.util.Collection;
 
-@EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "day")
+@Table(name = "shift")
 @Data
-public class DayEntity extends BaseEntity {
-    private String dayName;
+@AllArgsConstructor
+@NoArgsConstructor
+public class ShiftEntity extends BaseEntity{
+    private String name;
+    private String startTime;
+    private String endTime;
 
     @OneToMany(
-            mappedBy = "day",
+            mappedBy = "shift",
             targetEntity = LessonEntity.class
     )
     private Collection<LessonEntity> lessons;
