@@ -1,19 +1,18 @@
 package com.highschool.highschoolsystem.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name = "assignment")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AssignmentEntity extends BaseEntity {
+@EntityListeners(AuditingEntityListener.class)
+public class AssignmentEntity extends BaseEntity<String> {
     private String title;
     private String description;
     private boolean isDue;

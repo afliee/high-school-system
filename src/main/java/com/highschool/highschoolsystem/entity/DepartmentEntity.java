@@ -1,12 +1,10 @@
 package com.highschool.highschoolsystem.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Collection;
 
@@ -15,7 +13,8 @@ import java.util.Collection;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DepartmentEntity extends BaseEntity {
+@EntityListeners(AuditingEntityListener.class)
+public class DepartmentEntity extends BaseEntity<String> {
     private String name;
 
     @Column(columnDefinition = "TEXT")

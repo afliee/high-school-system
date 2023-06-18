@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Collection;
 
@@ -12,7 +13,8 @@ import java.util.Collection;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class LessonEntity extends BaseEntity {
+@EntityListeners(AuditingEntityListener.class)
+public class LessonEntity extends BaseEntity<String> {
     @ManyToOne(targetEntity = DayEntity.class)
     @JoinColumn(name = "day_id")
     private DayEntity day;

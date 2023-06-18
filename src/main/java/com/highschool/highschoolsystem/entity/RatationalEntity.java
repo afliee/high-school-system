@@ -1,19 +1,18 @@
 package com.highschool.highschoolsystem.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name = "ratational")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RatationalEntity extends BaseEntity {
+@EntityListeners(AuditingEntityListener.class)
+public class RatationalEntity extends BaseEntity<String> {
     private String content;
 
     @ManyToOne(targetEntity = TeacherEntity.class)

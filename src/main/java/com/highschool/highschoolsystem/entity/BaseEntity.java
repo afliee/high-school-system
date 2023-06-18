@@ -5,12 +5,20 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.util.Date;
 
 @MappedSuperclass
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BaseEntity {
+@EntityListeners(AuditingEntityListener.class)
+public abstract class BaseEntity<T> {
 //    generate id with uuid
     @Id
     @GeneratedValue(generator = "UUID")
@@ -24,12 +32,16 @@ public class BaseEntity {
     )
     private String id;
     @Column
-    private String createdDate;
+    @CreatedDate
+    private Date createdDate;
     @Column
-    private String updatedDate;
+    @LastModifiedDate
+    private Date updatedDate;
     @Column
-    private String createdBy;
+    @CreatedBy
+    private T createdBy;
     @Column
-    private String updatedBy;
+    @LastModifiedBy
+    private T updatedBy;
 
 }
