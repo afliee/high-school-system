@@ -18,6 +18,7 @@ import java.util.Collection;
 @EntityListeners(AuditingEntityListener.class)
 @Builder
 public class TeacherEntity extends BaseEntity<String> {
+    @Column(unique = true)
     private String name;
     private String fullName;
     private String password;
