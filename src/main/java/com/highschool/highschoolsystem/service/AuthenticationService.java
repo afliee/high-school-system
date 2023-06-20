@@ -7,10 +7,12 @@ import com.highschool.highschoolsystem.auth.RegistrationRequest;
 import com.highschool.highschoolsystem.config.Role;
 import com.highschool.highschoolsystem.config.TokenType;
 import com.highschool.highschoolsystem.converter.UserConverter;
+import com.highschool.highschoolsystem.entity.StudentEntity;
 import com.highschool.highschoolsystem.entity.TeacherEntity;
 import com.highschool.highschoolsystem.entity.TokenEntity;
 import com.highschool.highschoolsystem.entity.UserEntity;
 import com.highschool.highschoolsystem.exception.UserExistException;
+import com.highschool.highschoolsystem.exception.UserNotFoundException;
 import com.highschool.highschoolsystem.repository.StudentRepository;
 import com.highschool.highschoolsystem.repository.TeacherRepository;
 import com.highschool.highschoolsystem.repository.TokenRepository;
@@ -56,10 +58,14 @@ public class AuthenticationService {
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
         );
 
+        UserPrincipal userPrincipal;
         switch (request.getRole()) {
             case "teacher": {
-                TeacherEntity teacher = teacherRepository.findByName(request.getUsername()).orElseThrow();
-                UserPrincipal userPrincipal = new UserPrincipal(teacher);
+//               throw UserNotFoundException
+                TeacherEntity teacher = teacherRepository.findByName(request.getUsername()).orElseThrow(
+                        () -> new UserNotFoundException("User " + request.getUsername() + " not found")
+                );
+                userPrincipal = new UserPrincipal(teacher);
                 String token = jwtService.generateToken(userPrincipal);
                 String refreshToken = jwtService.generateRefreshToken(userPrincipal);
 
@@ -73,11 +79,30 @@ public class AuthenticationService {
                         .tokenType("Bearer ")
                         .build();
             }
+            case "student": {
+                StudentEntity student = studentRepository.findByName(request.getUsername()).orElseThrow(
+                        () -> new UserNotFoundException("User " + request.getUsername() + " not found")
+                );
+                userPrincipal = new UserPrincipal(student);
+                String token = jwtService.generateToken(userPrincipal);
+                String refreshToken = jwtService.generateRefreshToken(userPrincipal);
+
+                UserEntity user = userRepository.findByUserId(student.getId()).orElseThrow();
+                revokeAllToken(user);
+                saveUserToken(user, token);
+
+                return AuthenticationResponse.builder()
+                        .token(token)
+                        .refreshToken(refreshToken)
+                        .tokenType("Bearer ")
+                        .build();
+            }
         }
-        return null;
+        throw new UserNotFoundException("User " + request.getUsername() + " not found");
     }
 
     public AuthenticationResponse register(RegistrationRequest request, String role) throws UserExistException {
+        UserPrincipal userPrincipal;
         switch (role) {
             case "teacher": {
                 TeacherEntity teacherEntity = teacherRepository.findByName(request.getUsername()).orElse(null);
@@ -89,17 +114,49 @@ public class AuthenticationService {
                         .name(request.getUsername())
                         .fullName(request.getFullName())
                         .password(password)
+                        .role(Role.TEACHER)
                         .build();
 
 
 
-                UserPrincipal userPrincipal = new UserPrincipal(teacher);
+                userPrincipal = new UserPrincipal(teacher);
                 teacherRepository.save(teacher);
                 UserEntity user = UserEntity.builder()
                         .username(request.getUsername())
                         .password(password)
-                        .role(Role.ROLE_TEACHER)
+                        .role(teacher.getRole())
                         .userId(teacher.getId())
+                        .build();
+                userRepository.save(user);
+                String token = jwtService.generateToken(userPrincipal);
+                String refreshToken = jwtService.generateRefreshToken(userPrincipal);
+                saveUserToken(user, token);
+                return AuthenticationResponse.builder()
+                        .token(token)
+                        .refreshToken(refreshToken)
+                        .tokenType(TokenType.BEARER.getTokenType())
+                        .build();
+            }
+            case "student" : {
+                StudentEntity studentEntity = studentRepository.findByName(request.getUsername()).orElse(null);
+                if (studentEntity != null) {
+                    throw new UserExistException("User " + request.getUsername() + " already exists");
+                }
+                String password = passwordEncoder.encode(request.getPassword());
+                StudentEntity student = StudentEntity.builder()
+                        .name(request.getUsername())
+                        .fullName(request.getFullName())
+                        .password(password)
+                        .role(Role.STUDENT)
+                        .build();
+
+                userPrincipal = new UserPrincipal(student);
+                studentRepository.save(student);
+                UserEntity user = UserEntity.builder()
+                        .username(request.getUsername())
+                        .password(password)
+                        .role(student.getRole())
+                        .userId(student.getId())
                         .build();
                 userRepository.save(user);
                 String token = jwtService.generateToken(userPrincipal);

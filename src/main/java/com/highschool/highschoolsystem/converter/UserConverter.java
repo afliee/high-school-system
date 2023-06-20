@@ -9,7 +9,7 @@ public class UserConverter {
                 .id(userEntity.getUserId())
                 .username(userEntity.getUsername())
                 .password(userEntity.getPassword())
-                .role(userEntity.getRole().name())
+                .role(userEntity.getRole())
                 .build();
     }
 }

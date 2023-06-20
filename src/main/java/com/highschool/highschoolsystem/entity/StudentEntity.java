@@ -3,15 +3,18 @@ package com.highschool.highschoolsystem.entity;
 import com.highschool.highschoolsystem.config.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Collection;
 
+
 @Entity
 @Table(name = "student")
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
@@ -24,7 +27,7 @@ public class StudentEntity extends BaseEntity<String> {
     private String location;
     private String enteredDate;
     private String expiredDate;
-    private final String role = Role.ROLE_STUDENT.name();
+    private Role role;
 
     @ManyToOne(targetEntity = ClassEntity.class)
     @JoinColumn(name = "class_id")

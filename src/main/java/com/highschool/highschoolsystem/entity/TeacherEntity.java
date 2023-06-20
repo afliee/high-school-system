@@ -31,7 +31,7 @@ public class TeacherEntity extends BaseEntity<String> {
     private Long salary;
     private String enteredDate;
     private String closedDate;
-    private final String role = Role.ROLE_TEACHER.name();
+    private Role role;
 
     //   reference to department
     @ManyToOne(targetEntity = DepartmentEntity.class)

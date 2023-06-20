@@ -1,5 +1,6 @@
 package com.highschool.highschoolsystem.util.principal;
 
+import com.highschool.highschoolsystem.config.Role;
 import com.highschool.highschoolsystem.entity.StudentEntity;
 import com.highschool.highschoolsystem.entity.TeacherEntity;
 import lombok.AllArgsConstructor;
@@ -21,9 +22,9 @@ public class UserPrincipal implements UserDetails {
     private String id;
     private String username;
     private String password;
-    private String role;
+    private Role role;
 
-    public UserPrincipal(String username, String password, String role) {
+    public UserPrincipal(String username, String password, Role role) {
         this.username = username;
         this.password = password;
         this.role = role;
@@ -44,7 +45,7 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority(this.role));
+        return role.getAuthorities();
     }
 
     @Override

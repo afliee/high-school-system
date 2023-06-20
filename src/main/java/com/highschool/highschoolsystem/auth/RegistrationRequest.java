@@ -1,5 +1,6 @@
 package com.highschool.highschoolsystem.auth;
 
+import com.highschool.highschoolsystem.config.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
