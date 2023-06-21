@@ -42,6 +42,9 @@ public class SecurityConfiguration {
                                     .requestMatchers(new String[]{
                                             "/",
                                             "/webjars/**",
+                                            "/css/**",
+                                            "/js/**",
+                                            "/images/**",
                                             "/api/v1/auth/**",
                                     })
                                     .permitAll()

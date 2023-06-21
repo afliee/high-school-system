@@ -19,13 +19,14 @@ public class UserDetailServiceImpl implements UserDetailsService {
     private StudentRepository studentRepository;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        TeacherEntity teacher = teacherRepository.findByName(username).orElseThrow();
+        TeacherEntity teacher = teacherRepository.findByName(username).orElse(null);
 
         if (teacher != null) {
             return new UserPrincipal(teacher);
         }
 
-        StudentEntity student = studentRepository.findByName(username);
+        StudentEntity student = studentRepository.findByName(username).orElse(null);
+
         if (student != null) {
             return new UserPrincipal(student);
         }
