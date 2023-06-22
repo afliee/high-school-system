@@ -1,0 +1,29 @@
+<div th:fragment="chooseLogin" class="row align-items-center min-vh-100">
+  <div class="col-12 col-md-5 option">
+    <a th:href="@{'/login?with=teacher'}" class="text-decoration-none text-dark text-center ">
+      <div class="image-wraper">
+        <img th:src="@{/images/seminar_teacher.svg}" class="img-fluid rounded-top" alt="">
+      </div>
+      <div class="content">
+        <h3 class="text-title">Teacher</h3>
+        <p class="text-description">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.
+        </p>
+      </div>
+    </a>
+  </div>
+  <div class="col-12 col-md-1 offset-md-1"></div>
+  <div class="col-12 col-md-5 option">
+    <a th:href="@{'/login?with=student'}" class="text-decoration-none text-dark text-center ">
+      <div class="image-wraper">
+        <img th:src="@{/images/student1.svg}" class="img-fluid rounded-top" alt="">
+      </div>
+      <div class="content">
+        <h3 class="text-title">Student</h3>
+        <p class="text-description">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.
+        </p>
+      </div>
+    </a>
+  </div>
+</div>

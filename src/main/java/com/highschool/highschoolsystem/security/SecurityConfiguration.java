@@ -41,6 +41,7 @@ public class SecurityConfiguration {
                             authorize
                                     .requestMatchers(new String[]{
                                             "/",
+                                            "/login",
                                             "/webjars/**",
                                             "/css/**",
                                             "/js/**",

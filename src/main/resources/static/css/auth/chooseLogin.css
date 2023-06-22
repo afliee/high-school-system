@@ -1,0 +1,28 @@
+.choose-login {
+    height: 100%;
+}
+
+.choose-login .btn-login {
+    display: none;
+}
+
+.choose-login .navbar {
+    padding: 15px 40px;
+}
+
+.choose-login .option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 2rem 0;
+    cursor: pointer;
+}
+.choose-login .option:hover img {
+    transform: scale(1.1);
+    transition: all 0.3s ease-in-out;
+}
+
+.choose-login .content {
+    margin: 2rem 0;
+}

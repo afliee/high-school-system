@@ -167,7 +167,7 @@ public class AuthenticationService {
                         .build();
             }
         }
-        throw new RuntimeException("User " + request.getUsername() + " already exists");
+        throw new RuntimeException("Something went wrong with registration request");
     }
 
     private void revokeAllToken(UserEntity user) {

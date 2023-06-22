@@ -1,0 +1,22 @@
+
+.signin {
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid #e6e6e6;
+    padding: 3rem;
+    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1);
+}
+.btn-sign {
+    background-color: var(--color-primary);
+    color: #fff;
+}
+
+.btn:hover.btn-sign,
+.btn:hover.btn-sign:focus,
+.btn:hover.btn-sign:active {
+    background-color: var(--color-primary-darker);
+}
+
+.btn-sign:active {
+    transform: translateY(1px);
+}

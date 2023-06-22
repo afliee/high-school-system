@@ -17,4 +17,14 @@ public class HomeController {
         }
         return "pages/" + component;
     }
+
+    @GetMapping("/login")
+    public String login(@RequestParam(value = "with", defaultValue = "", required = true) String role, Model model) {
+        model.addAttribute("title", "Sign In");
+        model.addAttribute("role", role);
+        if (role.isEmpty()) {
+            return "404";
+        }
+        return "pages/auth/signin";
+    }
 }
