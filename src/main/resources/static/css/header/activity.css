@@ -1,0 +1,21 @@
+.activities {
+    padding: 5rem 1.2rem 2rem 1.2rem;
+    background-image: linear-gradient(
+            -180deg,
+            var(--color-transparent),
+            var(--color-banner)
+    );
+}
+.thumbnail {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+    background-color: var(--color-primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.thumbnail i {
+    font-size: 1.5rem;
+}

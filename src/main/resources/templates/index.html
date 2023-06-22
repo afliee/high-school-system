@@ -1,9 +1,15 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<th:block th:insert="~{fragments/htmlHead :: head(title = 'Home')}" />
+<th:block th:insert="~{fragments/htmlHead :: head(title = 'Home')}"/>
 <body>
 <div th:replace="~{fragments/util/navigation :: navigation}"></div>
-<th:block th:insert="~{fragments/scripts :: scripts}" />
+<div class="container-fluid">
+    <div th:replace="~{fragments/util/banner :: banner}"></div>
+    <div th:replace="~{fragments/landing/activities :: activities}"></div>
+    <div th:replace="~{fragments/landing/blog :: blogs}"></div>
+    <div th:replace="~{fragments/landing/staff :: staff}"></div>
+    <th:block th:insert="~{fragments/scripts :: scripts}"/>
+</div>
 <!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"-->
 <!--        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>-->
 </body>

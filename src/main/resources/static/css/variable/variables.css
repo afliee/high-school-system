@@ -1,3 +1,6 @@
 :root {
     --color-primary: rgb(128, 196, 211);
+    --color-primary-darker: rgb(87, 191, 214);
+    --color-banner: rgb(237, 237, 237);
+    --color-transparent: rgba(0, 0, 0, 0);
 }
