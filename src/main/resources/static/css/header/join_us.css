@@ -1,0 +1,13 @@
+h2.text-title {
+    color: var(--color-primary);
+}
+
+.join-us {
+    padding: 3rem 1.2rem 2rem 1.2rem;
+}
+
+.join-us .join-description {
+    line-height: 1.8;
+    font-weight: 500;
+    font-size: 1.2rem;
+}

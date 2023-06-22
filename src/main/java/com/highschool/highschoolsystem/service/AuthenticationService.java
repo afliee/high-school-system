@@ -117,8 +117,6 @@ public class AuthenticationService {
                         .role(Role.TEACHER)
                         .build();
 
-
-
                 userPrincipal = new UserPrincipal(teacher);
                 teacherRepository.save(teacher);
                 UserEntity user = UserEntity.builder()
@@ -169,7 +167,7 @@ public class AuthenticationService {
                         .build();
             }
         }
-        return null;
+        throw new RuntimeException("User " + request.getUsername() + " already exists");
     }
 
     private void revokeAllToken(UserEntity user) {

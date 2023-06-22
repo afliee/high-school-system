@@ -27,18 +27,20 @@
 .content .text-title {
     margin-top: 2rem;
 }
-.banner-content .btn-more-info {
+.btn-more-info,
+.btn-contact {
     padding: 17px 40px;
     margin-top: 2rem;
     background-color: var(--color-primary);
     color: white;
 }
 
-.banner-content .btn:hover {
+.btn:hover.btn-more-info,
+.btn:hover.btn-contact {
     background-color: var(--color-primary-darker);
 }
 
-.banner-content .btn:hover .icon {
+.btn:hover .icon {
     margin-left: 5px;
     transition: all 0.5s ease;
 }

@@ -27,7 +27,7 @@ public class AuthenticationController {
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
             @RequestBody RegistrationRequest request,
-            @RequestParam(value = "role", required = true, defaultValue = "student") String role
+            @RequestParam(value = "role", required = true, defaultValue = "") String role
             ) {
         return ResponseEntity.ok(authenticationService.register(request, role));
     }
