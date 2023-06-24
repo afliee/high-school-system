@@ -171,48 +171,6 @@ public class AuthenticationService {
         throw new RuntimeException("Something went wrong with registration request");
     }
 
-    public AuthenticationResponse signIn(SignInRequest request) throws UserNotFoundException {
-        UserPrincipal userPrincipal;
-        switch (request.getRole()) {
-            case "teacher": {
-                TeacherEntity teacher = teacherRepository.findByName(request.getUsername()).orElseThrow(
-                        () -> new UserNotFoundException("User " + request.getUsername() + " not found")
-                );
-                userPrincipal = new UserPrincipal(teacher);
-                String token = jwtService.generateToken(userPrincipal);
-                String refreshToken = jwtService.generateRefreshToken(userPrincipal);
-
-                UserEntity user = userRepository.findByUserId(teacher.getId()).orElseThrow();
-                revokeAllToken(user);
-                saveUserToken(user, token);
-
-                return AuthenticationResponse.builder()
-                        .token(token)
-                        .refreshToken(refreshToken)
-                        .tokenType("Bearer ")
-                        .build();
-            }
-            case "student": {
-                StudentEntity student = studentRepository.findByName(request.getUsername()).orElseThrow(
-                        () -> new UserNotFoundException("User " + request.getUsername() + " not found")
-                );
-                userPrincipal = new UserPrincipal(student);
-                String token = jwtService.generateToken(userPrincipal);
-                String refreshToken = jwtService.generateRefreshToken(userPrincipal);
-
-                UserEntity user = userRepository.findByUserId(student.getId()).orElseThrow();
-                revokeAllToken(user);
-                saveUserToken(user, token);
-
-                return AuthenticationResponse.builder()
-                        .token(token)
-                        .refreshToken(refreshToken)
-                        .tokenType("Bearer ")
-                        .build();
-            }
-        }
-        throw new UserNotFoundException("User " + request.getUsername() + " not found");
-    }
     private void revokeAllToken(UserEntity user) {
         tokenRepository.findAllValidTokenByUserId(user.getUserId())
                 .forEach(token -> {

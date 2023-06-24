@@ -1,7 +1,8 @@
 $(document).ready(function () {
     const formSignIn = $('#formSignIn');
     const btnSignIn = $('.btn-sign');
-
+    const errorEle = $('#error');
+    const alertEle = $('#alertError');
     btnSignIn.on('click', function (e) {
         e.preventDefault();
         const username = $('#username').val();
@@ -27,6 +28,8 @@ $(document).ready(function () {
             },
             error: function (error) {
                 console.log(error);
+                errorEle.text(error.message);
+                alertEle.removeClass('d-none');
             }
         })
     })

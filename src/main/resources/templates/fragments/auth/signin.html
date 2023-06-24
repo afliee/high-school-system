@@ -34,8 +34,13 @@
               in</button>
           </form>
         </div>
+<!--        alert error-->
+        <div class="alert alert-danger d-none" role="alert" id="alertError">
+          <i class="fas fa-exclamation-circle"></i>
+          <span id="error"></span>
+        </div>
         <div class="d-flex justify-content-between mt-3">
-          <div>Doesn't have an account? <a href="./signup.html" class="text-decoration-none">Let
+          <div>Doesn't have an account? <a th:href="@{'/register?with=' + ${role}}" class="text-decoration-none">Let
             create!</a></div>
           <a href="./forgot.html" class="text-decoration-none">Forgot password?</a>
         </div>

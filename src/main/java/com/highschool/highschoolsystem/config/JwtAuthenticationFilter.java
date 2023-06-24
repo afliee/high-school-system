@@ -65,10 +65,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 //                update security context holder
                 SecurityContext securityContext = SecurityContextHolder.getContext();
                 securityContext.setAuthentication(usernamePasswordAuthenticationToken);
+                filterChain.doFilter(request, response);
 
+            } else {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
             }
         }
 
-        filterChain.doFilter(request, response);
     }
 }

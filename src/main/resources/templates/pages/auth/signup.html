@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:insert="~{fragments/heading/signinHeading :: signinHeading(title = 'Sign Up')}"/>
 <body>
-
+<div class="container-fluid">
+    <th:block th:replace="~{fragments/util/navigation :: navigation}"/>
+    <th:block th:replace="~{fragments/auth/signup :: signup}"/>
+</div>
+<th:block th:insert="~{fragments/script/signUpScript :: signUpScript}"/>
 </body>
 </html>

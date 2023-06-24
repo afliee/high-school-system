@@ -44,4 +44,10 @@ public class GlobalExceptionHandle {
         }
         return ResponseEntity.status(400).body(new ErrorMessage(400, message));
     }
+
+    @ExceptionHandler(TokenInvalidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorMessage> handleTokenInvalidException(TokenInvalidException e) {
+        return ResponseEntity.status(400).body(new ErrorMessage(400, e.getMessage()));
+    }
 }

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping("/")
 public class HomeController {
-    @GetMapping({"", "/home"})
+    @GetMapping("")
     public String index(@RequestParam(value = "component", defaultValue = "", required = true) String component, Model model) {
         model.addAttribute("title", "Home");
         if (component.isEmpty()) {
@@ -26,5 +26,15 @@ public class HomeController {
             return "404";
         }
         return "pages/auth/signin";
+    }
+
+    @GetMapping("/register")
+    public String register(@RequestParam(value = "with", defaultValue = "", required = true) String role, Model model) {
+        model.addAttribute("title", "Sign Up");
+        model.addAttribute("role", role);
+        if (role.isEmpty()) {
+            return "404";
+        }
+        return "pages/auth/signup";
     }
 }

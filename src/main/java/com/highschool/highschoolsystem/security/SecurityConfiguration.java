@@ -32,6 +32,18 @@ public class SecurityConfiguration {
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
     private final LogoutHandler logoutHandler;
+    private final String[] publicRoutes = new String[] {
+            "/",
+            "/login",
+            "/register",
+            "/teacher",
+            "/student",
+            "/webjars/**",
+            "/css/**",
+            "/js/**",
+            "/images/**",
+            "/api/v1/auth/**",
+    };
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -39,15 +51,7 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> {
                             authorize
-                                    .requestMatchers(new String[]{
-                                            "/",
-                                            "/login",
-                                            "/webjars/**",
-                                            "/css/**",
-                                            "/js/**",
-                                            "/images/**",
-                                            "/api/v1/auth/**",
-                                    })
+                                    .requestMatchers(publicRoutes)
                                     .permitAll()
                                     .requestMatchers(new String[]{
                                             "/api/v1/admin/**"
