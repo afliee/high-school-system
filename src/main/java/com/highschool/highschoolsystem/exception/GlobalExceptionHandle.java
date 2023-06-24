@@ -3,9 +3,12 @@ package com.highschool.highschoolsystem.exception;
 import com.highschool.highschoolsystem.util.exception.ErrorMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.Objects;
 
 @RestControllerAdvice
 public class GlobalExceptionHandle {
@@ -27,5 +30,18 @@ public class GlobalExceptionHandle {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorMessage> handleException(Exception e) {
         return ResponseEntity.status(500).body(new ErrorMessage(500, e.getMessage()));
+    }
+
+    @ExceptionHandler(BindException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorMessage> handleBindException(BindException e) {
+        String message;
+
+        if (e.getBindingResult().hasErrors()) {
+            message = Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage();
+        } else {
+            message = e.getMessage();
+        }
+        return ResponseEntity.status(400).body(new ErrorMessage(400, message));
     }
 }

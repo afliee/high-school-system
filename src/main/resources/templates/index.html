@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <th:block th:insert="~{fragments/heading/landingHeading :: landingHeading(title = 'Home')}"/>
 <body>
-<div th:replace="~{fragments/util/navigation :: navigation}"></div>
+<div th:replace="~{fragments/util/navigation :: navigation(active = '/')}"></div>
 <div class="container-fluid">
     <div th:replace="~{fragments/util/banner :: banner}"></div>
     <div th:replace="~{fragments/landing/activities :: activities}"></div>

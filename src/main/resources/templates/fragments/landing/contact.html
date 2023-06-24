@@ -1,0 +1,164 @@
+<div th:fragment="contact">
+    <div class="container-fluid sub_header" th:style="'background-image: url(' + @{/images/sub_header_bg.svg} + ');'">
+        <div class="row mx-5">
+            <div class="col title">
+                <h1>Contact Us</h1>
+            </div>
+            <div
+                    class="bread_crum"
+                    style="
+							--bs-breadcrumb-divider: url(
+								&#34;data:image/svg + xml,
+								%3Csvgxmlns='http://www.w3.org/2000/svg'width='8'height='8'%3E%3Cpathd='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z'fill='currentColor'/%3E%3C/svg%3E&#34;
+							);
+						"
+                    aria-label="breadcrumb"
+            >
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Library</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact -->
+    <div class="contact container-fluid">
+        <div class="row m-5 gx-5 p-3">
+            <div class="col-12 col-md-6 contact_info">
+                <h1 class="title">Contact info</h1>
+                <div class="info_list">
+                    <div class="card mb-3">
+                        <div class="row g-0">
+                            <div
+                                    class="col-md-4 d-flex align-items-center justify-content-center d-flex align-items-center justify-content-center"
+                            >
+                                <img th:src="@{/images/info_1.svg}" class="img-fluid rounded-start" alt="..." />
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title info_title">Card title</h5>
+                                    <p class="card-text info_text">+234 805 029 1265</p>
+                                    <p class="card-text info_text">+234 907 228 0656</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mb-3">
+                        <div class="row g-0">
+                            <div class="col-md-4 d-flex align-items-center justify-content-center">
+                                <img th:src="@{/images/info_2.svg}" class="img-fluid rounded-start" alt="..." />
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title info_title">Card title</h5>
+                                    <p class="card-text info_text">+234 805 029 1265</p>
+                                    <p class="card-text info_text">+234 907 228 0656</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mb-3">
+                        <div class="row g-0">
+                            <div class="col-md-4 d-flex align-items-center justify-content-center">
+                                <img th:src="@{/images/info_3.svg}" class="img-fluid rounded-start" alt="..." />
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title info_title">Card title</h5>
+                                    <p class="card-text info_text">
+                                        4 law castle agbole aro opp. fidelity bank omida, abeokuta.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 contact_form" >
+                <h1 class="title">Get in touch</h1>
+                <form action="" id="contact_form">
+                    <div class="form-floating mb-3">
+                        <input
+                                type="email"
+                                class="form-control"
+                                id="floatingInput"
+                                placeholder="name@example.com"
+                        />
+                        <label for="floatingInput">Name</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input
+                                type="password"
+                                class="form-control"
+                                id="floatingPassword"
+                                placeholder="Password"
+                        />
+                        <label for="floatingPassword">Email</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input
+                                type="password"
+                                class="form-control"
+                                id="floatingPassword"
+                                placeholder="Password"
+                        />
+                        <label for="floatingPassword">Password</label>
+                    </div>
+                    <div class="form-floating mb-3">
+								<textarea
+                                        class="form-control"
+                                        placeholder="Leave a comment here"
+                                        id="floatingTextarea2"
+                                        style="height: 100px"
+                                ></textarea>
+                        <label for="floatingTextarea2">Message</label>
+                    </div>
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-outline-light btn_msg">Send message</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Map -->
+    <div class="google-map container-fluid">
+        <div class="row m-5">
+            <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3920.0170876317206!2d106.69447677896774!3d10.733165262115074!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752fbd68bcae7d%3A0xc59922383ff04616!2zxJDhuqFpIEjhu41jIFTDtG4gxJDhu6ljIFRo4bqvbmcgTmd1eeG7hW4gSOG7r3UgVGjhu40!5e0!3m2!1sen!2s!4v1687511709536!5m2!1sen!2s"
+                    width="600"
+                    height="450"
+                    style="border: 0"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+            ></iframe>
+        </div>
+    </div>
+
+    <!-- Newsletter -->
+    <div class="newsletter containter-fluid d-flex justify-content-center align-items-center" th:style="'background-image: url(' + @{/images/contact_background.svg} + ');'">
+        <div class="row mx-5">
+            <div class="col-12">
+                <h1 class="title text-center">JOIN OUR NEWSLETTER</br> AND BE THE FIRST TO KNOW!</h1>
+            </div>
+            <div class="col-12">
+                <form action="" id="email_form">
+                    <div class="form-floating m-3">
+                        <input
+                                type="email"
+                                class="form-control"
+                                id="floatingInput"
+                                placeholder="name@example.com"
+                        />
+                        <label for="floatingInput">Enter your email to recieve our newsletter</label>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn_email btn-medium">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -6,6 +6,7 @@ import com.highschool.highschoolsystem.auth.RegistrationRequest;
 import com.highschool.highschoolsystem.service.AuthenticationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,13 +21,13 @@ public class AuthenticationController {
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(
-            @RequestBody AuthenticationRequest request) {
+            @RequestBody @Valid AuthenticationRequest request) {
         return ResponseEntity.ok(authenticationService.authenticate(request));
     }
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
-            @RequestBody RegistrationRequest request,
+            @RequestBody @Valid RegistrationRequest request,
             @RequestParam(value = "role", required = true, defaultValue = "") String role
             ) {
         return ResponseEntity.ok(authenticationService.register(request, role));

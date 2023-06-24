@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.highschool.highschoolsystem.auth.AuthenticationRequest;
 import com.highschool.highschoolsystem.auth.AuthenticationResponse;
 import com.highschool.highschoolsystem.auth.RegistrationRequest;
+import com.highschool.highschoolsystem.auth.SignInRequest;
 import com.highschool.highschoolsystem.config.Role;
 import com.highschool.highschoolsystem.config.TokenType;
 import com.highschool.highschoolsystem.converter.UserConverter;
@@ -170,6 +171,48 @@ public class AuthenticationService {
         throw new RuntimeException("Something went wrong with registration request");
     }
 
+    public AuthenticationResponse signIn(SignInRequest request) throws UserNotFoundException {
+        UserPrincipal userPrincipal;
+        switch (request.getRole()) {
+            case "teacher": {
+                TeacherEntity teacher = teacherRepository.findByName(request.getUsername()).orElseThrow(
+                        () -> new UserNotFoundException("User " + request.getUsername() + " not found")
+                );
+                userPrincipal = new UserPrincipal(teacher);
+                String token = jwtService.generateToken(userPrincipal);
+                String refreshToken = jwtService.generateRefreshToken(userPrincipal);
+
+                UserEntity user = userRepository.findByUserId(teacher.getId()).orElseThrow();
+                revokeAllToken(user);
+                saveUserToken(user, token);
+
+                return AuthenticationResponse.builder()
+                        .token(token)
+                        .refreshToken(refreshToken)
+                        .tokenType("Bearer ")
+                        .build();
+            }
+            case "student": {
+                StudentEntity student = studentRepository.findByName(request.getUsername()).orElseThrow(
+                        () -> new UserNotFoundException("User " + request.getUsername() + " not found")
+                );
+                userPrincipal = new UserPrincipal(student);
+                String token = jwtService.generateToken(userPrincipal);
+                String refreshToken = jwtService.generateRefreshToken(userPrincipal);
+
+                UserEntity user = userRepository.findByUserId(student.getId()).orElseThrow();
+                revokeAllToken(user);
+                saveUserToken(user, token);
+
+                return AuthenticationResponse.builder()
+                        .token(token)
+                        .refreshToken(refreshToken)
+                        .tokenType("Bearer ")
+                        .build();
+            }
+        }
+        throw new UserNotFoundException("User " + request.getUsername() + " not found");
+    }
     private void revokeAllToken(UserEntity user) {
         tokenRepository.findAllValidTokenByUserId(user.getUserId())
                 .forEach(token -> {
@@ -213,7 +256,7 @@ public class AuthenticationService {
         UserPrincipal userPrincipal = UserConverter.toPrincipal(user);
 
         if (!jwtService.isTokenValid(refreshToken, userPrincipal)) {
-            return;
+            throw new RuntimeException("Refresh token is invalid or expired");
         }
 
         String token = jwtService.generateToken(userPrincipal);

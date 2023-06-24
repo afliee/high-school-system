@@ -1,7 +1,107 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <th:block th:insert="~{fragments/htmlHead :: head(title = 'About Us')}"/>
 <body>
-about us
+<div class="container-fluid m-0 p-0">
+    <div th:replace="~{fragments/util/navigation :: navigation(active = 'about')}"></div>
+    <div class="about sub_header" th:style="'background:url('+ @{/images/banner_background.svg} +');'">
+        <div class="row mx-5">
+            <div class="col title">
+                <h1>About Us</h1>
+            </div>
+            <div
+                    class="bread_crum"
+                    style="
+							--bs-breadcrumb-divider: url(
+								&#34;data:image/svg + xml,
+								%3Csvgxmlns='http://www.w3.org/2000/svg'width='8'height='8'%3E%3Cpathd='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z'fill='currentColor'/%3E%3C/svg%3E&#34;
+							);
+						"
+                    aria-label="breadcrumb"
+            >
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Library</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row p-5">
+            <div class="col-12 col-lg-6 content-img">
+                <img src="https://s3-alpha-sig.figma.com/img/f579/2abb/9c463067e406e707e6c11d174b9377f6?Expires=1688342400&Signature=afz2u9W~RmF~TOy2wVkmCElluVWkiPe-HBAvgxTfTTEOR-Eu79tfo-bVOl1pHotWbHKeL9eeXEdhx5WAob1Ss2KEj36htav-Xy0XqtwhigIGODyIdzdmQyC1uVTi2fx2Wj30bfwcxRxusqAs4fUCVxSpU6oWDL6QdQm80l8ngIRk6JXFa7IFtFJd~Q4yNiKzUu6qSvB1DgXEVk5Y3XT4J4Kx5gRWroDlIJynWTphPIR~QiVTE-UfbJtUDzpm5co8JsUL-lO3KKKB8nvKunhrgQFPwQScE3DA08aeyeAb1B~ZHxyN4AYugtcHwcmr2S0jY24uMmeyX-3scXN4Xgrapg__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4"
+                     alt="">
+            </div>
+            <div class="col-12 col-lg-6">
+                <div class="d-inline-flex">
+                    <div class="box m-3"></div>
+                    <p class="content-header">Who We Are</p>
+                    <div class="box m-3"></div>
+                </div>
+                <div>
+                    <p class="content-text ms-3">Lorem ipsum dolor sit amet, consectetur adiping elit, sed do eiusmod temp
+                        incit ut labore dolore magna aliqua. Ut enim ad minim veniam. Lorem ipsum dolor sit amet,
+                        consectetur adipiscing elit, sed do eiusmod temp incididunt ut labore dol magna aliqua. Ut enim ad
+                        minim Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed eiusmod temp incididunt ut labore
+                        et dolore magna aliqua. Ut enim ad minim veniam Lorem ipsum dolor sit amet, consectetur adipng elit,
+                        sed do eiusmod temp incididunt ut labore et dolore magna aliqua.</p>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6">
+                <div class="d-inline-flex pt-5">
+                    <div class="box m-3"></div>
+                    <p class="content-header">Our mission</p>
+                    <div class="box m-3"></div>
+                </div>
+                <div>
+                    <p class="content-text ms-3">Lorem ipsum dolor sit amet, consectetur adiping elit, sed do eiusmod temp
+                        incit ut labore dolore magna aliqua. Ut enim ad minim veniam. Lorem ipsum dolor sit amet,
+                        consectetur adipiscing elit, sed do eiusmod temp incididunt ut labore dol magna aliqua. Ut enim ad
+                        minim Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed eiusmod temp incididunt ut labore
+                        et dolore magna aliqua. Ut enim ad minim veniam Lorem ipsum dolor sit amet, consectetur adipng elit,
+                        sed do eiusmod temp incididunt ut labore et dolore magna aliqua.</p>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6">
+                <div class="d-inline-flex pt-5">
+                    <div class="box m-3"></div>
+                    <p class="content-header">Our Vision</p>
+                    <div class="box m-3"></div>
+                </div>
+                <div>
+                    <p class="content-text ms-3">Lorem ipsum dolor sit amet, consectetur adiping elit, sed do eiusmod temp
+                        incit ut labore dolore magna aliqua. Ut enim ad minim veniam. Lorem ipsum dolor sit amet,
+                        consectetur adipiscing elit, sed do eiusmod temp incididunt ut labore dol magna aliqua. Ut enim ad
+                        minim Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed eiusmod temp incididunt ut labore
+                        et dolore magna aliqua. Ut enim ad minim veniam Lorem ipsum dolor sit amet, consectetur adipng elit,
+                        sed do eiusmod temp incididunt ut labore et dolore magna aliqua.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row join-us" th:style="'background-image: url(' + @{/images/contact_background.svg} + ');'">
+        <div class="col-12">
+            <div class="content text-center">
+                <h2 class="text-title">
+                    JOIN OUR NEWSLETTER <br> AND BE THE FIRST TO KNOW!
+                </h2>
+                <div>
+                    <form action="" method="">
+                        <div class="input-group input-group-lg">
+                            <input type="email" name="email" class="form-control input" aria-label="Sizing example input"
+                                   aria-describedby="inputGroup-sizing-lg"
+                                   placeholder="Enter your email to recieve our newsletter">
+                        </div>
+                        <div>
+                            <button class="me-3 btn-submit">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <th:block th:replace="~{fragments/util/footer :: footer}"/>
+</div>
+<th:block th:replace="~{fragments/scripts :: scripts}"/>
 </body>
 </html>

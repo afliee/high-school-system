@@ -9,7 +9,7 @@
           <p class="text-description">
             Wellcome back! Please login to your account
           </p>
-          <form action="/" method="post">
+          <form action="/" method="post" id="formSignIn">
             <div class="mb-3">
               <div class="d-flex">
                 <label for="username" class="form-label">
@@ -29,6 +29,7 @@
               <input type="password" class="form-control" name="password" id="password"
                      placeholder="••••••••••" autocomplete="on">
             </div>
+            <input type="hidden" name="role" id="role" th:value="${role}">
             <button type="submit" class='btn-sign btn w-100 py-2 my-1 rounded-3 text-white rounded'>Log
               in</button>
           </form>
@@ -47,5 +48,4 @@
       </div>
     </div>
   </div>
-  <input type="hidden" name="role" th:value="${role}">
 </div>

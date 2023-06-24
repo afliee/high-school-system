@@ -1,0 +1,118 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600&family=Poppins:wght@400;500;600&family=Roboto:wght@400;500&display=swap");
+
+/* Header */
+.sub_header {
+	height: fit-content;
+	color: #fff;
+	/*background-image: url("/img/sub_header_bg.svg");*/
+	background-repeat: no-repeat;
+	background-size: cover;
+	padding: 8rem 1.2rem 2rem 1.2rem;
+}
+
+.bread_crum li a {
+	text-decoration: none;
+	color: #fff;
+}
+
+/* Contact */
+.contact > .row {
+	background-color: var(--color-primary);
+}
+
+.contact .card {
+	background-color: #fff;
+}
+
+.info_list .info_title {
+	color: #000;
+	font-size: 20px;
+	font-family: Poppins;
+	font-weight: 600;
+}
+
+.info_list .info_text {
+	color: #000;
+	font-size: 20px;
+	font-family: Poppins;
+	font-weight: 500;
+	line-height: 33px;
+	margin-bottom: 0;
+}
+
+.btn_msg {
+	color: #fff;
+	font-size: 20px;
+	font-family: Poppins;
+	font-weight: 500;
+	line-height: 21px;
+	letter-spacing: -0.4px;
+	padding: 12px 24px;
+}
+
+.contact .title {
+	display: inline-block;
+	position: relative;
+	color: #fff;
+	font-size: 30px;
+	font-family: Poppins;
+	font-weight: 600;
+	text-transform: uppercase;
+}
+
+.contact .title::before {
+	position: absolute;
+	left: -18px;
+	top: 50%;
+	transform: translateY(-50%);
+	content: "";
+	height: 12px;
+	width: 12px;
+	border-radius: 50%;
+	background-color: #fff;
+}
+
+.contact .title::after {
+	position: absolute;
+	right: -18px;
+	top: 50%;
+	transform: translateY(-50%);
+	content: "";
+	height: 12px;
+	width: 12px;
+	border-radius: 50%;
+	background-color: #fff;
+}
+
+/* Newsletter */
+.newsletter {
+	background-image: url(/img/20230623184630_[fpdl.in]_cream-memphis-pattern-wallpaper_53876-119211_large.jpg);
+	background-size: cover;
+	background-repeat: no-repeat;
+	height: 320px;
+}
+
+.newsletter .title {
+	color: #80c4d3;
+	text-align: center;
+	font-size: 30px;
+	font-family: 'Poppins', sans-serif;
+	font-weight: 500;
+	line-height: 40px;
+}
+
+.newsletter .btn_email {
+	background-color: var(--color-primary-darker);
+	color: #fff;
+	font-size: 20px;
+	font-family: 'Poppins', sans-serif;
+	line-height: 21px;
+	letter-spacing: -0.4px;
+	padding: 12px 24px;
+}
+
+.newsletter .btn_email:hover {
+	background-color: transparent;
+	border: 1px solid var(--color-primary-darker);
+	color: var(--color-primary-darker);
+}
