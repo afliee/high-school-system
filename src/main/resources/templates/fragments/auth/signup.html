@@ -60,7 +60,7 @@
         <div class="d-flex justify-content-between mt-3">
           <div>Already have account? <a th:href="@{'/login?with=' + ${role}}" class="text-decoration-none">Let
             Go</a></div>
-          <a href="./forgot.html" class="text-decoration-none">Forgot password?</a>
+          <a th:href="@{/forgot-password}" class="text-decoration-none">Forgot password?</a>
         </div>
       </div>
       <div class="col-md-1 offset-md-1"></div>

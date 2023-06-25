@@ -49,10 +49,10 @@ public class AuthenticationController {
     }
 
     @PostMapping("/forgot-password")
-    public void forgotPassword(
+    public ResponseEntity<ForgotPasswordResponse> forgotPassword(
             @RequestBody @Valid ForgotPasswordRequest request
     ) {
-        authenticationService.forgotPassword(request);
+        return ResponseEntity.ok(authenticationService.forgotPassword(request));
     }
 
     @PostMapping("/forgot-password/confirm")

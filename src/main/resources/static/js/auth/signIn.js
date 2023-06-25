@@ -28,7 +28,7 @@ $(document).ready(function () {
             },
             error: function (error) {
                 console.log(error);
-                errorEle.text(error.message);
+                errorEle.text(error.responseJSON.message);
                 alertEle.removeClass('d-none');
             }
         })

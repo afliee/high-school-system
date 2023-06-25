@@ -42,7 +42,7 @@
         <div class="d-flex justify-content-between mt-3">
           <div>Doesn't have an account? <a th:href="@{'/register?with=' + ${role}}" class="text-decoration-none">Let
             create!</a></div>
-          <a href="./forgot.html" class="text-decoration-none">Forgot password?</a>
+          <a th:href="@{/forgot-password}" class="text-decoration-none">Forgot password?</a>
         </div>
       </div>
       <div class="col-md-1 offset-md-1"></div>

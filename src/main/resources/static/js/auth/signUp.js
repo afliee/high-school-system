@@ -38,7 +38,7 @@ $(document).ready(function () {
             },
             error: function (errorResponse) {
                 console.log(errorResponse);
-                errorEle.text(errorResponse.message);
+                errorEle.text(errorResponse.responseJSON.message);
                 alertEle.removeClass('d-none');
             }
         })

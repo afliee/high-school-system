@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:insert="~{fragments/heading/signinHeading :: signinHeading(title = 'Forgot Password')}"/>
+<body>
+    <div class="container-fluid">
+        <th:block th:replace="~{fragments/util/navigation :: navigation}"/>
+        <th:block th:replace="~{fragments/auth/forgot :: forgot}"/>
+    </div>
+    <th:block th:insert="~{fragments/script/forgotScript :: forgotScript}"/>
+</body>
+</html>

@@ -37,4 +37,10 @@ public class HomeController {
         }
         return "pages/auth/signup";
     }
+
+    @GetMapping("/forgot-password")
+    public String forgotPassword(Model model) {
+        model.addAttribute("title", "Forgot Password");
+        return "pages/auth/forgot";
+    }
 }

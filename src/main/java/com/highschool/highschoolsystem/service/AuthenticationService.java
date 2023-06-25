@@ -287,7 +287,7 @@ public class AuthenticationService {
                 .build();
     }
 
-    public void forgotPassword(ForgotPasswordRequest request) {
+    public ForgotPasswordResponse forgotPassword(ForgotPasswordRequest request) {
         var user = userRepository.findByUsername(request.getUsername()).orElseThrow(
                 () -> new UserNotFoundException("User " + request.getUsername() + " not found")
         );
@@ -321,6 +321,9 @@ public class AuthenticationService {
                 .build();
 
         emailService.sendEmail(emailDetails);
+        return ForgotPasswordResponse.builder()
+                .message("Reset code has been sent to your email")
+                .build();
     }
 
     public AuthenticationResponse forgotPasswordConfirm(ForgotConfirmRequest request) {

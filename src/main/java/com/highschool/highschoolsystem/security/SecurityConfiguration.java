@@ -29,6 +29,7 @@ public class SecurityConfiguration {
             "/register",
             "/teacher",
             "/student",
+            "/forgot-password",
             "/webjars/**",
             "/css/**",
             "/js/**",
