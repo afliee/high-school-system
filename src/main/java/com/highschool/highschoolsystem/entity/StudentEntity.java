@@ -23,6 +23,7 @@ public class StudentEntity extends BaseEntity<String> {
     private String fullName;
     private String password;
     private String cardId;
+    private String email;
     private boolean gender;
     private String location;
     private String enteredDate;

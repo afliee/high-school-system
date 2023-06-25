@@ -30,4 +30,6 @@ public class UserEntity extends BaseEntity<String> {
             targetEntity = TokenEntity.class
     )
     private Collection<TokenEntity> tokens;
+
+    private String resetCode;
 }

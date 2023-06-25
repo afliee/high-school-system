@@ -1,12 +1,11 @@
 package com.highschool.highschoolsystem.controller;
 
-import com.highschool.highschoolsystem.auth.AuthenticationRequest;
-import com.highschool.highschoolsystem.auth.AuthenticationResponse;
-import com.highschool.highschoolsystem.auth.RegistrationRequest;
+import com.highschool.highschoolsystem.auth.*;
 import com.highschool.highschoolsystem.service.AuthenticationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +28,7 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> register(
             @RequestBody @Valid RegistrationRequest request,
             @RequestParam(value = "role", required = true, defaultValue = "") String role
-            ) {
+    ) {
         return ResponseEntity.ok(authenticationService.register(request, role));
     }
 
@@ -39,5 +38,26 @@ public class AuthenticationController {
             HttpServletResponse response
     ) throws IOException {
         authenticationService.refreshToken(request, response);
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<AuthenticationResponse> resetPassword(
+            @RequestBody @Valid ResetPasswordRequest request
+    ) {
+        return ResponseEntity.ok(authenticationService.resetPassword(request));
+    }
+
+    @PostMapping("/forgot-password")
+    public void forgotPassword(
+            @RequestBody @Valid ForgotPasswordRequest request
+    ) {
+        authenticationService.forgotPassword(request);
+    }
+
+    @PostMapping("/forgot-password/confirm")
+    public ResponseEntity<AuthenticationResponse> forgotPassword(
+            @RequestBody @Valid ForgotConfirmRequest request
+    ) {
+        return ResponseEntity.ok(authenticationService.forgotPasswordConfirm(request));
     }
 }

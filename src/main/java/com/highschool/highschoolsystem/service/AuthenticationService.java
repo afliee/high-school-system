@@ -1,10 +1,7 @@
 package com.highschool.highschoolsystem.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.highschool.highschoolsystem.auth.AuthenticationRequest;
-import com.highschool.highschoolsystem.auth.AuthenticationResponse;
-import com.highschool.highschoolsystem.auth.RegistrationRequest;
-import com.highschool.highschoolsystem.auth.SignInRequest;
+import com.highschool.highschoolsystem.auth.*;
 import com.highschool.highschoolsystem.config.Role;
 import com.highschool.highschoolsystem.config.TokenType;
 import com.highschool.highschoolsystem.converter.UserConverter;
@@ -18,18 +15,24 @@ import com.highschool.highschoolsystem.repository.StudentRepository;
 import com.highschool.highschoolsystem.repository.TeacherRepository;
 import com.highschool.highschoolsystem.repository.TokenRepository;
 import com.highschool.highschoolsystem.repository.UserRepository;
+import com.highschool.highschoolsystem.util.RandomStringUtils;
+import com.highschool.highschoolsystem.util.mail.EmailDetails;
 import com.highschool.highschoolsystem.util.principal.UserPrincipal;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 @Service
 @RequiredArgsConstructor
@@ -53,6 +56,9 @@ public class AuthenticationService {
 
     @Autowired
     private JwtService jwtService;
+
+
+    private final EmailService emailService;
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
@@ -115,6 +121,7 @@ public class AuthenticationService {
                         .name(request.getUsername())
                         .fullName(request.getFullName())
                         .password(password)
+                        .email(request.getEmail())
                         .role(Role.TEACHER)
                         .build();
 
@@ -146,6 +153,7 @@ public class AuthenticationService {
                         .name(request.getUsername())
                         .fullName(request.getFullName())
                         .password(password)
+                        .email(request.getEmail())
                         .role(Role.STUDENT)
                         .build();
 
@@ -229,5 +237,97 @@ public class AuthenticationService {
                 .build();
 
         new ObjectMapper().writeValue(response.getOutputStream(), authenticationResponse);
+    }
+
+    public AuthenticationResponse resetPassword(ResetPasswordRequest request) {
+
+
+        return AuthenticationResponse.builder()
+
+                .build();
+    }
+
+    public void forgotPassword(ForgotPasswordRequest request) {
+        var user = userRepository.findByUsername(request.getUsername()).orElseThrow(
+                () -> new UserNotFoundException("User " + request.getUsername() + " not found")
+        );
+
+        final String role = user.getRole().toString();
+        final String email;
+        if (role.equalsIgnoreCase("TEACHER")) {
+            var teacher = teacherRepository.findById(user.getUserId()).orElseThrow();
+
+            email = teacher.getEmail();
+        } else if (role.equalsIgnoreCase("STUDENT")) {
+            var student = studentRepository.findById(user.getUserId()).orElseThrow();
+
+            email = student.getEmail();
+        } else {
+            throw new RuntimeException("Something went wrong");
+        }
+
+        if (email == null) {
+            throw new RuntimeException("Email is not set");
+        }
+
+        String resetCode = generateResetCode();
+
+        user.setResetCode(resetCode);
+        userRepository.save(user);
+        var emailDetails = EmailDetails.builder()
+                .to(email)
+                .subject("Reset password")
+                .content(resetCode)
+                .build();
+
+        emailService.sendEmail(emailDetails);
+    }
+
+    public AuthenticationResponse forgotPasswordConfirm(ForgotConfirmRequest request) {
+        var user = userRepository.findByUsername(request.getUsername()).orElseThrow(
+                () -> new UserNotFoundException("User " + request.getUsername() + " not found")
+        );
+
+        final String resetCode = user.getResetCode();
+        if (!resetCode.equals(request.getCode())) {
+            throw new RuntimeException("Reset code is invalid");
+        }
+
+        final String password = passwordEncoder.encode(request.getNewPassword());
+        user.setPassword(password);
+        userRepository.save(user);
+
+        final String role = user.getRole().toString();
+        UserDetails userPrincipal;
+        if (role.equalsIgnoreCase("TEACHER")) {
+            var teacher = teacherRepository.findById(user.getUserId()).orElseThrow();
+            teacher.setPassword(password);
+            userPrincipal = UserConverter.toPrincipal(teacher);
+            teacherRepository.save(teacher);
+        } else if (role.equalsIgnoreCase("STUDENT")) {
+            var student = studentRepository.findById(user.getUserId()).orElseThrow();
+            student.setPassword(password);
+            userPrincipal = UserConverter.toPrincipal(student);
+            studentRepository.save(student);
+        } else {
+            throw new RuntimeException("Something went wrong");
+        }
+
+        final String token = jwtService.generateToken(userPrincipal);
+        final String refreshToken = jwtService.generateRefreshToken(userPrincipal);
+
+        revokeAllToken(user);
+        saveUserToken(user, token);
+        user.setResetCode(null);
+        return AuthenticationResponse.builder()
+                .token(token)
+                .refreshToken(refreshToken)
+                .tokenType(TokenType.BEARER.getTokenType())
+                .build();
+    }
+
+    private String generateResetCode() {
+//        random number include 6 number
+        return RandomStringUtils.randomAlphanumeric(6);
     }
 }
