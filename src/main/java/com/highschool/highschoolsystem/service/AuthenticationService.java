@@ -239,11 +239,51 @@ public class AuthenticationService {
         new ObjectMapper().writeValue(response.getOutputStream(), authenticationResponse);
     }
 
-    public AuthenticationResponse resetPassword(ResetPasswordRequest request) {
+    public AuthenticationResponse resetPassword(HttpServletRequest request ,ResetPasswordRequest resetPasswordRequest) {
+        var header = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (header == null || !header.startsWith(TokenType.BEARER.getTokenType())) {
+            throw new RuntimeException("Token is invalid or expired");
+        }
+        final String token = header.substring(TokenType.BEARER.getTokenType().length());
+        var user = userRepository.findByUsername(resetPasswordRequest.getUsername()).orElseThrow(
+                () -> new UserNotFoundException("User " + resetPasswordRequest + " not found")
+        );
 
+        UserPrincipal userPrincipal = UserConverter.toPrincipal(user);
 
+        if (!jwtService.isTokenValid(token, userPrincipal)) {
+            throw new RuntimeException("Token is invalid or expired");
+        }
+
+        String password = passwordEncoder.encode(resetPasswordRequest.getNewPassword());
+
+        final String role = user.getRole().toString();
+
+        if (role.equalsIgnoreCase("TEACHER")) {
+            var teacher = teacherRepository.findById(user.getUserId()).orElseThrow();
+
+            teacher.setPassword(password);
+            teacherRepository.save(teacher);
+        } else if (role.equalsIgnoreCase("STUDENT")) {
+            var student = studentRepository.findById(user.getUserId()).orElseThrow();
+
+            student.setPassword(password);
+            studentRepository.save(student);
+        } else {
+            throw new RuntimeException("Something went wrong");
+        }
+
+        user.setPassword(password);
+        userRepository.save(user);
+        var userTarget = UserConverter.toPrincipal(user);
+        final String accessToken = jwtService.generateToken(userTarget);
+        final String refreshToken = jwtService.generateRefreshToken(UserConverter.toPrincipal(user));
+        revokeAllToken(user);
+        saveUserToken(user, accessToken);
         return AuthenticationResponse.builder()
-
+                .token(accessToken)
+                .refreshToken(refreshToken)
+                .tokenType(TokenType.BEARER.getTokenType())
                 .build();
     }
 

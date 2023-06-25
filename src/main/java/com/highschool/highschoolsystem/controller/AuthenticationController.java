@@ -42,9 +42,10 @@ public class AuthenticationController {
 
     @PostMapping("/reset-password")
     public ResponseEntity<AuthenticationResponse> resetPassword(
-            @RequestBody @Valid ResetPasswordRequest request
+            HttpServletRequest request,
+            @RequestBody @Valid ResetPasswordRequest resetPasswordRequest
     ) {
-        return ResponseEntity.ok(authenticationService.resetPassword(request));
+        return ResponseEntity.ok(authenticationService.resetPassword(request, resetPasswordRequest));
     }
 
     @PostMapping("/forgot-password")
