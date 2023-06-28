@@ -26,6 +26,6 @@ public class RegistrationRequest {
     private String email;
 
     @NotEmpty(message = "Password is required")
-    @Min(value = 8, message = "Password must be at least 8 characters")
+    @Length(min = 6, message = "Password must be at least 6 characters")
     private String password;
 }

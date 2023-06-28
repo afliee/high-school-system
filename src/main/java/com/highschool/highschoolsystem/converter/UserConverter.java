@@ -1,5 +1,6 @@
 package com.highschool.highschoolsystem.converter;
 
+import com.highschool.highschoolsystem.entity.AdminEntity;
 import com.highschool.highschoolsystem.entity.StudentEntity;
 import com.highschool.highschoolsystem.entity.TeacherEntity;
 import com.highschool.highschoolsystem.entity.UserEntity;
@@ -30,6 +31,15 @@ public class UserConverter {
                 .username(studentEntity.getName())
                 .password(studentEntity.getPassword())
                 .role(studentEntity.getRole())
+                .build();
+    }
+
+    public static UserPrincipal toPrincipal(AdminEntity adminEntity) {
+        return UserPrincipal.builder()
+                .id(adminEntity.getId())
+                .username(adminEntity.getUsername())
+                .password(adminEntity.getPassword())
+                .role(adminEntity.getRole())
                 .build();
     }
 }

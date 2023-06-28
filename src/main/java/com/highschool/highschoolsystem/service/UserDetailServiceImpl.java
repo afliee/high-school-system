@@ -1,7 +1,10 @@
 package com.highschool.highschoolsystem.service;
 
+import com.highschool.highschoolsystem.converter.UserConverter;
+import com.highschool.highschoolsystem.entity.AdminEntity;
 import com.highschool.highschoolsystem.entity.StudentEntity;
 import com.highschool.highschoolsystem.entity.TeacherEntity;
+import com.highschool.highschoolsystem.repository.AdminRepository;
 import com.highschool.highschoolsystem.util.principal.UserPrincipal;
 import com.highschool.highschoolsystem.repository.StudentRepository;
 import com.highschool.highschoolsystem.repository.TeacherRepository;
@@ -17,6 +20,9 @@ public class UserDetailServiceImpl implements UserDetailsService {
     private TeacherRepository teacherRepository;
     @Autowired
     private StudentRepository studentRepository;
+    @Autowired
+    private AdminRepository adminRepository;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         TeacherEntity teacher = teacherRepository.findByName(username).orElse(null);
@@ -29,6 +35,12 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
         if (student != null) {
             return new UserPrincipal(student);
+        }
+
+        AdminEntity admin = adminRepository.findByUsername(username).orElse(null);
+
+        if (admin != null) {
+            return UserConverter.toPrincipal(admin);
         }
 
         throw new UsernameNotFoundException("User not found with username: " + username);

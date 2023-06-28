@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:insert="~{fragments/heading/signinHeading :: signinHeading(title = 'Sign In')}"/>
+<body>
+<div class="container-fluid">
+    <th:block th:replace="~{fragments/admin/adminSignin :: adminSignin(role = 'administrator')}"/>
+</div>
+<th:block th:insert="~{fragments/script/admin/adminSigninScript :: signinScript}"/>
+</body>
+</html>

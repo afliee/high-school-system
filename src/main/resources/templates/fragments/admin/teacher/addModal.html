@@ -1,0 +1,70 @@
+<div th:fragment="addModal" class="modal fade text-left" id="addModal" tabindex="-1"
+     role="dialog" aria-labelledby="myModalLabel33" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+       role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel33">Add Teacher Form</h4>
+        <button type="button" class="close" data-bs-dismiss="modal"
+                aria-label="Close">
+          <i data-feather="x"></i>
+        </button>
+      </div>
+      <form action="#">
+        <div class="modal-body">
+          <div class="mb-3">
+            <div class="d-flex">
+              <label for="username" class="form-label">
+                Username
+              </label>
+              <p class="p-0 m-0" style="color:red">(*)</p>
+            </div>
+            <input type="text" class="form-control" name="username" id="username"
+                   placeholder="Username" required>
+          </div>
+
+          <div class="mb-3">
+            <div class="d-flex">
+              <label for="email" class="form-label">
+                Email
+              </label>
+              <p class="p-0 m-0" style="color:red">(*)</p>
+            </div>
+            <input type="email" class="form-control" name="email" id="email"
+                   placeholder="Your Email" required>
+          </div>
+
+          <div class="mb-3">
+            <div class="d-flex">
+              <label for="fullName" class="form-label">Full name</label>
+              <p class="p-0 m-0" style="color:red">(*)</p>
+            </div>
+            <input type="text" class="form-control" name="fullName" id="fullName"
+                   placeholder="Full Your Name" autocomplete="on" required>
+          </div>
+
+          <div class="mb-3">
+            <div class="d-flex">
+              <label for="password" class="form-label">Password</label>
+              <p class="p-0 m-0" style="color:red">(*)</p>
+            </div>
+            <input type="password" class="form-control" name="password" id="password"
+                   placeholder="••••••••••" autocomplete="on" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light-secondary"
+                  data-bs-dismiss="modal">
+            <i class="bx bx-x d-block d-sm-none"></i>
+            <span class="d-none d-sm-block">Close</span>
+          </button>
+          <button type="button" class="btn btn-primary ml-1"
+                  data-bs-dismiss="modal">
+            <i class="bx bx-check d-block d-sm-none"></i>
+            <span class="d-none d-sm-block">Add</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

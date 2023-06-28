@@ -1,0 +1,134 @@
+
+/* Badges */
+.badge {
+    border-radius: 20px;
+    font-size: 12px;
+    line-height: 1;
+    padding: .375rem .5625rem;
+    font-weight: normal;
+}
+
+.badge.badge-pill {
+    border-radius: 10rem;
+}
+
+/*Badge outlined variations*/
+.badge-outline-primary {
+    color: #1F3BB3;
+    border: 1px solid #1F3BB3;
+}
+
+.badge-outline-secondary {
+    color: #F1F1F1;
+    border: 1px solid #F1F1F1;
+}
+
+.badge-outline-success {
+    color: #34B1AA;
+    border: 1px solid #34B1AA;
+}
+
+.badge-outline-info {
+    color: #52CDFF;
+    border: 1px solid #52CDFF;
+}
+
+.badge-outline-warning {
+    color: #ffaf00;
+    border: 1px solid #ffaf00;
+}
+
+.badge-outline-danger {
+    color: #F95F53;
+    border: 1px solid #F95F53;
+}
+
+.badge-outline-light {
+    color: #fbfbfb;
+    border: 1px solid #fbfbfb;
+}
+
+.badge-outline-dark {
+    color: #1E283D;
+    border: 1px solid #1E283D;
+}
+
+.badge-opacity-primary {
+    background: #b6c1f2;
+    color: #172d88;
+}
+
+.badge-opacity-secondary {
+    background: white;
+    color: #d8d8d8;
+}
+
+.badge-opacity-success {
+    background: #cbf0ee;
+    color: #288a84;
+}
+
+.badge-opacity-info {
+    background: white;
+    color: #1fbeff;
+}
+
+.badge-opacity-warning {
+    background: #fff2d6;
+    color: #cc8c00;
+}
+
+.badge-opacity-danger {
+    background: white;
+    color: #f73122;
+}
+
+.badge-opacity-light {
+    background: white;
+    color: #e2e2e2;
+}
+
+.badge-opacity-dark {
+    background: #768cbb;
+    color: #0d121b;
+}
+
+.badge-primary {
+    color: #1F3BB3;
+    border: 1px solid #1F3BB3;
+}
+
+.badge-secondary {
+    color: #F1F1F1;
+    border: 1px solid #F1F1F1;
+}
+
+.badge-success, .preview-list .preview-item .preview-thumbnail .badge.badge-online {
+    color: #34B1AA;
+    border: 1px solid #34B1AA;
+}
+
+.badge-info, .preview-list .preview-item .preview-thumbnail .badge.badge-offline {
+    color: #52CDFF;
+    border: 1px solid #52CDFF;
+}
+
+.badge-warning, .preview-list .preview-item .preview-thumbnail .badge.badge-busy {
+    color: #ffaf00;
+    border: 1px solid #ffaf00;
+}
+
+.badge-danger {
+    color: #F95F53;
+    border: 1px solid #F95F53;
+}
+
+.badge-light {
+    color: #fbfbfb;
+    border: 1px solid #fbfbfb;
+}
+
+.badge-dark {
+    color: #1E283D;
+    border: 1px solid #1E283D;
+}

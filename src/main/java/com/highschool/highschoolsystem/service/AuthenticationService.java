@@ -5,34 +5,26 @@ import com.highschool.highschoolsystem.auth.*;
 import com.highschool.highschoolsystem.config.Role;
 import com.highschool.highschoolsystem.config.TokenType;
 import com.highschool.highschoolsystem.converter.UserConverter;
-import com.highschool.highschoolsystem.entity.StudentEntity;
-import com.highschool.highschoolsystem.entity.TeacherEntity;
-import com.highschool.highschoolsystem.entity.TokenEntity;
-import com.highschool.highschoolsystem.entity.UserEntity;
+import com.highschool.highschoolsystem.entity.*;
 import com.highschool.highschoolsystem.exception.UserExistException;
 import com.highschool.highschoolsystem.exception.UserNotFoundException;
-import com.highschool.highschoolsystem.repository.StudentRepository;
-import com.highschool.highschoolsystem.repository.TeacherRepository;
-import com.highschool.highschoolsystem.repository.TokenRepository;
-import com.highschool.highschoolsystem.repository.UserRepository;
+import com.highschool.highschoolsystem.repository.*;
 import com.highschool.highschoolsystem.util.RandomStringUtils;
 import com.highschool.highschoolsystem.util.mail.EmailDetails;
 import com.highschool.highschoolsystem.util.principal.UserPrincipal;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 @Service
 @RequiredArgsConstructor
@@ -49,6 +41,9 @@ public class AuthenticationService {
     private StudentRepository studentRepository;
 
     @Autowired
+    private AdminRepository adminRepository;
+
+    @Autowired
     private TokenRepository tokenRepository;
 
     @Autowired
@@ -60,7 +55,11 @@ public class AuthenticationService {
 
     private final EmailService emailService;
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthenticationResponse authenticate(
+            AuthenticationRequest request,
+            HttpServletRequest httpServletRequest,
+            HttpServletResponse httpServletResponse
+    ) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
         );
@@ -80,6 +79,12 @@ public class AuthenticationService {
                 revokeAllToken(user);
                 saveUserToken(user, token);
 
+                Cookie cookie = new Cookie("refreshToken", refreshToken);
+                cookie.setHttpOnly(true);
+                cookie.setPath("/");
+                cookie.setMaxAge(7 * 24 * 60 * 60); // 7 days
+                httpServletResponse.addCookie(cookie);
+
                 return AuthenticationResponse.builder()
                         .token(token)
                         .refreshToken(refreshToken)
@@ -97,6 +102,37 @@ public class AuthenticationService {
                 UserEntity user = userRepository.findByUserId(student.getId()).orElseThrow();
                 revokeAllToken(user);
                 saveUserToken(user, token);
+
+                Cookie cookie = new Cookie("refreshToken", refreshToken);
+                cookie.setHttpOnly(true);
+                cookie.setPath("/");
+                cookie.setMaxAge(7 * 24 * 60 * 60); // 7 days
+                httpServletResponse.addCookie(cookie);
+
+                return AuthenticationResponse.builder()
+                        .token(token)
+                        .refreshToken(refreshToken)
+                        .tokenType("Bearer ")
+                        .build();
+            }
+            case "administrator": {
+                AdminEntity admin = adminRepository.findByUsername(request.getUsername()).orElseThrow(
+                        () -> new UserNotFoundException("User " + request.getUsername() + " not found")
+                );
+
+                userPrincipal = UserConverter.toPrincipal(admin);
+                String token = jwtService.generateToken(userPrincipal);
+                String refreshToken = jwtService.generateRefreshToken(userPrincipal);
+
+                UserEntity user = userRepository.findByUserId(admin.getId()).orElseThrow();
+                revokeAllToken(user);
+                saveUserToken(user, token);
+
+                Cookie cookie = new Cookie("refreshToken", refreshToken);
+                cookie.setHttpOnly(true);
+                cookie.setPath("/");
+                cookie.setMaxAge(7 * 24 * 60 * 60); // 7 days
+                httpServletResponse.addCookie(cookie);
 
                 return AuthenticationResponse.builder()
                         .token(token)
@@ -168,6 +204,39 @@ public class AuthenticationService {
                 userRepository.save(user);
                 String token = jwtService.generateToken(userPrincipal);
                 String refreshToken = jwtService.generateRefreshToken(userPrincipal);
+                saveUserToken(user, token);
+                return AuthenticationResponse.builder()
+                        .token(token)
+                        .refreshToken(refreshToken)
+                        .tokenType(TokenType.BEARER.getTokenType())
+                        .build();
+            }
+            case "administrator": {
+                UserEntity userEntity = userRepository.findByUsername(request.getUsername()).orElse(null);
+                if (userEntity != null) {
+                    throw new UserExistException("User " + request.getUsername() + " already exists");
+                }
+                String password = passwordEncoder.encode(request.getPassword());
+                AdminEntity admin = AdminEntity.builder()
+                        .username(request.getUsername())
+                        .password(password)
+                        .fullName(request.getFullName())
+                        .email(request.getEmail())
+                        .role(Role.ADMIN)
+                        .build();
+
+                userPrincipal = UserConverter.toPrincipal(admin);
+                adminRepository.save(admin);
+                UserEntity user = UserEntity.builder()
+                        .username(request.getUsername())
+                        .password(password)
+                        .role(admin.getRole())
+                        .userId(admin.getId())
+                        .build();
+                userRepository.save(user);
+                String token = jwtService.generateToken(userPrincipal);
+                String refreshToken = jwtService.generateRefreshToken(userPrincipal);
+
                 saveUserToken(user, token);
                 return AuthenticationResponse.builder()
                         .token(token)
