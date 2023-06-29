@@ -3,6 +3,8 @@ package com.highschool.highschoolsystem.controller;
 import com.highschool.highschoolsystem.auth.RegistrationRequest;
 import com.highschool.highschoolsystem.dto.response.TeacherResponse;
 import com.highschool.highschoolsystem.service.AdminService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,26 @@ public class AdminApiController {
         return "Admin";
     }
 
+    @Operation(
+            summary = "Create a new teacher by admin",
+            description = "Create a new teacher by admin",
+            tags = "Admin",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Teacher object that will be created",
+                    required = true,
+                    content = @io.swagger.v3.oas.annotations.media.Content(
+                            mediaType = "application/json",
+                            schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = RegistrationRequest.class)
+                    )
+            ),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Teacher created successfully"),
+                    @ApiResponse(responseCode = "400", description = "Invalid request"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized"),
+                    @ApiResponse(responseCode = "403", description = "Forbidden"),
+                    @ApiResponse(responseCode = "500", description = "Bad credentials")
+            }
+        )
     @PostMapping("/teacher")
     public ResponseEntity<TeacherResponse> createTeacher(
             @RequestBody @Valid RegistrationRequest request
@@ -33,6 +55,7 @@ public class AdminApiController {
     {
         return ResponseEntity.ok(adminService.createTeacher(request));
     }
+
 
     @GetMapping("/members")
     public ResponseEntity<Page<?>> getAll(

@@ -1,44 +1,161 @@
-<div th:fragment="content" class="table-responsive">
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th>User</th>
-            <th>Product</th>
-            <th>Sale</th>
-            <th>Status</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>Jacob</td>
-            <td>Photoshop</td>
-            <td class="text-danger"> 28.76% <i class="ti-arrow-down"></i></td>
-            <td><label class="badge badge-danger">Pending</label></td>
-        </tr>
-        <tr>
-            <td>Messsy</td>
-            <td>Flash</td>
-            <td class="text-danger"> 21.06% <i class="ti-arrow-down"></i></td>
-            <td><label class="badge badge-warning">In progress</label></td>
-        </tr>
-        <tr>
-            <td>John</td>
-            <td>Premier</td>
-            <td class="text-danger"> 35.00% <i class="ti-arrow-down"></i></td>
-            <td><label class="badge badge-info">Fixed</label></td>
-        </tr>
-        <tr>
-            <td>Peter</td>
-            <td>After effects</td>
-            <td class="text-success"> 82.00% <i class="ti-arrow-up"></i></td>
-            <td><label class="badge badge-success">Completed</label></td>
-        </tr>
-        <tr>
-            <td>Dave</td>
-            <td>53275535</td>
-            <td class="text-success"> 98.05% <i class="ti-arrow-up"></i></td>
-            <td><label class="badge badge-warning">In progress</label></td>
-        </tr>
-        </tbody>
-    </table>
+<div th:fragment="content" class="card w-100" style="border: none; outline: none">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12 col-xl-8">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="mt-3">
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Full Name</th>
+                                    <th>Email</th>
+                                    <th>Created Date</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+                                <tbody class="content">
+                                <tr>
+                                    <td>Jacob</td>
+                                    <td>Photoshop</td>
+                                    <td class="text-danger"> 28.76% <i class="ti-arrow-down"></i></td>
+                                    <td><label class="badge badge-danger">Pending</label></td>
+                                </tr>
+                                <tr>
+                                    <td>Messsy</td>
+                                    <td>Flash</td>
+                                    <td class="text-danger"> 21.06% <i class="ti-arrow-down"></i></td>
+                                    <td><label class="badge badge-warning">In progress</label></td>
+                                </tr>
+                                <tr>
+                                    <td>John</td>
+                                    <td>Premier</td>
+                                    <td class="text-danger"> 35.00% <i class="ti-arrow-down"></i></td>
+                                    <td><label class="badge badge-info">Fixed</label></td>
+                                </tr>
+                                <tr>
+                                    <td>Peter</td>
+                                    <td>After effects</td>
+                                    <td class="text-success"> 82.00% <i class="ti-arrow-up"></i></td>
+                                    <td><label class="badge badge-success">Completed</label></td>
+                                </tr>
+                                <tr>
+                                    <td>Dave</td>
+                                    <td>53275535</td>
+                                    <td class="text-success"> 98.05% <i class="ti-arrow-up"></i></td>
+                                    <td><label class="badge badge-warning">In progress</label></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-12 d-flex justify-content-center">
+                        <ul class="pagination"></ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-xl-4 d-flex justify-content-center align-items-center h-100">
+                <div class="card" style="border-radius: 15px;">
+                    <div class="card-body text-center teacher-info">
+                        <div class="mt-3 mb-4 d-flex justify-content-center">
+                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
+                                 class="rounded-circle img-fluid avatar" style="width: 100px;"/>
+                        </div>
+                        <h4 class="mb-2 fullname">Julie L. Arsenault</h4>
+                        <p class="text-muted mb-4 username">@Programmer <span class="mx-2">|</span> <a
+                                href="#!">mdbootstrap.com</a></p>
+                        <div class="mb-4 pb-2 row form">
+                            <div class="col-12 col-md-6">
+                                <div class="form-group has-icon-left">
+                                    <div class="position-relative">
+                                        <input type="text" class="form-control"
+                                               placeholder="Phone" id="phone">
+                                        <div class="form-control-icon">
+                                            <i class="bi bi-phone"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="form-group has-icon-left">
+                                    <div class="position-relative">
+                                        <input type="text" class="form-control"
+                                               placeholder="Card Id" id="cardId">
+                                        <div class="form-control-icon">
+                                            <i class="bi bi-phone"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <div class="form-group has-icon-left">
+                                    <div class="position-relative">
+                                        <input type="date" class="form-control"
+                                               placeholder="Birthday" id="birthday">
+                                        <div class="form-control-icon">
+                                            <i class="bi bi-calendar-week"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="form-group has-icon-left">
+                                    <div class="position-relative">
+                                        <input type="text" class="form-control"
+                                               placeholder="Salary" id="salary">
+                                        <div class="form-control-icon">
+                                            <i class="bi bi-currency-bitcoin"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 ">
+                                <div class="form-group has-icon-left">
+                                    <div class="position-relative">
+                                        <input type="text" class="form-control"
+                                               placeholder="Address" id="address">
+                                        <div class="form-control-icon">
+                                            <i class="bi bi-geo-alt"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 ">
+                                <div class="form-group has-icon-left">
+                                    <div class="position-relative">
+                                        <input type="text" class="form-control"
+                                               placeholder="Email" id="mail">
+                                        <div class="form-control-icon">
+                                            <i class="bi bi-envelope-at"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" name="__STATEMENT" id="__STATEMENT">
+                        </div>
+                        <button type="button" class="btn btn-primary btn-rounded btn-lg btn-update">
+                            Update Now
+                        </button>
+                        <div class="d-flex justify-content-between text-center mt-5 mb-2">
+                            <div>
+                                <p class="mb-2 h5">8471</p>
+                                <p class="text-muted mb-0">Wallets Balance</p>
+                            </div>
+                            <div class="px-3">
+                                <p class="mb-2 h5">8512</p>
+                                <p class="text-muted mb-0">Income amounts</p>
+                            </div>
+<!--                            <div>-->
+<!--                                <p class="mb-2 h5">4751</p>-->
+<!--                                <p class="text-muted mb-0">Total Transactions</p>-->
+<!--                            </div>-->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
 </div>

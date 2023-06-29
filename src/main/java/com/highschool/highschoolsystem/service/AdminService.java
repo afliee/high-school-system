@@ -1,14 +1,16 @@
 package com.highschool.highschoolsystem.service;
 
 import com.highschool.highschoolsystem.auth.RegistrationRequest;
+import com.highschool.highschoolsystem.converter.TeacherConverter;
 import com.highschool.highschoolsystem.dto.response.TeacherResponse;
+import com.highschool.highschoolsystem.exception.UserNotFoundException;
 import com.highschool.highschoolsystem.repository.TeacherRepository;
 import com.highschool.highschoolsystem.repository.UserRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -47,16 +49,18 @@ public class AdminService {
     }
 
     public Page<?> getAll(String filter, int page) {
-        Page<?> list = null;
+        final int PAGE_SIZE = 10;
+
         if (filter.equals("teacher")) {
-            list = teacherRepository.findAll(Pageable.ofSize(10).withPage(page));
-            return list;
+            PageRequest pageRequest = PageRequest.of(page - 1, PAGE_SIZE);
+            return teacherRepository.findAll(pageRequest);
         }
         return null;
     }
 
     public TeacherResponse createTeacher(RegistrationRequest request) {
         try {
+            System.out.println(request);
             authenticationService.register(request, "teacher");
             return TeacherResponse.builder()
                     .name(request.getUsername())

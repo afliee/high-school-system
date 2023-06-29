@@ -12,5 +12,12 @@ import lombok.NoArgsConstructor;
 public class TeacherResponse {
     private String name;
     private String fullName;
+    private String avatar;
     private String email;
+    private String cardId;
+    private boolean gender;
+    private String phone;
+    private String address;
+    private String birthday;
+    private Long salary;
 }

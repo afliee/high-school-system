@@ -1,9 +1,9 @@
-<div th:fragment="sidebar" id="sidebar" class="active">
+<div th:fragment="sidebar" id="sidebar" class="active" xmlns:th="http://www.thymeleaf.org">
     <div class="sidebar-wrapper active">
         <div class="sidebar-header">
             <div class="d-flex justify-content-between">
                 <div class="logo">
-                    <a href="index.html" class="text-decoration-none text-dark"><h2>Teacholy</h2></a>
+                    <a th:href="@{/auth/admin}" class="text-decoration-none text-dark"><h2>Teacholy</h2></a>
                 </div>
                 <div class="toggler">
                     <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
@@ -15,7 +15,7 @@
                 <li class="sidebar-title">Menu</li>
 
                 <li th:class="'sidebar-item ' + ${#strings.equals(active, 'dashboard') ? 'active' : ''}">
-                    <a href="index.html" class='sidebar-link'>
+                    <a th:href="@{/auth/admin}" class='sidebar-link'>
                         <i class="bi bi-grid-fill"></i>
                         <span>Dashboard</span>
                     </a>
@@ -29,15 +29,15 @@
 
                     <ul class="submenu">
                         <li th:class="'submenu-item ' + ${#strings.equals(sub, 'teacher') ? 'active' : ''}">
-                            <a href="#" class="submenu-link">
+                            <a th:href="@{'/auth/admin/members?filter=teacher&page=1'}" class="submenu-link">
                                 <i class="fa-solid fa-user-graduate"></i>
                                 <span>Teachers</span>
                             </a>
                         </li>
-                        <li class="submenu-item">
-                            <a href="#" th:class="'submenu-item ' + ${#strings.equals(sub, 'student') ? 'active' : ''}">
+                        <li th:class="'submenu-item ' + ${#strings.equals(sub, 'student') ? 'active' : ''}">
+                            <a  th:href="@{'/auth/admin/members?filter=student&page=1'}" class="submenu-link">
                                 <i class="fa-solid fa-user-graduate"></i>
-                                <span>Teachers</span>
+                                <span>Students</span>
                             </a>
                         </li>
                     </ul>

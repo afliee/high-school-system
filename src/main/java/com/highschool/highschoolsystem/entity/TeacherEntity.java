@@ -22,6 +22,7 @@ public class TeacherEntity extends BaseEntity<String> {
     private String name;
     private String fullName;
     private String password;
+    private String avatar;
     private String email;
     private String cardId;
     private boolean gender;
