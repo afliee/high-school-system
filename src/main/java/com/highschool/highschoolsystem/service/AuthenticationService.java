@@ -371,6 +371,10 @@ public class AuthenticationService {
             var student = studentRepository.findById(user.getUserId()).orElseThrow();
 
             email = student.getEmail();
+        } else if (role.equalsIgnoreCase("ADMIN")) {
+            var admin = adminRepository.findById(user.getUserId()).orElseThrow();
+
+            email = admin.getEmail();
         } else {
             throw new RuntimeException("Something went wrong");
         }
@@ -421,6 +425,11 @@ public class AuthenticationService {
             student.setPassword(password);
             userPrincipal = UserConverter.toPrincipal(student);
             studentRepository.save(student);
+        } else if (role.equalsIgnoreCase("ADMIN")) {
+            var admin = adminRepository.findById(user.getUserId()).orElseThrow();
+            admin.setPassword(password);
+            userPrincipal = UserConverter.toPrincipal(admin);
+            adminRepository.save(admin);
         } else {
             throw new RuntimeException("Something went wrong");
         }

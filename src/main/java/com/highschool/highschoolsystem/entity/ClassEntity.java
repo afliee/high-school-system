@@ -2,6 +2,7 @@ package com.highschool.highschoolsystem.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -11,11 +12,14 @@ import java.util.Collection;
 @Entity
 @Table(name = "class")
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class ClassEntity extends BaseEntity<String> {
+    @Column(unique = true)
     private String name;
+
     private int present;
 
     @ManyToOne(targetEntity = SemesterEntity.class)
