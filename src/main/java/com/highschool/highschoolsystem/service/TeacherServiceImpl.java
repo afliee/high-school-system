@@ -5,6 +5,7 @@ import com.highschool.highschoolsystem.dto.response.TeacherResponse;
 import com.highschool.highschoolsystem.entity.TeacherEntity;
 import com.highschool.highschoolsystem.exception.TokenInvalidException;
 import com.highschool.highschoolsystem.exception.UserNotFoundException;
+import com.highschool.highschoolsystem.repository.DepartmentRepository;
 import com.highschool.highschoolsystem.repository.TeacherRepository;
 import com.highschool.highschoolsystem.repository.TokenRepository;
 import com.highschool.highschoolsystem.repository.UserRepository;
@@ -29,6 +30,9 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private DepartmentRepository departmentRepository;
 
     private final PasswordEncoder passwordEncoder;
     @Override
@@ -55,7 +59,7 @@ public class TeacherServiceImpl implements TeacherService {
                 () -> new UserNotFoundException("User not found")
         ).getId();
 
-        tokenRepository.deleteByUserId(userId);
+        tokenRepository.deleteByUserId(userId).orElse(null);
         userRepository.deleteByUserId(id);
         teacherRepository.deleteById(id);
     }
@@ -66,6 +70,13 @@ public class TeacherServiceImpl implements TeacherService {
         var teacherEntity = teacherRepository.findById(id).orElseThrow(
                 () -> new UserNotFoundException("User not found")
         );
+
+        if (teacher.getDepartmentId() != null) {
+            var department = departmentRepository.findById(teacher.getDepartmentId()).orElseThrow(
+                    () -> new UserNotFoundException("Department not found")
+            );
+            teacherEntity.setDepartment(department);
+        }
 
         TeacherConverter.to(teacher, teacherEntity);
         return teacherRepository.save(teacherEntity);

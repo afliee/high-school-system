@@ -4,7 +4,7 @@ $(document).ready(function () {
 
     const filter = $("#filter").val();
     const page = $("#page").val();
-    const token = localStorage.getItem('token');
+    const token = getCookie("token") || localStorage.getItem("token");
     const content = $(".content");
     const MAX_PAGE = 10;
     fetchAll();

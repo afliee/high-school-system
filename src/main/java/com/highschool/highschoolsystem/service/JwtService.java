@@ -1,10 +1,14 @@
 package com.highschool.highschoolsystem.service;
 
+import com.highschool.highschoolsystem.config.Role;
+import com.highschool.highschoolsystem.exception.NotFoundException;
+import com.highschool.highschoolsystem.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -23,6 +27,10 @@ public class JwtService {
     private long jwtExpiration;
     @Value("${application.security.jwt.refresh-token.expiration}")
     private long refreshExpiration;
+
+    @Autowired
+    private UserRepository userRepository;
+
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -79,6 +87,13 @@ public class JwtService {
         return !isTokenExpired(token);
     }
 
+    private Boolean hasRole(Role role, String token) {
+        final String username = extractUsername(token);
+        var user =  userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+        return user.getRole().equals(role);
+    }
     private Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
@@ -90,5 +105,9 @@ public class JwtService {
     private Key getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public boolean isAdmin(String token) {
+        return hasRole(Role.ADMIN, token);
     }
 }

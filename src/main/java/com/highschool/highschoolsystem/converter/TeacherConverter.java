@@ -6,6 +6,7 @@ import com.highschool.highschoolsystem.entity.TeacherEntity;
 public class TeacherConverter {
     public static TeacherResponse toResponse(TeacherEntity teacher) {
         return TeacherResponse.builder()
+                .id(teacher.getId())
                 .name(teacher.getName())
                 .fullName(teacher.getFullName())
                 .avatar(teacher.getAvatar())
@@ -15,6 +16,9 @@ public class TeacherConverter {
                 .birthday(teacher.getBirthday())
                 .salary(teacher.getSalary())
                 .email(teacher.getEmail())
+                .createdDate(teacher.getCreatedDate().toString())
+                .departmentId(teacher.getDepartment() != null ? teacher.getDepartment().getId() : null)
+                .departmentName(teacher.getDepartment() != null ? teacher.getDepartment().getName() : null)
                 .build();
     }
 

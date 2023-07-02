@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -23,9 +24,13 @@ public class AdminApiController {
     @Autowired
     private AdminService adminService;
 
-    @GetMapping({"/", ""})
-    public String index() {
-        return "Admin";
+    @GetMapping("")
+    public ResponseEntity<?> index(@RequestParam(name = "token") String token) {
+        String redirect = adminService.requireAdminLogin(token);
+        if (redirect != null) {
+            return ResponseEntity.badRequest().body(redirect);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Operation(

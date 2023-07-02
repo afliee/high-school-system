@@ -11,6 +11,7 @@ import org.springframework.core.io.Resource;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/class") // http://localhost:8080/api/v1/classes
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
 public class ClassController {
     @Autowired
     private ClassService classService;
@@ -53,5 +54,24 @@ public class ClassController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName)
                 .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
                 .body(file);
+    }
+
+    @GetMapping("/get/{id}")
+    public ResponseEntity<ClassEntity> get(@PathVariable String id) {
+        return new ResponseEntity<>(classService.get(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/get")
+    public ResponseEntity<Page<?>> get(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return new ResponseEntity<>(classService.get(page, size), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> delete(@PathVariable String id, @RequestParam(name = "studentId", defaultValue = "") String studentId) {
+        classService.delete(id, studentId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
