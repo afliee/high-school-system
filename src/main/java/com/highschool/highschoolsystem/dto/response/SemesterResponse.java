@@ -5,17 +5,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class StudentResponse {
+public class SemesterResponse {
     private String id;
     private String name;
-    private String fullName;
-    private String email;
-    private String avatar;
-    private String location;
-    private String enteredDate;
-    private String cardId;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private boolean isCurrent;
 }

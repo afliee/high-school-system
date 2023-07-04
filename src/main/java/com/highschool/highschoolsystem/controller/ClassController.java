@@ -38,7 +38,7 @@ public class ClassController {
             )
     )
     @PostMapping("/add")
-    public ResponseEntity<ClassEntity> add(
+    public ResponseEntity<?> add(
             @ModelAttribute @Valid AddClassRequest request
     ) {
         if (ExcelUtil.isExcel(request.getStudents())) {
@@ -57,16 +57,22 @@ public class ClassController {
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<ClassEntity> get(@PathVariable String id) {
-        return new ResponseEntity<>(classService.get(id), HttpStatus.OK);
+    public ResponseEntity<?> get(
+            @PathVariable String id,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "8") int size
+    ) {
+        return new ResponseEntity<>(classService.get(id, page, size), HttpStatus.OK);
     }
 
     @GetMapping("/get")
     public ResponseEntity<Page<?>> get(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(name = "semesterId", defaultValue = "current") String semesterId
     ) {
-        return new ResponseEntity<>(classService.get(page, size), HttpStatus.OK);
+
+        return new ResponseEntity<>(classService.get(page, size, semesterId), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")

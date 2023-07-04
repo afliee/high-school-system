@@ -7,6 +7,8 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,11 +27,13 @@ public class Initialize implements ApplicationListener<ApplicationReadyEvent> {
     private DepartmentRepository departmentRepository;
     @Autowired
     private ShiftRepository shiftRepository;
+
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
 //        addDays();
 //        var semesters = addSemesters();
-//        var weeks = addWeeks(semesters);
+////        var weeks = addWeeks(semesters);
 //        addLevels();
 //        addDepartments();
 //        addShifts();
@@ -167,22 +171,22 @@ public class Initialize implements ApplicationListener<ApplicationReadyEvent> {
         semesters.add(
                 SemesterEntity.builder()
                         .name("First Semester")
-                        .startDate("2021-09-01")
-                        .endDate("2021-12-31")
+                        .startDate(LocalDate.parse("2023-07-04", formatter))
+                        .endDate(LocalDate.parse("2023-10-01", formatter))
                         .build()
         );
         semesters.add(
                 SemesterEntity.builder()
                         .name("Second Semester")
-                        .startDate("2022-01-01")
-                        .endDate("2022-04-30")
+                        .startDate(LocalDate.parse("2023-10-02", formatter))
+                        .endDate(LocalDate.parse("2023-12-01", formatter))
                         .build()
         );
         semesters.add(
                 SemesterEntity.builder()
                         .name("Summer Semester")
-                        .startDate("2022-05-01")
-                        .endDate("2022-08-31")
+                        .startDate(LocalDate.parse("2023-12-02", formatter))
+                        .endDate(LocalDate.parse("2023-12-31", formatter))
                         .build()
         );
         semesterRepository.saveAll(semesters);

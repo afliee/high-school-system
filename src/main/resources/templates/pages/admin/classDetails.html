@@ -7,7 +7,9 @@
     <div id="main">
         <th:block th:insert="~{fragments/admin/dashboard/navbar :: navbar}"/>
         <th:block th:insert="~{fragments/admin/class/navbar :: navbar}"/>
-        <th:block th:insert="~{fragments/admin/class/content :: content}"/>
+        <th:block th:insert="~{fragments/admin/class/student :: students}" />
+        <th:block th:insert="~{fragments/admin/class/studentDetails :: studentDetail}"/>
+        <input type="hidden" name="classId" id="classId" th:value="${classId}">
     </div>
 </div>
 

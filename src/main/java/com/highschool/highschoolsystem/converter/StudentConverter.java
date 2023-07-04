@@ -14,6 +14,10 @@ public class StudentConverter {
                 .name(studentEntity.getName())
                 .fullName(studentEntity.getFullName())
                 .email(studentEntity.getEmail())
+                .avatar(studentEntity.getAvatar())
+                .location(studentEntity.getLocation())
+                .cardId(studentEntity.getCardId())
+                .enteredDate(studentEntity.getEnteredDate())
                 .build();
     }
 }

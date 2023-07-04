@@ -55,10 +55,16 @@ public class AdminService {
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
 
-        if (!jwtService.isAdmin(token) || !jwtService.isTokenValid(token, UserConverter.toPrincipal(user))) {
+        var isTokenValid = tokenRepository.findByToken(token)
+                .map(t -> !t.isExpired() && !t.isRevoked())
+                .orElse(false);
+
+        if (!jwtService.isAdmin(token) || !isTokenValid || !jwtService.isTokenValid(token, UserConverter.toPrincipal(user))) {
             return "redirect:/auth/admin/login";
         }
+
         System.out.println("token valid: " + jwtService.isTokenValid(token, UserConverter.toPrincipal(user)));
+        System.out.println("token valid 1: " + isTokenValid);
         System.out.println("token admin: " + jwtService.isAdmin(token));
         System.out.println("token: " + token);
         return null;

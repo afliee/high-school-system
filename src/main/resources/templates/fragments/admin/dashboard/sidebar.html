@@ -43,6 +43,13 @@
                     </ul>
                 </li>
 
+                <li th:class="'sidebar-item ' + ${#strings.equals(active, 'classes') ? 'active' : ''}">
+                    <a th:href="@{/auth/admin/classes}" class='sidebar-link'>
+                        <i class="fa-solid fa-users-viewfinder"></i>
+                        <span>Class Management</span>
+                    </a>
+                </li>
+
                 <li class="sidebar-item  has-sub">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-collection-fill"></i>

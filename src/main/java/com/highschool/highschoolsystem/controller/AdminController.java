@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -63,5 +64,20 @@ public class AdminController {
         String redirect = adminService.requireAdminLogin(request);
 
         return redirect != null ? redirect : "pages/admin/classes";
+    }
+
+    @GetMapping("/classes/{classId}")
+    public String classDetails(
+            HttpServletRequest request,
+            @PathVariable String classId,
+            Model model
+    ) {
+        String redirect = adminService.requireAdminLogin(request);
+
+        if (redirect != null) {
+            return redirect;
+        }
+        model.addAttribute("classId", classId);
+        return "pages/admin/classDetails";
     }
 }

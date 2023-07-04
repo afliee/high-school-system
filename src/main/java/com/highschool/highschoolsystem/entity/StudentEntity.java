@@ -24,10 +24,13 @@ public class StudentEntity extends BaseEntity<String> {
     private String password;
     private String cardId;
     private String email;
+    private String avatar;
     private boolean gender;
     private String location;
     private String enteredDate;
     private String expiredDate;
+
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @ManyToOne(targetEntity = ClassEntity.class)

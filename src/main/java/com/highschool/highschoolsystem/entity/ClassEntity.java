@@ -17,7 +17,6 @@ import java.util.Collection;
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class ClassEntity extends BaseEntity<String> {
-    @Column(unique = true)
     private String name;
 
     private int present;
