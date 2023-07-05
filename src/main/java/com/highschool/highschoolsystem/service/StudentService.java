@@ -7,7 +7,6 @@ import com.highschool.highschoolsystem.entity.StudentEntity;
 import com.highschool.highschoolsystem.exception.NotFoundException;
 import com.highschool.highschoolsystem.repository.StudentRepository;
 import com.highschool.highschoolsystem.util.FileUploadUtils;
-import org.apache.tomcat.util.http.fileupload.FileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,13 +25,13 @@ public class StudentService {
         StudentEntity studentEntity = studentRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Student not found"));
 
-        String uploadDir = "src/main/resources/static/images/user-photos/";
+        String uploadDir = "/uploads/images/user-photos/";
         String fileName = studentEntity.getId() + ".jpg";
 
         studentEntity.setEmail(request.getEmail());
         studentEntity.setLocation(request.getLocation());
         studentEntity.setCardId(request.getCardId());
-        studentEntity.setAvatar("/images/user-photos/" + fileName);
+        studentEntity.setAvatar(uploadDir + fileName);
 
         studentRepository.save(studentEntity);
         try {

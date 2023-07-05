@@ -3,7 +3,7 @@ $(document).ready(function () {
     const CLASS_ID = $("#classId").val();
 
     fetchClassDetails(CLASS_ID, 0 , renderClassDetails);
-
+    registerUpdateStudentEvent();
 
     function fetchClassDetails(classId, page,  callback) {
         $.ajax({
@@ -145,6 +145,8 @@ $(document).ready(function () {
                 const email = modal.find('#mail')
                 const enterDate = modal.find('#enterDate');
                 const address = modal.find('#address');
+                const statement = modal.find('#__STATEMENT');
+
                 const fullName = modal.find('.fullname');
                 const username = modal.find('.username');
 
@@ -159,47 +161,12 @@ $(document).ready(function () {
                 email.val(res.email);
                 enterDate.val(new Date(res.enterDate).toLocaleDateString('en-GB'));
                 address.val(res.location);
+                statement.val(id);
 
                 modal.modal('show')
 
                 const btnUpdate = modal.find('.btn-update');
-
-                btnUpdate.click(function () {
-                    const phoneValue = phone.val();
-                    const cardIdValue = cardId.val();
-                    const emailValue = email.val();
-                    const addressValue = address.val();
-
-                //     get image file from input file
-                    const imageFile = avatarInput[0].files[0];
-                    const data = new FormData();
-                    data.append('phone', phoneValue);
-                    data.append('cardId', cardIdValue);
-                    data.append('email', emailValue);
-                    data.append('address', addressValue);
-                    data.append('avatar', imageFile);
-                    $.ajax({
-                        url: `/api/v1/student/${id}`,
-                        method: 'PUT',
-                        headers: {
-                            'Authorization': `Bearer ${TOKEN}`
-                        },
-                        enctype: 'multipart/form-data',
-                        data: data,
-                        processData: false,
-                        contentType: false,
-                        success: function (res) {
-                            console.log(res);
-                            // animate hide modal
-                            modal.fadeOut(500, function () {
-                                modal.modal('hide');
-                            })
-                        },
-                        error: function (err) {
-                            console.log(err);
-                        }
-                    })
-                })
+                console.log("button update",btnUpdate.length)
 
                 avatarInput.change(function () {
                     const imageFile = avatarInput[0].files[0];
@@ -209,6 +176,59 @@ $(document).ready(function () {
                     }
                     reader.readAsDataURL(imageFile);
                 })
+            })
+        })
+    }
+
+    function registerUpdateStudentEvent() {
+        const modal = $('#studentDetail');
+        const btnUpdate = modal.find('.btn-update');
+        btnUpdate.click(function () {
+            const avatarInput = modal.find('#avatar');
+            const phone = modal.find('#phone');
+            const cardId = modal.find('#cardId');
+            const email = modal.find('#mail')
+            const address = modal.find('#address');
+            const statement = modal.find('#__STATEMENT');
+
+            const id = statement.val();
+            const phoneValue = phone.val();
+            const cardIdValue = cardId.val();
+            const emailValue = email.val();
+            const addressValue = address.val();
+            console.log("avatar input: ",avatarInput[0].files[0])
+            //     get image file from input file
+            const imageFile = avatarInput[0].files[0];
+            // clear data form input file
+
+
+            const data = new FormData();
+            data.append('phone', phoneValue);
+            data.append('cardId', cardIdValue);
+            data.append('email', emailValue);
+            data.append('address', addressValue);
+            data.append('avatar', imageFile);
+            $.ajax({
+                url: `/api/v1/student/${id}`,
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${TOKEN}`
+                },
+                enctype: 'multipart/form-data',
+                data: data,
+                cache: false,
+                processData: false,
+                contentType: false,
+                success: function (res) {
+                    console.log(res);
+                    // animate hide modal
+                    modal.fadeOut(500, function () {
+                        modal.modal('hide');
+                    })
+                },
+                error: function (err) {
+                    console.log(err);
+                }
             })
         })
     }

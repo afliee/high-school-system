@@ -10,11 +10,9 @@ import java.nio.file.Paths;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class FileUploadUtils {
+    private static final String uploadDir = System.getProperty("user.dir") + "/src/main/uploads/images/user-photos/";
     public static void saveFile(String path, String fileName, MultipartFile file) throws Exception {
-        Path uploadPath = Paths.get(path);
-//        path = /static/images/user-photos/
-//        fileName = 1.jpg
-//        save file to /static/images/user-photos/1.jpg
+        Path uploadPath = Paths.get(uploadDir);
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
@@ -25,6 +23,7 @@ public class FileUploadUtils {
         } catch (Exception e) {
             throw new Exception("Could not save file: " + fileName, e);
         }
+
 
     }
 }
