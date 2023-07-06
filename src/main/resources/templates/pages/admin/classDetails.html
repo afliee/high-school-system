@@ -9,6 +9,7 @@
         <th:block th:insert="~{fragments/admin/class/navbar :: navbar}"/>
         <th:block th:insert="~{fragments/admin/class/student :: students}" />
         <th:block th:insert="~{fragments/admin/class/studentDetails :: studentDetail}"/>
+        <th:block th:insert="~{fragments/admin/class/addChairman :: addChairman}"/>
         <input type="hidden" name="classId" id="classId" th:value="${classId}">
     </div>
 </div>

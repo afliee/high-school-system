@@ -2,10 +2,10 @@ $(document).ready(function () {
     const TOKEN = getCookie("token") || localStorage.getItem("token");
     const CLASS_ID = $("#classId").val();
 
-    fetchClassDetails(CLASS_ID, 0 , renderClassDetails);
+    fetchClassDetails(CLASS_ID, 0, renderClassDetails);
     registerUpdateStudentEvent();
 
-    function fetchClassDetails(classId, page,  callback) {
+    function fetchClassDetails(classId, page, callback) {
         $.ajax({
             url: `/api/v1/class/get/${classId}?page=${page}`,
             method: 'GET',
@@ -39,9 +39,13 @@ $(document).ready(function () {
                                     <p class="fw-bold">Student Present</p>
                                     <p class="fw-bold">Created Date</p>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-6" class="class-info" data-id="${res.id}">
                                     <p>${res.id}</p>
-                                    <p>${res.chairman}</p>
+                                    <p>
+                                        ${
+                                        res.chairman ? res.chairman : `<button class="btn btn-outline-primary btn-add-chairman"><i class="bi bi-plus-lg"></i></button>`
+                                        }
+                                    </p>
                                     <p>${res.students.length}</p>
                                     <p>${new Date(res.createdDate).toLocaleDateString('en-GB')}</p>
                                 </div>
@@ -52,7 +56,7 @@ $(document).ready(function () {
             </div>
         `;
         info.html(html);
-
+        registerAddChairmanEvent();
         const students = $('.students');
         html = '';
 
@@ -68,20 +72,21 @@ $(document).ready(function () {
                         <button type="button" class="btn btn-primary btn-show" data-id="${student.id}" >View</button>
                     </td>
                     <td>
-                        <button class="btn btn-danger btn-delete" data-id="${student.id}">Delete</button>
+                        <button class="btn btn-danger btn-delete" data-id="${student.id}" data-class-id="${res.id}">Delete</button>
                     </td>
                 </tr>
             `
         })
         students.html(html);
         registerShowStudentEvent();
-
+        registerDeleteStudentEvent();
 
         let pagination = '';
-        const { totalPages, pageable } = res.studentPage;
+        const {totalPages, pageable} = res.studentPage;
         const currentPage = pageable.pageNumber;
         const prevPage = currentPage - 1 < 0 ? 0 : currentPage - 1;
         const nextPage = currentPage + 1 > totalPages ? totalPages : currentPage + 1;
+        localStorage.setItem('page', currentPage);
         console.log("prevPage", prevPage)
         console.log("nextPage", nextPage)
         pagination += `
@@ -166,7 +171,7 @@ $(document).ready(function () {
                 modal.modal('show')
 
                 const btnUpdate = modal.find('.btn-update');
-                console.log("button update",btnUpdate.length)
+                console.log("button update", btnUpdate.length)
 
                 avatarInput.change(function () {
                     const imageFile = avatarInput[0].files[0];
@@ -196,7 +201,7 @@ $(document).ready(function () {
             const cardIdValue = cardId.val();
             const emailValue = email.val();
             const addressValue = address.val();
-            console.log("avatar input: ",avatarInput[0].files[0])
+            console.log("avatar input: ", avatarInput[0].files[0])
             //     get image file from input file
             const imageFile = avatarInput[0].files[0];
             // clear data form input file
@@ -233,6 +238,42 @@ $(document).ready(function () {
         })
     }
 
+    function registerDeleteStudentEvent() {
+        const btnDeletes = $('.btn-delete');
+        btnDeletes.click(function () {
+            const studentId = $(this).data('id');
+            const classId = $(this).data('class-id');
+            console.log("student Id Delete", studentId)
+
+
+            $.ajax({
+                url: `/api/v1/class/delete/${classId}?studentId=${studentId}`,
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${TOKEN}`
+                },
+                success: function (res) {
+                    // get page form url
+                    fetchClassDetails(CLASS_ID, localStorage.getItem('page') || 1, renderClassDetails);
+                    Toastify({
+                        text: "Delete student successfully",
+                        duration: 3000,
+                        gravity: "top",
+                        position: 'right',
+                        backgroundColor: "#32CD32",
+                        stopOnFocus: true,
+                    })
+
+                    fetchClassDetails(CLASS_ID, localStorage.getItem('page') || 1, renderClassDetails);
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            })
+        });
+    }
+
+
     function fetchStudentDetails(id, callback) {
         $.ajax({
             url: `/api/v1/student/${id}`,
@@ -247,5 +288,123 @@ $(document).ready(function () {
                 console.log(err);
             }
         })
+    }
+
+    function registerAddChairmanEvent() {
+        const btnAddChairman = $('.btn-add-chairman');
+        const chairmanModal = $('#addChairman');
+
+        btnAddChairman.click(function () {
+            //     call get all student
+            $.ajax({
+                url: `/api/v1/teacher/all`,
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${TOKEN}`
+                },
+                success: function (res) {
+                    console.log(res)
+                    const chairmans = chairmanModal.find('.chairmans');
+
+                    chairmans.empty();
+                    const select = $('<select class="form-control" id="chairman"></select>');
+
+                    const defaultOption = $(`<option value="">Select chairman</option>`);
+                    select.append(defaultOption);
+
+                    res.forEach(function (chairman) {
+                        const option = $(`<option value="${chairman.id}">${chairman.fullName}</option>`);
+                        select.append(option);
+                    })
+
+                    chairmans.append(select);
+                    chairmanModal.modal('show');
+                }
+            });
+        });
+
+        const btnSubmit = chairmanModal.find('.btn-submit');
+        const searchInput = chairmanModal.find('#search');
+        searchInput.keyup(function () {
+            const value = $(this).val();
+            console.log("value", value)
+
+            $.ajax({
+                url: `/api/v1/teacher/search?q=${value}`,
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${TOKEN}`
+                },
+                success: function (res) {
+                    console.log(res)
+                    renderChairmans(chairmanModal, res)
+                },
+                error: function (err) {
+                    console.log(err)
+                }
+            })
+        });
+
+        btnSubmit.click(function () {
+            const optionSelected = chairmanModal.find('#chairman option:selected');
+            const chairmanId = optionSelected.val();
+            console.log("chairman id", chairmanId)
+
+            $.ajax({
+                url: '/api/v1/class/set-chairman',
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${TOKEN}`
+                },
+                data: {
+                    classId: CLASS_ID,
+                    teacherId: chairmanId
+                },
+                success: function (res) {
+                    console.log(res)
+                    chairmanModal.modal('hide');
+                    Toastify({
+                        text: "Add chairman successfully",
+                        duration: 3000,
+                        gravity: "top",
+                        position: 'right',
+                        backgroundColor: "#32CD32",
+                        stopOnFocus: true,
+                    }).showToast();
+                    fetchClassDetails(CLASS_ID, localStorage.getItem('page') || 1, renderClassDetails);
+                },
+                error: function (err) {
+                    console.log(err);
+                    const message = chairmanModal.find('#message');
+                    message.text(err.responseJSON.message);
+                    message.addClass('text-danger');
+                    Toastify({
+                        text: err.responseJSON.message,
+                        duration: 3000,
+                        gravity: "top",
+                        position: 'right',
+                        backgroundColor: "#FF0000",
+                        stopOnFocus: true,
+                    }).showToast();
+                }
+            })
+        });
+
+        function renderChairmans(chairManModal, res) {
+            const chairmans = chairmanModal.find('.chairmans');
+
+            chairmans.empty();
+            const select = $('<select class="form-control" id="chairman"></select>');
+
+            const defaultOption = $(`<option value="">Select chairman</option>`);
+            select.append(defaultOption);
+
+            res.forEach(function (chairman) {
+                const option = $(`<option value="${chairman.id}">${chairman.fullName}</option>`);
+                select.append(option);
+            })
+
+            chairmans.append(select);
+        }
     }
 })

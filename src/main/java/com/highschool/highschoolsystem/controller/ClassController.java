@@ -80,4 +80,10 @@ public class ClassController {
         classService.delete(id, studentId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PostMapping("/set-chairman")
+    public ResponseEntity<?> setChairman(@RequestParam String classId, @RequestParam String teacherId) {
+        classService.setChairman(classId, teacherId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

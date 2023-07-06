@@ -6,6 +6,7 @@ import com.highschool.highschoolsystem.service.TeacherService;
 import com.highschool.highschoolsystem.service.TeacherServiceImpl;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,6 @@ public class TeacherApiController {
 
     @GetMapping({"/", ""})
     public String index(HttpServletRequest request) {
-
         return "Teacher";
     }
 
@@ -48,6 +48,26 @@ public class TeacherApiController {
 
         return ResponseEntity.ok(
                 TeacherConverter.toResponse(teacherService.updateById(id, teacherResponse))
+        );
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllTeachers() {
+        return ResponseEntity.ok(
+                teacherService.findAllTeachers()
+        );
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> findByName(@RequestParam(name = "q", defaultValue = "") String query) {
+        if (query.isEmpty()) {
+            return ResponseEntity.ok(
+                    teacherService.findAllTeachers()
+            );
+        }
+
+        return ResponseEntity.ok(
+                teacherService.findByName(query)
         );
     }
 }

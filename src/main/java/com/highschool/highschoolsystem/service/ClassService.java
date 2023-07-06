@@ -44,6 +44,8 @@ public class ClassService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private TokenRepository tokenRepository;
+    @Autowired
+    private TeacherRepository teacherRepository;
 
     public ClassResponse save(AddClassRequest request) {
         try {
@@ -159,6 +161,24 @@ public class ClassService {
 
         classEntity.getStudents().removeIf(studentEntity -> studentEntity.getId().equals(studentId));
         classEntity.setPresent(classEntity.getPresent() - 1);
+        classRepository.save(classEntity);
+    }
+
+    public void setChairman(String classId, String teacherId) {
+        var classEntity = classRepository.findById(classId).orElseThrow(
+                () -> new NotFoundException("Class not found")
+        );
+
+        var isChairman = classRepository.findByChairmanId(teacherId).orElse(null);
+        if (isChairman != null && !isChairman.getId().equals(classId)) {
+            throw new RuntimeException("Teacher already chairman of other class");
+        }
+
+        var chairman = teacherRepository.findById(teacherId).orElseThrow(
+                () -> new NotFoundException("Teacher not found")
+        );
+
+        classEntity.setChairman(chairman);
         classRepository.save(classEntity);
     }
 }

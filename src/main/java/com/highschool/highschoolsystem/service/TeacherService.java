@@ -15,4 +15,6 @@ public interface TeacherService extends GeneralService<TeacherEntity> {
     TeacherEntity findById(String id) throws UserNotFoundException;
     void deleteById(String id);
     TeacherEntity updateById(String id, TeacherResponse teacher);
+    Iterable<TeacherResponse> findAllTeachers();
+    Iterable<TeacherResponse> findByName(String query);
 }

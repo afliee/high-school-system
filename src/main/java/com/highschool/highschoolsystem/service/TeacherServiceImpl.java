@@ -93,6 +93,30 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
+    public Iterable<TeacherResponse> findAllTeachers() {
+        var teachers =  teacherRepository.findAll().stream().map(teacher ->
+                TeacherResponse.builder()
+                        .id(teacher.getId())
+                        .fullName(teacher.getFullName())
+                        .build()
+        );
+//        return list to iterable
+//        filter attributes != null
+
+        return teachers.toList();
+    }
+
+    @Override
+    public Iterable<TeacherResponse> findByName(String query) {
+        return teacherRepository.findByFullNameContainingIgnoreCase(query).stream().map(teacher ->
+                TeacherResponse.builder()
+                        .id(teacher.getId())
+                        .fullName(teacher.getFullName())
+                        .build()
+        ).toList();
+    }
+
+    @Override
     public TeacherEntity add(TeacherEntity teacherEntity) {
         return null;
     }
