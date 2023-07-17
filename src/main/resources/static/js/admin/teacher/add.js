@@ -1,6 +1,7 @@
 $(document).ready(function () {
     const btnAdd = $(".btn-add");
     const btnUpdate = $(".btn-update");
+    const paginationDropdown = $("#departments");
 
     const filter = $("#filter").val();
     const page = $("#page").val();
@@ -17,7 +18,6 @@ $(document).ready(function () {
         const fullName = $("#fullName").val();
         const email = $("#email").val();
         const password = $("#password").val();
-        console.log($("#email"))
         const data = {
             username, fullName, email, password
         }
@@ -60,9 +60,12 @@ $(document).ready(function () {
         const salary = cardBody.find("#salary").val();
         const email = cardBody.find("#mail").val();
         const address = cardBody.find("#address").val();
+        const department = cardBody.find("#departments option:selected") || null;
+        console.log(department)
+        const departmentId = department ? department.val() : null;
 
         const data = {
-            id, name, fullName, phone, cardId, birthday, salary, email, address
+            id, name, fullName, phone, cardId, birthday, salary, email, address, departmentId
         };
 
         console.log(data)
@@ -211,7 +214,7 @@ $(document).ready(function () {
                 const __STATEMENT = cardBody.find("#__STATEMENT");
 
                 fullName.text(teacher.fullName);
-                username.text(`#${teacher.name}`);
+                username.text(`${teacher.name}`);
                 avatar.attr('src', teacher.avatar || 'https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp');
                 phone.val(teacher.phone || '');
                 cardId.val(teacher.cardId || '');
@@ -219,6 +222,11 @@ $(document).ready(function () {
                 salary.val(teacher.salary || '');
                 email.val(teacher.email || '');
                 address.val(teacher.address || '');
+                if (!teacher?.departmentName) {
+                    fetchAllDepartment(false, false);
+                } else {
+                    fetchAllDepartment(teacher.departmentName, teacher.departmentId)
+                }
                 __STATEMENT.val(id);
                 console.log(teacher);
             },
@@ -247,6 +255,117 @@ $(document).ready(function () {
             error: function (error) {
                 console.log(error);
             }
+        })
+    }
+
+    /**
+     * @param {string} departmentName - name of department
+     * @param {string} departmentId - id of department
+     * @param {DeparmentResponse[]} data - total item
+     * @returns {string} - html of pagination
+     */
+    function generateDepartmentOption(departmentName, departmentId ,data) {
+        let html = '';
+
+        if (departmentName && departmentId) {
+            html += `
+                <option value="${departmentId}" class="fw-bold mt-3">${departmentName}</option>
+            `
+        } else {
+            html += `
+                <option value="">Choose department</option>
+            `
+        }
+
+        data.forEach((item, index) => {
+            if (item.id === departmentId) return;
+            html += `
+                <option value="${item.id}">${item.name}</option>
+            `
+        });
+        return html;
+    }
+
+    // function generatePaginationOptions(currentPage, totalPages) {
+    //     const MAX_PAGE = 5;
+    //     let pagination = '';
+    //
+    //     //  if totalPage > MAX_PAGE => show MAX_PAGE
+    //     // else the distance between startPage and endPage is MAX_PAGE
+    //     let startPage = 1;
+    //     let endPage = totalPages;
+    //
+    //     if (totalPages > MAX_PAGE) {
+    //         const distance = Math.floor(MAX_PAGE / 2);
+    //         startPage = currentPage - distance;
+    //         endPage = currentPage + distance;
+    //
+    //         if (startPage < 1) {
+    //             endPage += Math.abs(startPage) + 1;
+    //             startPage = 1;
+    //         }
+    //
+    //         if (endPage > totalPages) {
+    //             startPage -= endPage - totalPages;
+    //             endPage = totalPages;
+    //         }
+    //     }
+    //
+    //     console.log("startPage", startPage);
+    //     console.log("endPage", endPage);
+    //
+    //     for (let i = startPage; i <= endPage; i++) {
+    //         pagination += `
+    //             <li class="page-item ${currentPage === i ? 'active' : ''}">
+    //                 <span class="page-link">${i}</span>
+    //             </li>
+    //         `
+    //     }
+    //
+    //     return pagination;
+    // }
+
+    function fetchAllDepartment(departmentName, departmentId , page = 0) {
+        const MAX_SIZE = 5;
+        $.ajax({
+            url: `/api/v1/department/all?size=${MAX_SIZE}&page=${page}`,
+            type: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            success: function (data) {
+                const {totalPages, pageable, content, number : currentPage} = data;
+                const pageSize = pageable.pageSize;
+                console.log(data)
+                const pagination = generatePaginationOptions(currentPage + 1, totalPages);
+                const departmentOptions = generateDepartmentOption(departmentName, departmentId, content);
+
+                paginationDropdown.html(departmentOptions);
+                $('.department-pagination').html(pagination);
+                registerPageDepartmentEvent();
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        })
+    }
+
+    function registerPageDepartmentEvent() {
+        const pageItems = $(".department-pagination").find(".page-item");
+        pageItems.each(function (index, pageItem) {
+            $(pageItem).on('click', function (e) {
+                console.log($(this))
+                e.preventDefault();
+                let page = $(this).find(".page-link").text();
+                console.log(page)
+                const currentSelected = $('#departments').find(":selected");
+                const departmentId = currentSelected.val();
+                const departmentName = currentSelected.text();
+                if (page === '>') {
+                    page = parseInt($(this).prev().find(".page-link").text()) + 1;
+                }
+                fetchAllDepartment(departmentName, departmentId, page - 1);
+            })
         })
     }
 })

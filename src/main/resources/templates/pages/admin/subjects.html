@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:insert="~{fragments/heading/dashboardHeading :: dashboardHeading(title = 'Subjects')}"/>
+<body>
+<div class="container-fluid">
+  <th:block th:insert="~{fragments/admin/dashboard/sidebar :: sidebar(active = 'subjects')}"/>
+  <div id="main">
+    <th:block th:insert="~{fragments/admin/dashboard/navbar :: navbar}"/>
+    <th:block th:insert="~{/fragments/admin/subject/navbar :: navbar(isDetail = false)}"/>
+    <th:block th:insert="~{fragments/admin/subject/content :: content}" />
+    <th:block th:insert="~{fragments/admin/subject/modalFilter :: modalFilter}"/>
+  </div>
+</div>
+
+<th:block th:insert="~{fragments/script/admin/dashboardScript :: dashboardScript}"/>
+<th:block th:insert="~{fragments/script/admin/subject/subjectScript :: subjectScript}"/>
+</body>
+</html>

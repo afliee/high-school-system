@@ -1,0 +1,14 @@
+.department {
+    /*convert 125px to rem*/
+    min-height: 7.8125rem;
+
+}
+
+.subjects .badge {
+    margin-left: 0.625rem;
+}
+
+.subjects .badge:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}

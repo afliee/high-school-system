@@ -1,0 +1,32 @@
+<!-- Modal -->
+<div th:fragment="addModal" class="modal fade" id="addDepartment" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modelTitleId">Create new Department</h4>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form">
+                    <div class="form-group has-icon-left">
+                        <label for="name">Name</label>
+                        <div class="position-relative mt-3">
+                            <input type="text" class="form-control"
+                                   placeholder="Type Department's name" id="name" required name="name">
+                            <div class="form-control-icon">
+                                <i class="fa-regular fa-folder-open"></i>
+                            </div>
+                        </div>
+                        <small class="text-danger" id="name-error"></small>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary py-2 btn-save">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

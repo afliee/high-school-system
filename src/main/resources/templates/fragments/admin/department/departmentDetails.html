@@ -1,0 +1,31 @@
+<div th:fragment="departmentDetails" class="row mt-3">
+    <div class="col-12">
+        <div class="form-group w-100 row">
+            <label for="department-name"></label>
+            <div class="col-3"></div>
+            <input type="text" class="form-control col text-center text-center p-2 text-title"
+                   style="font-size: 2rem; border: none; outline: none" id="department-name" name="department-name"
+                   placeholder="Department Name">
+            <div class="col-3"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 subjects"></div>
+        <div class="col-12">
+            <div class="card w-100 mt-3">
+                <div class="card-header">
+                    <h3 class="card-title">Department Description Review</h3>
+                </div>
+                <div class="card-body department-content">
+<!--                    will be rendered by js-->
+                </div>
+            </div>
+            <div class="col-12 department-editor">
+                <label for="editor"></label>
+                <form action="" onsubmit="return false;" class="form">
+                    <textarea class="form-control " id="editor" name="editor" rows="10" cols="80"></textarea>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

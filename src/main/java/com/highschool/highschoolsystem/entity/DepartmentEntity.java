@@ -1,5 +1,6 @@
 package com.highschool.highschoolsystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDate;
 import java.util.Collection;
 
 @Entity
@@ -22,11 +24,18 @@ public class DepartmentEntity extends BaseEntity<String> {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    private String foundedDate;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate foundedDate;
 
     @OneToMany(
             mappedBy = "department",
             targetEntity = TeacherEntity.class
     )
     private Collection<TeacherEntity> teachers;
+
+    @OneToMany(
+            mappedBy = "department",
+            targetEntity = SubjectEntity.class
+    )
+    private Collection<SubjectEntity> subjects;
 }

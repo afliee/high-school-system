@@ -5,10 +5,7 @@ import com.highschool.highschoolsystem.dto.response.TeacherResponse;
 import com.highschool.highschoolsystem.entity.TeacherEntity;
 import com.highschool.highschoolsystem.exception.TokenInvalidException;
 import com.highschool.highschoolsystem.exception.UserNotFoundException;
-import com.highschool.highschoolsystem.repository.DepartmentRepository;
-import com.highschool.highschoolsystem.repository.TeacherRepository;
-import com.highschool.highschoolsystem.repository.TokenRepository;
-import com.highschool.highschoolsystem.repository.UserRepository;
+import com.highschool.highschoolsystem.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +30,12 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Autowired
     private DepartmentRepository departmentRepository;
+
+    @Autowired
+    private SubjectRepository subjectRepository;
+
+    @Autowired
+    private ClassRepository classRepository;
 
     private final PasswordEncoder passwordEncoder;
     @Override
@@ -59,6 +62,16 @@ public class TeacherServiceImpl implements TeacherService {
                 () -> new UserNotFoundException("User not found")
         ).getId();
 
+        var teacher = teacherRepository.findById(id).orElseThrow(
+                () -> new UserNotFoundException("User not found")
+        );
+
+        classRepository.findByChairmanId(teacher.getId()).ifPresent(aClass -> {
+            aClass.setChairman(null);
+            classRepository.save(aClass);
+        });
+
+        subjectRepository.deleteAllByTeacher(teacher);
         tokenRepository.deleteByUserId(userId).orElse(null);
         userRepository.deleteByUserId(id);
         teacherRepository.deleteById(id);

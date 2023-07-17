@@ -1,4 +1,4 @@
-package com.highschool.highschoolsystem.controller;
+package com.highschool.highschoolsystem.controller.api;
 
 import com.highschool.highschoolsystem.dto.request.AddClassRequest;
 import com.highschool.highschoolsystem.entity.ClassEntity;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/class") // http://localhost:8080/api/v1/classes
 @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
-public class ClassController {
+public class ClassApiController {
     @Autowired
     private ClassService classService;
 

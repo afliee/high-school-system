@@ -82,7 +82,8 @@
     display: block;
 }
 .sidebar-wrapper .menu .sidebar-item.active .sidebar-link {
-    background-color: #435ebe;
+    /*background-color: #435ebe;*/
+    background-color: var(--color-primary);
 }
 .sidebar-wrapper .menu .sidebar-item.active .sidebar-link span {
     color: #fff;
@@ -109,7 +110,7 @@
     position: relative;
 }
 .sidebar-wrapper .menu .submenu .submenu-item.active > a {
-    color: #435ebe;
+    color: var(--color-primary-darker);
     font-weight: 700;
 }
 .sidebar-wrapper .menu .submenu .submenu-item a {

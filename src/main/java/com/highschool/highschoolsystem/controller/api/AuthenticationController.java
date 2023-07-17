@@ -1,4 +1,4 @@
-package com.highschool.highschoolsystem.controller;
+package com.highschool.highschoolsystem.controller.api;
 
 import com.highschool.highschoolsystem.auth.*;
 import com.highschool.highschoolsystem.service.AuthenticationService;

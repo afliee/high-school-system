@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:insert="~{fragments/heading/dashboardHeading :: dashboardHeading(title = 'Departments')}"/>
+<body>
+<div class="container-fluid">
+  <th:block th:insert="~{fragments/admin/dashboard/sidebar :: sidebar(active = 'departments')}"/>
+  <div id="main">
+    <th:block th:insert="~{fragments/admin/dashboard/navbar :: navbar}"/>
+    <th:block th:insert="~{fragments/admin/department/departmentDetailNavbar :: navbar(breadcumbs = ${breadCrumbs}, isActive = false)}"/>
+    <th:block th:insert="~{fragments/admin/department/subjects/content :: content(department = ${department})}"/>
+    <input type="hidden" name="departmentId" id="departmentId" th:value="${departmentId}">
+  </div>
+</div>
+
+<th:block th:insert="~{fragments/script/admin/dashboardScript :: dashboardScript}"/>
+<th:block th:insert="~{fragments/script/admin/department/addSubjectScript :: addSubjectScript}"/>
+<!--<th:block th:insert="~{fragments/script/admin/department/departmentScript :: departmentScript}"/>-->
+</body>
+</html>

@@ -7,7 +7,7 @@
 * {
     margin: 0;
     padding: 0;
-    font: inherit;
+    /*font: inherit;*/
 }
 html:focus-within {
     scroll-behavior: smooth;
@@ -40,6 +40,21 @@ body {
     --bs-body-font-family: 'Poppins', sans-serif;
 }
 
+.btn-primary {
+    --bs-btn-bg: var(--color-primary);
+    --bs-btn-hover-bg: var(--color-primary-hover);
+    --bs-btn-border-color: var(--color-primary);
+    --bs-btn-border-color-hover: var(--color-primary-hover);
+    --bs-btn-color: #fff;
+    --bs-btn-color-hover: #fff;
+}
+
+.btn-outline-primary {
+    --bs-btn-border-color: var(--color-primary);
+    --bs-btn-border-color-hover: var(--color-primary-hover);
+    --bs-btn-color: var(--color-primary);
+    --bs-btn-hover-bg: var(--color-primary-hover);
+}
 .text-title {
     font-size: 2rem;
     font-weight: 500;

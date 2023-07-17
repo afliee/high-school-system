@@ -4,12 +4,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Collection;
 
 @Entity
@@ -19,10 +19,15 @@ import java.util.Collection;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
+@EqualsAndHashCode(exclude = {"startTime", "endTime"}, callSuper = false)
 public class ShiftEntity extends BaseEntity<String> {
     private String name;
-    private String startTime;
-    private String endTime;
+
+    @DateTimeFormat(pattern = "HH:mm")
+    private LocalTime startTime;
+
+    @DateTimeFormat(pattern = "HH:mm")
+    private LocalTime endTime;
 
     @OneToMany(
             mappedBy = "shift",

@@ -1,0 +1,12 @@
+<th:block th:fragment="departmentScript">
+  <script th:src="@{/js/admin/department/index.js}"></script>
+  <script th:src="@{/js/admin/department/departmentDetails.js}"></script>
+  <script th:src="@{/webjars/ckeditor/4.19.0/full/styles.js}"></script>
+  <script th:src="@{/webjars/ckeditor/4.19.0/full/adapters/jquery.js}"></script>
+  <script>
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+  </script>
+</th:block>

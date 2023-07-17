@@ -64,7 +64,7 @@ $(document).ready(function () {
         res.studentPage.content.forEach(function (student) {
             html += `
                 <tr>
-                    <td>${student.id}</td>
+                    <td>${student.id.substring(0, 10)}...</td>
                     <td>${student.name}</td>
                     <td>${student.fullName}</td>
                     <td>${student.email}</td>

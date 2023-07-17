@@ -1,6 +1,9 @@
 package com.highschool.highschoolsystem.controller;
 
 import com.highschool.highschoolsystem.service.AdminService;
+import com.highschool.highschoolsystem.service.DepartmentService;
+import com.highschool.highschoolsystem.service.SubjectService;
+import com.highschool.highschoolsystem.util.BreadCrumb;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,12 +15,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/auth/admin")
 @Tag(name = "Admin", description = "Admin views for CRUD")
 public class AdminController {
     @Autowired
     private AdminService adminService;
+    @Autowired
+    private DepartmentService departmentService;
+    @Autowired
+    private SubjectService subjectService;
 
     @GetMapping({"/", "", "/dashboard"})
     public String index(
@@ -79,5 +88,81 @@ public class AdminController {
         }
         model.addAttribute("classId", classId);
         return "pages/admin/classDetails";
+    }
+
+    @GetMapping("/subjects")
+    public String subjects(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Model model
+    ) {
+        String redirect = adminService.requireAdminLogin(request);
+
+        List<BreadCrumb> breadCrumbs = adminService.getSubjectBreadCrumbs("");
+
+        model.addAttribute("breadCrumbs", breadCrumbs);
+
+        return redirect != null ? redirect : "pages/admin/subjects";
+    }
+
+    @GetMapping("/subjects/add")
+    public String addSubject(
+            @RequestParam(name = "departmentId", defaultValue = "") String departmentId,
+            HttpServletRequest request,
+            Model model
+    ) {
+        String redirect = adminService.requireAdminLogin(request);
+
+        List<BreadCrumb> breadCrumbs = adminService.getDepartmentBreadCrumbs(departmentId);
+
+        var department = departmentService.findById(departmentId);
+
+        model.addAttribute("departmentId", departmentId);
+        model.addAttribute("breadCrumbs", breadCrumbs);
+        model.addAttribute("department", department);
+
+        return redirect != null ? redirect : "pages/admin/addSubject";
+    }
+
+    @GetMapping("/subjects/{subjectId}")
+    public String subjectDetail(
+            @PathVariable String subjectId,
+            HttpServletRequest request,
+            Model model
+    ) {
+        String redirect = adminService.requireAdminLogin(request);
+        var subject = subjectService.findById(subjectId);
+        var department = departmentService.findById(subject.getDepartmentDetail().getId());
+
+        List<BreadCrumb> breadCrumbs = adminService.getSubjectBreadCrumbs(subjectId);
+
+        model.addAttribute("breadCrumbs", breadCrumbs);
+        model.addAttribute("subjectId", subjectId);
+        model.addAttribute("department", department);
+
+        return redirect != null ? redirect : "pages/admin/subjectDetails";
+    }
+
+    @GetMapping("/department")
+    public String department(
+            HttpServletRequest request
+    ) {
+        String redirect = adminService.requireAdminLogin(request);
+
+        return redirect != null ? redirect : "pages/admin/department";
+    }
+
+    @GetMapping("/department/{departmentId}")
+    public String departmentDetails(
+            @PathVariable String departmentId,
+            HttpServletRequest request,
+            Model model
+    ) {
+        List<BreadCrumb> breadCrumbs = adminService.getDepartmentBreadCrumbs(departmentId);
+        model.addAttribute("breadCrumbs", breadCrumbs);
+        model.addAttribute("departmentId", departmentId);
+
+        String redirect = adminService.requireAdminLogin(request);
+        return redirect != null ? redirect : "pages/admin/departmentDetails";
     }
 }

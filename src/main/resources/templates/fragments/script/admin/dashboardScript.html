@@ -19,4 +19,21 @@
         }
     </script>
     <script th:src="@{/js/vendors/toastify/toastify.js}"></script>
+    <script th:src="@{/vendors/wow/wow.min.js}"></script>
+    <script th:src="@{/vendors/animsition/animsition.min.js}"></script>
+    <script th:src="@{/vendors/select2/select2.min.js}"></script>
+    <script !src="">
+        try {
+
+            $(".js-select2").each(function () {
+                $(this).select2({
+                    minimumResultsForSearch: 20,
+                    dropdownParent: $(this).next('.dropDownSelect2')
+                });
+            });
+
+        } catch (error) {
+            console.log(error);
+        }
+    </script>
 </th:block>

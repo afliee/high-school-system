@@ -19,7 +19,8 @@
     border: 1px solid #e6e6e6;
 }
 .pagination .page-item.active a, .pagination .page-item.active span {
-    background: #4ba1fa;
+    /*background: #4ba1fa;*/
+    background: var(--color-primary-darker);
     color: #fff;
     border: 1px solid transparent;
 }

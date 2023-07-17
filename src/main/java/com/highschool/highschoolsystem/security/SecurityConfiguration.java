@@ -33,7 +33,9 @@ public class SecurityConfiguration {
             "/student",
             "/forgot-password",
             "/auth/admin/**",
+            "/error/**",
             "/webjars/**",
+            "/vendors/**",
             "/css/**",
             "/js/**",
             "/images/**",
@@ -69,6 +71,9 @@ public class SecurityConfiguration {
                                     )
                                     .anyRequest().authenticated();
                         }
+                )
+                .exceptionHandling(exception -> exception
+                        .accessDeniedPage("/error/403")
                 )
                 .authenticationProvider(authenticationProvider)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -8,12 +8,16 @@ import com.highschool.highschoolsystem.exception.UserNotFoundException;
 import com.highschool.highschoolsystem.repository.TeacherRepository;
 import com.highschool.highschoolsystem.repository.TokenRepository;
 import com.highschool.highschoolsystem.repository.UserRepository;
+import com.highschool.highschoolsystem.util.BreadCrumb;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class AdminService {
@@ -102,5 +106,60 @@ public class AdminService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public List<BreadCrumb> getDepartmentBreadCrumbs(String departmentId) {
+        return List.of(
+                BreadCrumb.builder()
+                        .name("Dashboard")
+                        .url("/auth/admin")
+                        .isActive(false)
+                        .build(),
+                BreadCrumb.builder()
+                        .name("Department")
+                        .url("/auth/admin/department")
+                        .isActive(false)
+                        .build(),
+                BreadCrumb.builder()
+                        .name(departmentId)
+                        .url("/auth/admin/department/" + departmentId)
+                        .isActive(true)
+                        .build()
+        );
+    }
+
+    public List<BreadCrumb> getSubjectBreadCrumbs(String s) {
+        if (s.isEmpty()) {
+            return List.of(
+                    BreadCrumb.builder()
+                            .name("Dashboard")
+                            .url("/auth/admin")
+                            .isActive(false)
+                            .build(),
+                    BreadCrumb.builder()
+                            .name("Subject")
+                            .url("/auth/admin/subjects")
+                            .isActive(true)
+                            .build()
+            );
+        } else {
+            return List.of(
+                    BreadCrumb.builder()
+                            .name("Dashboard")
+                            .url("/auth/admin")
+                            .isActive(false)
+                            .build(),
+                    BreadCrumb.builder()
+                            .name("Subject")
+                            .url("/auth/admin/subjects")
+                            .isActive(false)
+                            .build(),
+                    BreadCrumb.builder()
+                            .name(s)
+                            .url("/auth/admin/subjects/" + s)
+                            .isActive(true)
+                            .build()
+            );
+        }
     }
 }

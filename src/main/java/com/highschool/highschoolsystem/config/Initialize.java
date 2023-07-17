@@ -92,7 +92,7 @@ public class Initialize implements ApplicationListener<ApplicationReadyEvent> {
                 DepartmentEntity.builder()
                         .name("Computer Science")
                         .description("Computer Science Department")
-                        .foundedDate("2021-09-01")
+                        .foundedDate(LocalDate.parse("2021-09-01", formatter))
                         .build()
         );
 
@@ -100,7 +100,7 @@ public class Initialize implements ApplicationListener<ApplicationReadyEvent> {
                 DepartmentEntity.builder()
                         .name("Mathematics")
                         .description("Mathematics Department")
-                        .foundedDate("2021-09-01")
+                        .foundedDate(LocalDate.parse("2021-09-01", formatter))
                         .build()
         );
 
@@ -108,7 +108,7 @@ public class Initialize implements ApplicationListener<ApplicationReadyEvent> {
                 DepartmentEntity.builder()
                         .name("Physics")
                         .description("Physics Department")
-                        .foundedDate("2021-09-01")
+                        .foundedDate(LocalDate.parse("2021-09-01", formatter))
                         .build()
         );
 
@@ -116,7 +116,7 @@ public class Initialize implements ApplicationListener<ApplicationReadyEvent> {
                 DepartmentEntity.builder()
                         .name("Chemistry")
                         .description("Chemistry Department")
-                        .foundedDate("2021-09-01")
+                        .foundedDate(LocalDate.parse("2021-09-01", formatter))
                         .build()
         );
 
@@ -129,8 +129,8 @@ public class Initialize implements ApplicationListener<ApplicationReadyEvent> {
         weeks.add(
                 WeekEntity.builder()
                         .name("First Week")
-                        .startDate("2021-09-01")
-                        .endDate("2021-09-07")
+                        .startDate(LocalDate.parse("2021-09-01", formatter))
+                        .endDate(LocalDate.parse("2021-09-07", formatter))
                         .weekIndex(1)
                         .semester(semesters.get(0))
                         .build()
@@ -138,8 +138,8 @@ public class Initialize implements ApplicationListener<ApplicationReadyEvent> {
         weeks.add(
                 WeekEntity.builder()
                         .name("Second Week")
-                        .startDate("2021-09-08")
-                        .endDate("2021-09-14")
+                        .startDate(LocalDate.parse("2021-09-08", formatter))
+                        .endDate(LocalDate.parse("2021-09-14", formatter))
                         .weekIndex(2)
                         .semester(semesters.get(0))
                         .build()
@@ -147,8 +147,8 @@ public class Initialize implements ApplicationListener<ApplicationReadyEvent> {
         weeks.add(
                 WeekEntity.builder()
                         .name("Third Week")
-                        .startDate("2021-09-15")
-                        .endDate("2021-09-21")
+                        .startDate(LocalDate.parse("2021-09-15", formatter))
+                        .endDate(LocalDate.parse("2021-09-21", formatter))
                         .weekIndex(3)
                         .semester(semesters.get(1))
                         .build()
@@ -156,8 +156,8 @@ public class Initialize implements ApplicationListener<ApplicationReadyEvent> {
         weeks.add(
                 WeekEntity.builder()
                         .name("Fourth Week")
-                        .startDate("2021-09-22")
-                        .endDate("2021-09-28")
+                        .startDate(LocalDate.parse("2021-09-22", formatter))
+                        .endDate(LocalDate.parse("2021-09-28", formatter))
                         .weekIndex(4)
                         .build()
         );

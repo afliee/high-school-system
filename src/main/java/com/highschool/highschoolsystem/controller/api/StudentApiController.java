@@ -1,4 +1,4 @@
-package com.highschool.highschoolsystem.controller;
+package com.highschool.highschoolsystem.controller.api;
 
 import com.highschool.highschoolsystem.dto.request.UpdateStudentRequest;
 import com.highschool.highschoolsystem.service.StudentService;
