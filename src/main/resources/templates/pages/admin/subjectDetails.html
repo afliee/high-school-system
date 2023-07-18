@@ -9,11 +9,11 @@
         <th:block th:insert="~{fragments/admin/subject/navbar :: navbar(breadcumbs = ${breadCrumbs}, isDetail = true)}"/>
         <th:block th:insert="~{fragments/admin/subject/calendar :: calendar}" />
         <input type="hidden" name="subjectId" id="subjectId" th:value="${subjectId}">
-        <input type="hidden" name="semesterId" id="semesterId" th:value="${department.getId()}">
+        <input type="hidden" name="semesterId" id="semesterId" th:value="${semester.getId()}">
     </div>
 </div>
 
 <th:block th:insert="~{fragments/script/admin/dashboardScript :: dashboardScript}"/>
-<th:block th:insert="~{fragments/script/admin/subject/subjectScript :: subjectScript}"/>
+<th:block th:insert="~{fragments/script/admin/subject/subjectDetailScript :: subjectDetailScript}"/>
 </body>
 </html>

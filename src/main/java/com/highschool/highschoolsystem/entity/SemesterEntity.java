@@ -8,6 +8,7 @@ import jakarta.persistence.Table;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Collection;
 
@@ -21,7 +22,7 @@ import java.util.Collection;
 @EntityListeners(AuditingEntityListener.class)
 @EqualsAndHashCode(exclude = {"weeks", "classes", "schedules"}, callSuper = false)
 @ToString(exclude = {"weeks", "classes", "schedules"})
-public class SemesterEntity extends BaseEntity<String> {
+public class SemesterEntity extends BaseEntity<String> implements Serializable {
     private String name;
 
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")

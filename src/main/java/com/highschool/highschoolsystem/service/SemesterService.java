@@ -4,11 +4,13 @@ import com.highschool.highschoolsystem.converter.SemesterConverter;
 import com.highschool.highschoolsystem.dto.response.SemesterResponse;
 import com.highschool.highschoolsystem.entity.SemesterEntity;
 import com.highschool.highschoolsystem.entity.WeekEntity;
+import com.highschool.highschoolsystem.exception.NotFoundException;
 import com.highschool.highschoolsystem.repository.SemesterRepository;
 import com.highschool.highschoolsystem.repository.WeekRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,5 +57,18 @@ public class SemesterService {
 
     public List<SemesterResponse> findAll() {
         return semesterRepository.findAllByOrderByStartDateDesc().stream().map(SemesterConverter::toResponse).toList();
+    }
+
+    public SemesterResponse findCurrentSemester() {
+        var currentDay = LocalDate.now();
+
+        var semester = semesterRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqual(currentDay, currentDay);
+
+        if (semester.isEmpty()) {
+            throw new NotFoundException("Semester not found");
+        }
+
+        return SemesterConverter.toResponse(semester.get());
+
     }
 }

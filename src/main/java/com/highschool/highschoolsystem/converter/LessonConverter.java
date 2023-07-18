@@ -7,6 +7,7 @@ import org.apache.commons.text.CaseUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 public class LessonConverter {
@@ -27,18 +28,24 @@ public class LessonConverter {
         return lessons.stream().map(lesson -> toResponse(lesson, attrs)).toList();
     }
 
-    public static LessonResponse toResponse(LessonEntity lesson, String[] methodNames) {
-        List<String> names = List.of(methodNames);
-        List<Method> methods = List.of(lesson.getClass().getMethods());
+    public static LessonResponse toResponse(LessonEntity lesson, String[] attNames) {
+
+        List<String> names = List.of(attNames);
+
+        List<Field> fields = new ArrayList<>(List.of(lesson.getClass().getDeclaredFields()));
+
+        fields.addAll(List.of(lesson.getClass().getSuperclass().getDeclaredFields()));
+
         LessonResponse response = new LessonResponse();
-        Class<?> responseClass = response.getClass();
-        for (var method : methods) {
-            if (names.contains(method.getName())) {
+
+        for (Field field : fields) {
+            if (names.contains(field.getName())) {
                 try {
-//                    String methodConverted = ConverterUtils.convertMethodName();
+                    String fieldName = field.getName();
 
-                    Method rootMethod = lesson.getClass().getMethod(method.getName());
+                    String methodName = "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
 
+                    Method rootMethod = lesson.getClass().getMethod(methodName);
                     Object value = rootMethod.invoke(lesson);
 
                     if (value == null) {
@@ -46,17 +53,17 @@ public class LessonConverter {
                     }
 
                     String className = value.getClass().getSimpleName();
-
                     value = convertClassName(className, value);
-                    String fieldName = CaseUtils.toCamelCase(method.getName().substring(3).toLowerCase(), false, ' ');
-                    Field field = responseClass.getDeclaredField(fieldName);
-                    field.setAccessible(true);
-                    field.set(response, value);
+
+                    Field responseField = response.getClass().getDeclaredField(fieldName);
+                    responseField.setAccessible(true);
+                    responseField.set(response, value);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
+
         return response;
     }
 

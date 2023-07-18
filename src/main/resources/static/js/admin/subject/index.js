@@ -4,7 +4,7 @@ $(document).ready(function () {
 
     const subjectsTemplate = $("#subjects");
     const paginationTemplate = $("#pagination");
-    const selectDepartment = $("#select_department");
+    const selectDepartment = $(".select_department");
     const searchModal = $("#advancedSearch");
 
 //     ========== CALL FUNCTION ==========
@@ -58,6 +58,9 @@ $(document).ready(function () {
             headers: {
                 'Authorization': `Bearer ${TOKEN}`
             },
+            beforeSend: function () {
+                $(".card-loaders").removeClass('d-none');
+            },
             success: function (data) {
                 renderDepartmentOptions(data);
             },
@@ -107,6 +110,9 @@ $(document).ready(function () {
             `;
         })
 
+        $('.card-loaders').fadeOut(300, function () {
+            $(this).addClass('d-none');
+        });
         subjectsTemplate.fadeOut(300, function () {
             subjectsTemplate.html(html);
             registerSubjectClicked();
@@ -145,7 +151,7 @@ $(document).ready(function () {
 //     ========== EVENT ==========
 
     function registerSelectDepartmentEvent() {
-        const jsSelect2 = $(".js-select2");
+        const jsSelect2 = $(".js-select2.select_department");
 
         jsSelect2.off("change"); // clear previous event register
 
@@ -164,6 +170,7 @@ $(document).ready(function () {
             }
         });
     }
+
     function registerSearchEvent() {
         const btnSearch = searchModal.find('.btn-search');
         btnSearch.on('click', function (e) {
@@ -182,7 +189,7 @@ $(document).ready(function () {
             filter ? getSubjects({filter: filter}) : getSubjects({});
             searchModal.modal('hide');
 
-        //     clear search value
+            //     clear search value
             subjectName.val('');
             teacherName.val('');
         })

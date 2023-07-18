@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -18,4 +20,6 @@ public class LessonResponse {
     private ShiftResponse shift;
     private boolean isAbsent;
     private WeekResponse week;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
 }

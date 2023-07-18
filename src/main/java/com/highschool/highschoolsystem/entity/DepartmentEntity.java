@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Collection;
 
@@ -18,7 +19,7 @@ import java.util.Collection;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class DepartmentEntity extends BaseEntity<String> {
+public class DepartmentEntity extends BaseEntity<String> implements Serializable {
     private String name;
 
     @Column(columnDefinition = "TEXT")

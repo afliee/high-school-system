@@ -2,6 +2,7 @@ package com.highschool.highschoolsystem.controller;
 
 import com.highschool.highschoolsystem.service.AdminService;
 import com.highschool.highschoolsystem.service.DepartmentService;
+import com.highschool.highschoolsystem.service.SemesterService;
 import com.highschool.highschoolsystem.service.SubjectService;
 import com.highschool.highschoolsystem.util.BreadCrumb;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,17 +17,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 @Controller
 @RequestMapping("/auth/admin")
 @Tag(name = "Admin", description = "Admin views for CRUD")
 public class AdminController {
+    Logger logger = Logger.getLogger(AdminController.class.getName());
+
     @Autowired
     private AdminService adminService;
     @Autowired
     private DepartmentService departmentService;
     @Autowired
     private SubjectService subjectService;
+    @Autowired
+    private SemesterService semesterService;
 
     @GetMapping({"/", "", "/dashboard"})
     public String index(
@@ -132,13 +138,13 @@ public class AdminController {
     ) {
         String redirect = adminService.requireAdminLogin(request);
         var subject = subjectService.findById(subjectId);
-        var department = departmentService.findById(subject.getDepartmentDetail().getId());
+        var semester = semesterService.findCurrentSemester();
 
         List<BreadCrumb> breadCrumbs = adminService.getSubjectBreadCrumbs(subjectId);
-
+        logger.info(semester.toString());
         model.addAttribute("breadCrumbs", breadCrumbs);
         model.addAttribute("subjectId", subjectId);
-        model.addAttribute("department", department);
+        model.addAttribute("semester", semester);
 
         return redirect != null ? redirect : "pages/admin/subjectDetails";
     }

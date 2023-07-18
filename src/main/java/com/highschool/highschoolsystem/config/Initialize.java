@@ -4,10 +4,12 @@ import com.highschool.highschoolsystem.entity.*;
 import com.highschool.highschoolsystem.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.cglib.core.Local;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,40 +47,40 @@ public class Initialize implements ApplicationListener<ApplicationReadyEvent> {
         shifts.add(
                 ShiftEntity.builder()
                         .name("Shift 1")
-                        .startTime("07:00")
-                        .endTime("07:45")
+                        .startTime(LocalTime.parse("07:00"))
+                        .endTime(LocalTime.parse("07:45"))
                         .build()
         );
 
         shifts.add(
                 ShiftEntity.builder()
                         .name("Shift 2")
-                        .startTime("07:50")
-                        .endTime("08:35")
+                        .startTime(LocalTime.parse("07:50"))
+                        .endTime(LocalTime.parse("08:35"))
                         .build()
         );
 
         shifts.add(
                 ShiftEntity.builder()
                         .name("Shift 3")
-                        .startTime("08:40")
-                        .endTime("09:25")
+                        .startTime(LocalTime.parse("08:40"))
+                        .endTime(LocalTime.parse("09:25"))
                         .build()
         );
 
         shifts.add(
                 ShiftEntity.builder()
                         .name("Shift 4")
-                        .startTime("09:50")
-                        .endTime("10:35")
+                        .startTime(LocalTime.parse("09:30"))
+                        .endTime(LocalTime.parse("10:15"))
                         .build()
         );
 
         shifts.add(
                 ShiftEntity.builder()
                         .name("Shift 5")
-                        .startTime("10:40")
-                        .endTime("11:25")
+                        .startTime(LocalTime.parse("10:20"))
+                        .endTime(LocalTime.parse("11:05"))
                         .build()
         );
 

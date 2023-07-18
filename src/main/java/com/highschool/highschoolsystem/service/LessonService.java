@@ -100,12 +100,14 @@ public class LessonService {
             return LessonConverter.toResponse(lessons);
         }
 
-        var lessons = lessonRepository.findAllBySubjectIdAndWeekSemesterIdAndWeekStartDateGreaterThanEqualAndWeekEndDateLessThanEqual(subjectId, semesterId, start, end);
+        var lessons = lessonRepository.findAllBySubjectIdAndWeekSemesterIdAndWeekStartDateBetweenOrWeekEndDateBetween(subjectId, semesterId, start, end, start, end);
         return LessonConverter.toResponse(lessons, new String[]{
-                "getId",
-                "getWeek",
-                "getSubject",
-                "getShift"
+                "id",
+                "week",
+                "subject",
+                "shift",
+                "startDate",
+                "endDate"
         });
     }
 }

@@ -17,7 +17,7 @@
     <div th:class="' nav navbar-nav flex-row justify-content-end ' + ${isDetail ? 'd-none' : ''}">
         <!--        list button add, filter, sort-->
         <div class="rs-select2--light rs-select2--md ms-3">
-            <select class="js-select2" id="select_department" name="property">
+            <select class="js-select2 select_department" name="property">
                 <option selected="selected" value="0">All Departments</option>
             </select>
             <div class="dropDownSelect2"></div>
@@ -33,5 +33,15 @@
             <i class="bi bi-plus"></i>
             <span>Add</span>
         </button>
+    </div>
+
+    <div th:class="' nav navbar-nav flex-row justify-content-end ' + ${!isDetail ? 'd-none' : ''}">
+        <!--        list button add, filter, sort-->
+        <div class="rs-select2--light rs-select2--md ms-3">
+            <select class="js-select2" id="select_semester" name="property">
+                <option selected="selected" >Current Semester</option>
+            </select>
+            <div class="dropDownSelect2"></div>
+        </div>
     </div>
 </nav>
