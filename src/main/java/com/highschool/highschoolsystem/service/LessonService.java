@@ -12,10 +12,16 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
+import java.util.stream.IntStream;
 
 @Service
 public class LessonService {
+    private static final Logger logger = Logger.getLogger(LessonService.class.getName());
+
     @Autowired
     private DayRepository dayRepository;
     @Autowired
@@ -28,28 +34,40 @@ public class LessonService {
     private LessonRepository lessonRepository;
 
     public List<LessonResponse> create(LessonRequest request) {
+        Map<String, List<String>> dataProcessed = preProcessRequest(request);
         var semester = semesterRepository.findById(request.getSemesterId()).orElseThrow(
                 () -> new NotFoundException("Semester not found")
         );
-
+        logger.info(semester.getName());
         var weeks = semester.getWeeks();
 //        get days by Map<String, List<String>> dayIds
         var days = dayRepository.findAllById(request.getDayIds());
 //        get shifts by Map<String, List<String>> shiftIds
-        var shifts = shiftRepository.findAllById(request.getShiftIds());
-
+//        var shifts = shiftRepository.findAllById(request.getShiftIds());
+        var shiftIds = request.getShiftIds();
+        System.out.println("days");
+        days.forEach(day -> logger.info(day.getName()));
+        System.out.println("weeks");
+        weeks.forEach(week -> logger.info(week.getName()));
         var subject = subjectRepository.findById(request.getSubjectId()).orElseThrow(
                 () -> new NotFoundException("Subject not found")
         );
 
         var lessons = new ArrayList<LessonEntity>();
 
-
         for (var week : weeks) {
-            for (var day : days) {
-                for (var shift : shifts) {
-//                    find date of day in week begin startDate and end with endDate
-                    String dateName = day.getDayName().toUpperCase();
+//                keys of dataProcessed
+            var dayIds = dataProcessed.keySet();
+            for (var dayId : dayIds) {
+                var day = dayRepository.findById(dayId).orElseThrow(
+                        () -> new NotFoundException("Day not found")
+                );
+                var shiftIdsOfTheDay = dataProcessed.get(dayId);
+                for (var shiftId : shiftIdsOfTheDay) {
+                    var shift = shiftRepository.findById(shiftId).orElseThrow(
+                            () -> new NotFoundException("Shift not found")
+                    );
+                    String dateName = day.getName().toUpperCase();
                     LocalDateTime date = week.getStartDate().atStartOfDay();
                     while (!dateName.equals(date.getDayOfWeek().name())) {
                         date = date.plusDays(1);
@@ -70,6 +88,10 @@ public class LessonService {
                     var endTimeDate = date.plusHours(shift.getEndTime().getHour());
                     endTimeDate = endTimeDate.plusMinutes(shift.getEndTime().getMinute());
 
+                    var lessonOptional = lessonRepository.findTop1BySubjectIdAndWeekIdAndDayIdAndShiftId(subject.getId(), week.getId(), day.getId(), shift.getId());
+                    if (lessonOptional.isPresent()) {
+                        throw new RuntimeException("Lesson already exists");
+                    }
                     var lesson = LessonEntity.builder()
                             .week(week)
                             .day(day)
@@ -83,7 +105,6 @@ public class LessonService {
                 }
             }
         }
-
         lessonRepository.saveAll(lessons);
         return LessonConverter.toResponse(lessons);
     }
@@ -109,5 +130,29 @@ public class LessonService {
                 "startDate",
                 "endDate"
         });
+    }
+
+    private Map<String, List<String>> preProcessRequest(LessonRequest request) {
+        Map<String, List<String>> dataProcessed = new HashMap<>();
+
+        List<String> dayIds = new ArrayList<>(request.getDayIds());
+        List<String> shiftIds = new ArrayList<>(request.getShiftIds());
+
+        int daySize = dayIds.size();
+
+        IntStream.range(0, daySize).forEach(index -> {
+            var dayId = dayIds.get(index);
+            var shiftId = shiftIds.get(index);
+
+            if (dataProcessed.containsKey(dayId)) {
+                dataProcessed.get(dayId).add(shiftId);
+            } else {
+                var shiftIdsOfTheDay = new ArrayList<String>();
+                shiftIdsOfTheDay.add(shiftId);
+                dataProcessed.put(dayId, shiftIdsOfTheDay);
+            }
+        });
+
+        return dataProcessed;
     }
 }

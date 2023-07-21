@@ -71,4 +71,14 @@ public class SemesterService {
         return SemesterConverter.toResponse(semester.get());
 
     }
+
+    public SemesterResponse findById(String semesterId) {
+        var semester = semesterRepository.findById(semesterId);
+
+        if (semester.isEmpty()) {
+            throw new NotFoundException("Semester not found");
+        }
+
+        return SemesterConverter.toResponse(semester.get());
+    }
 }

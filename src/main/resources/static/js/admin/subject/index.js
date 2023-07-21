@@ -100,7 +100,7 @@ $(document).ready(function () {
                         <div class="card-body">
                             <h3 class="name text-title text-truncate">${subject.name}</h3>
                              <div class="info my-3 d-flex flex-column gap-2">
-                                <span data-bs-toggle="tooltip" title="${subject.teacher.name}"><i><span class="fw-semibold">Teached By</span>: ${subject.teacher.fullName}</i></span>
+                                <span class="text-truncate" data-bs-toggle="tooltip" title="${subject.teacher.name}"><i><span class="fw-semibold">Teached By</span>: ${subject.teacher.fullName}</i></span>
                                 <span><i><span class="fw-semibold">Created at</span></i>: ${createdAt}</span>
                             </div>
                             <i><h5 class="text-truncate text-muted" data-bs-toggle="tooltip" title="${subject.department}"><span class="fw-semibold">Belong to</span>: ${subject.department} Department</h5></i>

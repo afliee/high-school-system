@@ -116,10 +116,8 @@ $(document).ready(function () {
                     const dayConverted = new Date(item.createdDate).toLocaleDateString('en-GB');
                     html += `
                         <tr class='teacher' data-id='${item.id}'>
-                            <td>${item.name}</td>
-                            <td>${item.fullName}</td>
-                            <td>${item.email}</td>
-                            <td>${dayConverted}</td>
+                            <td class="text-truncate" data-bs-toggle="tooltip" title="${item.name}">${item.fullName}</td>
+                            <td class="text-truncate" data-bs-toggle="tooltip" title="${item.email}">${item.email}</td>
                             <td>
                                 <button class="btn btn-danger btn-delete" data-id="${item.id}">Delete</button>
                             </td>

@@ -1,9 +1,9 @@
 package com.highschool.highschoolsystem.controller;
 
-import com.highschool.highschoolsystem.service.AdminService;
-import com.highschool.highschoolsystem.service.DepartmentService;
-import com.highschool.highschoolsystem.service.SemesterService;
-import com.highschool.highschoolsystem.service.SubjectService;
+import com.highschool.highschoolsystem.controller.api.ShiftService;
+import com.highschool.highschoolsystem.dto.response.SemesterResponse;
+import com.highschool.highschoolsystem.entity.SemesterEntity;
+import com.highschool.highschoolsystem.service.*;
 import com.highschool.highschoolsystem.util.BreadCrumb;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,6 +33,10 @@ public class AdminController {
     private SubjectService subjectService;
     @Autowired
     private SemesterService semesterService;
+    @Autowired
+    private DayService dayService;
+    @Autowired
+    private ShiftService shiftService;
 
     @GetMapping({"/", "", "/dashboard"})
     public String index(
@@ -137,10 +141,10 @@ public class AdminController {
             Model model
     ) {
         String redirect = adminService.requireAdminLogin(request);
-        var subject = subjectService.findById(subjectId);
         var semester = semesterService.findCurrentSemester();
 
         List<BreadCrumb> breadCrumbs = adminService.getSubjectBreadCrumbs(subjectId);
+
         logger.info(semester.toString());
         model.addAttribute("breadCrumbs", breadCrumbs);
         model.addAttribute("subjectId", subjectId);
@@ -148,6 +152,37 @@ public class AdminController {
 
         return redirect != null ? redirect : "pages/admin/subjectDetails";
     }
+
+    @GetMapping("/subjects/{subjectId}/lessons/add")
+    public String addLessons(
+            @RequestParam(value = "semesterId", defaultValue = "") String semesterId,
+            @PathVariable String subjectId,
+            HttpServletRequest request,
+            Model model
+    ) {
+        String redirect = adminService.requireAdminLogin(request);
+        SemesterResponse semester = null;
+        if (semesterId.isEmpty()) {
+            semester = semesterService.findCurrentSemester();
+        } else {
+            semester = semesterService.findById(semesterId);
+        }
+
+        var days = dayService.getAllDays();
+        var shifts = shiftService.getAll();
+        logger.info(days.toString());
+
+        List<BreadCrumb> breadCrumbs = adminService.getSubjectBreadCrumbs(subjectId);
+
+        model.addAttribute("breadCrumbs", breadCrumbs);
+        model.addAttribute("subjectId", subjectId);
+        model.addAttribute("semester", semester);
+        model.addAttribute("days", days);
+        model.addAttribute("shifts", shifts);
+
+        return redirect != null ? redirect : "pages/admin/subject/addLessons";
+    }
+
 
     @GetMapping("/department")
     public String department(

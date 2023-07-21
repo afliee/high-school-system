@@ -60,7 +60,7 @@ $(document).ready(function () {
     }
 
 // ========= Event Handlers =========
-    function fetchAllDepartments(page = 0, size = 12, sort = "name") {
+    function fetchAllDepartments(page = 0, size = 9, sort = "name") {
         $.ajax({
             url: `/api/v1/department/all?page=${page}&size=${size}&sortBy=${sort}`,
             type: 'GET',

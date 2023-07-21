@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface LessonRepository extends JpaRepository<LessonEntity, String> {
     Page<?> findAllBySubjectId(String subjectId, Pageable pageable);
@@ -42,4 +43,6 @@ public interface LessonRepository extends JpaRepository<LessonEntity, String> {
             String subject_id, String week_semester_id, LocalDate week_startDate, LocalDate week_startDate2, LocalDate week_endDate, LocalDate week_endDate2
     );
 
+
+    Optional<LessonEntity> findTop1BySubjectIdAndWeekIdAndDayIdAndShiftId(String subjectId, String weekId, String dayId, String shiftId);
 }

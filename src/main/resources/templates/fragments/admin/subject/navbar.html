@@ -14,7 +14,7 @@
             </li>
         </ol>
     </nav>
-    <div th:class="' nav navbar-nav flex-row justify-content-end ' + ${isDetail ? 'd-none' : ''}">
+    <div th:class="' nav navbar-nav flex-row justify-content-end ' + ${isDetail ? 'd-none ' : ' '} + ${!isFilter ? 'd-none' : ''}">
         <!--        list button add, filter, sort-->
         <div class="rs-select2--light rs-select2--md ms-3">
             <select class="js-select2 select_department" name="property">
@@ -22,7 +22,7 @@
             </select>
             <div class="dropDownSelect2"></div>
         </div>
-        <button class="au-btn-filter ms-3" type="button" data-bs-toggle="modal" data-bs-target="#advancedSearch"
+        <button th:class="'au-btn-filter ms-3 ' + ${isFilter ? '' : 'd-none'} " type="button" data-bs-toggle="modal" data-bs-target="#advancedSearch"
                 aria-expanded="false"
                 aria-controls="contentId">
             <i class="bi bi-filter"></i>
@@ -35,7 +35,7 @@
         </button>
     </div>
 
-    <div th:class="' nav navbar-nav flex-row justify-content-end ' + ${!isDetail ? 'd-none' : ''}">
+    <div th:class="'gap-2 nav navbar-nav flex-row justify-content-end ' + ${isSemesterShow ? '' : 'd-none'}">
         <!--        list button add, filter, sort-->
         <div class="rs-select2--light rs-select2--md ms-3">
             <select class="js-select2" id="select_semester" name="property">
@@ -43,5 +43,15 @@
             </select>
             <div class="dropDownSelect2"></div>
         </div>
+        <button th:class="'btn btn-primary au-btn ms-3 btn-save ' + ${isSemesterShow ? '' : 'd-none '} + ${isDetail ? 'd-none' : ''}">
+            <i class="bi bi-upload"></i>
+            <span>Save</span>
+        </button>
+
+
+        <button th:class="'btn btn-primary au-btn ms-3 btn-add-lessons ' + ${!isDetail ? 'd-none' : ''}">
+            <i class="bi bi-plus au-btn-icon"></i>
+            <span>Add Lessons</span>
+        </button>
     </div>
 </nav>

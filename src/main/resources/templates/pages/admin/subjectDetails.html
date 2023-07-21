@@ -6,10 +6,10 @@
     <th:block th:insert="~{fragments/admin/dashboard/sidebar :: sidebar(active = 'subjects')}"/>
     <div id="main">
         <th:block th:insert="~{fragments/admin/dashboard/navbar :: navbar}"/>
-        <th:block th:insert="~{fragments/admin/subject/navbar :: navbar(breadcumbs = ${breadCrumbs}, isDetail = true)}"/>
+        <th:block th:insert="~{fragments/admin/subject/navbar :: navbar(breadcumbs = ${breadCrumbs}, isDetail = true, isFilter = true, isSemesterShow = true)}"/>
         <th:block th:insert="~{fragments/admin/subject/calendar :: calendar}" />
         <input type="hidden" name="subjectId" id="subjectId" th:value="${subjectId}">
-        <input type="hidden" name="semesterId" id="semesterId" th:value="${semester.getId()}">
+        <input type="hidden" name="semesterId" id="semesterId" th:value="${semester.getId()}" th:attr="data-start-time=${semester.getStartDate()}">
     </div>
 </div>
 

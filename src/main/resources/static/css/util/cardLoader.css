@@ -7,7 +7,7 @@
     margin-bottom: 10px;
     border: 1px solid #d3d3d3;
     padding: 15px;
-    background-color: #dfdfdf;
+    background-color: #d7d4d4;
     overflow: hidden;
 }
 
@@ -18,7 +18,7 @@
     height: 100%;
     top: 0;
     left: 0;
-    background: linear-gradient(110deg, rgba(227, 227, 227, 0) 0%, rgba(227, 227, 227, 0) 40%, rgba(227, 227, 227, 0.94) 50%, rgba(227, 227, 227, 0) 60%, rgba(227, 227, 227, 0) 100%);
+    background: linear-gradient(110deg, rgba(227, 227, 227, 0) 0%, rgba(227, 227, 227, 0) 40%, rgba(236, 235, 235, 0.94) 50%, rgba(227, 227, 227, 0) 60%, rgba(227, 227, 227, 0) 100%);
     animation: gradient-animation_2 1.2s linear infinite;
 }
 
@@ -29,7 +29,7 @@
 }
 
 .loader .wrapper > div {
-    background-color: #ececec;
+    background-color: rgba(237, 237, 237, 0.68);
 }
 
 .loader .circle {

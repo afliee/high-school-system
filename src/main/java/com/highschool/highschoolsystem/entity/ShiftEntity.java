@@ -1,9 +1,6 @@
 package com.highschool.highschoolsystem.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -21,6 +18,7 @@ import java.util.Collection;
 @EntityListeners(AuditingEntityListener.class)
 @EqualsAndHashCode(exclude = {"startTime", "endTime"}, callSuper = false)
 public class ShiftEntity extends BaseEntity<String> {
+    @Column(unique = true)
     private String name;
 
     @DateTimeFormat(pattern = "HH:mm")

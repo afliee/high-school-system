@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:insert="~{fragments/heading/subjectHeading :: subjectHeading(title = 'Add Lessons')}"/>
+<body>
+<div class="container-fluid">
+  <th:block th:insert="~{fragments/admin/dashboard/sidebar :: sidebar(active = 'subjects')}"/>
+  <div id="main">
+    <th:block th:insert="~{fragments/admin/dashboard/navbar :: navbar}"/>
+    <th:block th:insert="~{fragments/admin/subject/navbar :: navbar(breadcumbs = ${breadCrumbs}, isDetail = false, isFilter = false, isSemesterShow = true)}"/>
+    <th:block th:insert="~{fragments/admin/subject/lesson/dayShiftOption :: dayShiftOption(days = ${days}, shifts = ${shifts})}"/>
+    <th:block th:insert="~{fragments/admin/subject/calendar :: calendar}" />
+    <input type="hidden" name="subjectId" id="subjectId" th:value="${subjectId}">
+    <input type="hidden" name="semesterId" id="semesterId" th:value="${semester.getId()}" th:attr="data-start-time=${semester.getStartDate()}">
+  </div>
+</div>
+
+<th:block th:insert="~{fragments/script/admin/dashboardScript :: dashboardScript}"/>
+<th:block th:insert="~{fragments/script/admin/subject/subjectDetailScript :: subjectDetailScript}"/>
+<script th:src="@{/js/admin/subject/addLessons.js}"></script>
+</body>
+</html>

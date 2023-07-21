@@ -60,3 +60,15 @@ body {
     font-weight: 500;
     color: var(--color-primary);
 }
+
+a {
+    text-decoration: none;
+}
+
+.fc-col-header-cell-cushion {
+    color: var(--color-primary);
+}
+
+.fc-col-header-cell-cushion:hover {
+    color: var(--color-primary-hover);
+}

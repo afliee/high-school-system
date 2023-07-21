@@ -6,7 +6,7 @@
   <th:block th:insert="~{fragments/admin/dashboard/sidebar :: sidebar(active = 'subjects')}"/>
   <div id="main">
     <th:block th:insert="~{fragments/admin/dashboard/navbar :: navbar}"/>
-    <th:block th:insert="~{/fragments/admin/subject/navbar :: navbar(isDetail = false)}"/>
+    <th:block th:insert="~{/fragments/admin/subject/navbar :: navbar(isDetail = false, isFilter = true, isSemesterShow = false)}"/>
     <th:block th:insert="~{fragments/admin/subject/content :: content}" />
     <th:block th:insert="~{fragments/admin/subject/modalFilter :: modalFilter}"/>
   </div>

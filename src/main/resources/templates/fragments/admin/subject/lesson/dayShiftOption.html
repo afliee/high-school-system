@@ -1,0 +1,44 @@
+<div th:fragment="dayShiftOption">
+    <style>
+        tbody[data-bs-toggle="collapse"] {
+            cursor: pointer;
+        }
+
+        .collapsing {
+            transition: height 0.3s ease-out; /* Adjust the animation duration as needed */
+        }
+
+        .shift {
+            cursor: pointer;
+        }
+
+        .shift.active {
+            background-color: #007bff;
+            color: #fff;
+        }
+    </style>
+    <div class="table-responsive shift-regis">
+        <table class="table">
+            <thead class="text-center">
+            <tr>
+                <th class="text-center">Time Shift</th>
+                <th:block th:each="day: ${days}">
+                    <th th:attr="data-id=${day.getId()}" th:text="${day.getName()}" scope="col"
+                        data-bs-toggle="collapse" href="#contentCollapse" role="button" aria-expanded="false"
+                        aria-controls="contentCollapse"></th>
+                </th:block>
+            </tr>
+            </thead>
+            <tbody class="collapse" id="contentCollapse">
+            <tr th:each="shift, iter : ${shifts}">
+                <td class="text-center text-primary"
+                    th:text="${shift.getStartTime() + '&rarr;' +  shift.getEndTime()}"></td>
+                <td class="text-center" th:each="day : ${days}" th:attr="data-id=${day.getId()}">
+                    <span class="badge badge-pill badge-outline-primary px-3 shift" th:text="${shift.getName}"
+                          th:attr="data-id=${shift.getId()}"></span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

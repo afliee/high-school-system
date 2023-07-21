@@ -7,6 +7,7 @@ import jakarta.persistence.Table;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 @EqualsAndHashCode(callSuper = true)
@@ -17,8 +18,8 @@ import java.util.Collection;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class DayEntity extends BaseEntity<String> {
-    private String dayName;
+public class DayEntity extends BaseEntity<String> implements Serializable {
+    private String name;
 
     @OneToMany(
             mappedBy = "day",

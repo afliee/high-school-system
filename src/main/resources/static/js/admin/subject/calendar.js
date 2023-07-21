@@ -25,8 +25,8 @@ $(document).ready(function () {
         selectable: true,
         selectMirror: true,
         navLinks: true,
-        eventChange: function (changeInfo ) {
-        //       call api update lesson
+        eventChange: function (changeInfo) {
+            //       call api update lesson
             const {event} = changeInfo;
             console.log("event", event);
         },
@@ -35,9 +35,12 @@ $(document).ready(function () {
         }
     });
 
+    const startTimeDefault = $("#semesterId").data("start-time");
+    calendar.gotoDate(startTimeDefault);
     calendar.render();
 
     getALlSemester()
+
     function getALlSemester() {
         $.ajax({
             url: "/api/v1/semester",
@@ -56,20 +59,16 @@ $(document).ready(function () {
     }
 
     function generateSemesterSelection(data) {
-
+        const semesterId = $("#semesterId").val();
         // remove first option
         semesterSelection.find("option:first").remove();
         data.forEach(semester => {
             // convert date from array [2024, 1, 1] => 2024-01-01
             const startDate = new Date(semester.startDate[0], semester.startDate[1] - 1, semester.startDate[2]).toISOString();
             const endDate = new Date(semester.endDate[0], semester.endDate[1] - 1, semester.endDate[2]).toISOString();
-            if (semester.current) {
-                const currentOption = $(`<option value="${semester.id}" data-start-date="${startDate}" data-end-date="${endDate}" selected>${semester.name}</option>`);
-                semesterSelection.append(currentOption);
-            } else {
-                const option = $(`<option value="${semester.id}" data-start-date="${startDate}" data-end-date="${endDate}">${semester.name}</option>`);
-                semesterSelection.append(option);
-            }
+
+            const option = $(`<option value="${semester.id}" data-start-date="${startDate}" data-end-date="${endDate}" ${semester.id === semesterId ? 'selected' : 0}>${semester.name}</option>`);
+            semesterSelection.append(option);
         })
 
         registerSemesterSelectionEvent();
@@ -82,7 +81,6 @@ $(document).ready(function () {
             const endDate = $(this).find(":selected").data("end-date");
 
             calendar.gotoDate(startDate);
-
         })
     }
 
@@ -134,4 +132,9 @@ $(document).ready(function () {
             }
         })
     }
+
+
+    $(".btn-add-lessons").on('click', function () {
+        location.href = `/auth/admin/subjects/${subjectId}/lessons/add`
+    })
 })

@@ -198,13 +198,13 @@ public class Initialize implements ApplicationListener<ApplicationReadyEvent> {
     private void addDays() {
         List<DayEntity> days = new ArrayList<>();
 //        add seven day in week
-        days.add(DayEntity.builder().dayName("Monday").build());
-        days.add(DayEntity.builder().dayName("Tuesday").build());
-        days.add(DayEntity.builder().dayName("Wednesday").build());
-        days.add(DayEntity.builder().dayName("Thursday").build());
-        days.add(DayEntity.builder().dayName("Friday").build());
-        days.add(DayEntity.builder().dayName("Saturday").build());
-        days.add(DayEntity.builder().dayName("Sunday").build());
+        days.add(DayEntity.builder().name("Monday").build());
+        days.add(DayEntity.builder().name("Tuesday").build());
+        days.add(DayEntity.builder().name("Wednesday").build());
+        days.add(DayEntity.builder().name("Thursday").build());
+        days.add(DayEntity.builder().name("Friday").build());
+        days.add(DayEntity.builder().name("Saturday").build());
+        days.add(DayEntity.builder().name("Sunday").build());
         dayRepository.saveAll(days);
     }
 
