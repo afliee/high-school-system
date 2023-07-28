@@ -4,6 +4,7 @@ import com.highschool.highschoolsystem.dto.request.SubjectRequest;
 import com.highschool.highschoolsystem.dto.response.DepartmentResponse;
 import com.highschool.highschoolsystem.dto.response.SubjectResponse;
 import com.highschool.highschoolsystem.entity.DepartmentEntity;
+import com.highschool.highschoolsystem.entity.LevelEntity;
 import com.highschool.highschoolsystem.entity.SubjectEntity;
 import com.highschool.highschoolsystem.entity.TeacherEntity;
 import org.springframework.data.domain.PageRequest;
@@ -46,7 +47,7 @@ public class SubjectConverter {
                 .build();
     }
 
-    public static SubjectEntity toEntity(SubjectRequest request, TeacherEntity teacher, DepartmentEntity department) {
+    public static SubjectEntity toEntity(SubjectRequest request, TeacherEntity teacher, DepartmentEntity department, LevelEntity level) {
         Random ramdom = new Random();
         int r = ramdom.nextInt(255);
         int g = ramdom.nextInt(255);
@@ -56,6 +57,7 @@ public class SubjectConverter {
                 .name(request.getName())
                 .description(request.getDescription())
                 .teacher(teacher)
+                .level(level)
                 .department(department)
                 .color("rgb(" + r + "," + g + "," + b + ")")
                 .build();
@@ -73,10 +75,6 @@ public class SubjectConverter {
         return PageRequest.of(page, size, Sort.by(sort.equals("ASC") ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy));
     }
 
-    public static Specification<?> toSpecification(Map<String, String> filterMap) {
-        return null;
-
-    }
 
     public static List<SubjectResponse> toResponse(List<SubjectEntity> content) {
         return content.stream().map(SubjectConverter::toResponse).toList();

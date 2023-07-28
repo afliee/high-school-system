@@ -1,0 +1,40 @@
+<!-- Modal -->
+<div th:fragment="levelModal" class="modal fade modal-lg" id="levelModal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center text-uppercase" id="modelTitleId">Create New Level</h4>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body form row">
+                <div class="form-group has-icon-left">
+                    <label for="name">Level Name</label>
+                    <div class="position-relative mt-3">
+                        <input type="text" class="form-control"
+                               placeholder="Type Level's name" id="name" required name="name">
+                        <div class="form-control-icon">
+                            <i class="fa-regular fa-folder-open"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group has-icon-left">
+                    <label for="name">Level Number</label>
+                    <div class="position-relative mt-3">
+                        <input type="number" class="form-control"
+                               placeholder="Type Level Number" id="level_number" required name="level_number">
+                        <div class="form-control-icon">
+                            <i class="fa-regular fa-folder-open"></i>
+                        </div>
+                    </div>
+                    <small class="text-danger" id="small-error"></small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-save">Save Level</button>
+            </div>
+        </div>
+    </div>
+</div>

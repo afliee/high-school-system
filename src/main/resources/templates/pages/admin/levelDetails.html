@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:insert="~{fragments/heading/dashboardHeading :: dashboardHeading(title = 'Level Managerment')}"/>
+<body>
+<div class="container-fluid">
+  <th:block th:insert="~{fragments/admin/dashboard/sidebar :: sidebar(active = 'levels', sub = ${levelId})}"/>
+  <div id="main">
+    <th:block th:insert="~{fragments/admin/dashboard/navbar :: navbar}"/>
+    <th:block th:insert="~{fragments/admin/level/navbar :: navbar(isDetail = true)}"/>
+    <th:block th:insert="~{fragments/admin/level/levelDetail :: levelDetail}"/>
+    <input type="hidden" name="levelId" id="levelId" th:value="${levelId}">
+  </div>
+</div>
+
+<th:block th:insert="~{fragments/script/admin/dashboardScript :: dashboardScript}"/>
+<script th:src="@{/js/util/fetchAllSubjectByLevel.js}"></script>
+<script th:src="@{/js/util/fetchAllClassByLevel.js}"></script>
+<script th:src="@{/js/admin/level/levelDetail.js}"></script>
+</body>
+</html>

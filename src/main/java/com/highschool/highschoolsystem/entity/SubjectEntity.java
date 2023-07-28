@@ -34,4 +34,10 @@ public class SubjectEntity extends BaseEntity<String> {
     @ManyToOne(targetEntity = DepartmentEntity.class)
     @JoinColumn(name = "department_id")
     private DepartmentEntity department;
+
+    @ManyToOne(
+            targetEntity = LevelEntity.class
+    )
+    @JoinColumn(name = "level_id")
+    private LevelEntity level;
 }

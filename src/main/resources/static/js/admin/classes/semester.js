@@ -1,6 +1,4 @@
 $(document).ready(function () {
-
-
     const semesters = $('#semesters');
     fetchAllSemesters(function (res) {
         let html = '';

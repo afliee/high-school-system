@@ -78,6 +78,21 @@ $(document).ready(function () {
 
         let departmentsHTML = '';
         content.forEach(department => {
+            if (department.subjectColors.length === 0) {
+                department.subjectColors.push({
+                    name: 'No Subject',
+                    color: ''
+                })
+            }
+            // display limit 3 subjects
+            if (department.subjectColors.length > 3) {
+                department.subjectColors = department.subjectColors.slice(0, 3);
+                //     add more subject
+                department.subjectColors.push({
+                    name: '...',
+                    color: ''
+                })
+            }
             departmentsHTML += `
                 <div class="col-md-4 col-sm-6 col-xs-12 my-3" >
                     <div class="card department" data-id="${department.id}">
@@ -86,13 +101,14 @@ $(document).ready(function () {
                             <div class="info d-flex justify-content-between align-items-center my-3">
                                 <span class="create-at">Fouded: ${new Date(department.foundedDate).toLocaleDateString('en-GB')}</span>
                             </div>
-                            <div class="subjects">
+<!--                            display subjects 1 line-->
+                            <div class="subjects d-flex flex-shrink-1">
                                 ${department.subjectColors.length ? department.subjectColors.map(function (subject) {
-                                    const colorString = subject?.color;
-                                    return `
-                                        <label class="subject badge" style="border: 1px solid ${colorString || 'black'}; color: ${colorString || 'black'}">${subject.name}</label>
+                                const colorString = subject?.color;
+                                return `
+                                        <label class="subject badge text-truncate" data-bs-toggle="tooltip" title="${subject.name}" style="border: 1px solid ${colorString || 'black'}; color: ${colorString || 'black'}">${subject.name}</label>
                                     `
-                                    }).join('') : `
+                                }).join('') : `
                                         <label class="subject badge bg-primary">No Subject</label>
                                 `}
                             </div>

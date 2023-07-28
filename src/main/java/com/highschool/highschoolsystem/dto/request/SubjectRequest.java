@@ -27,4 +27,8 @@ public class SubjectRequest {
     @NotNull(message = "Department id is required")
     @NotEmpty(message = "Department id is required")
     private String departmentId;
+
+    @NotNull(message = "Level id is required")
+    @NotEmpty(message = "Level id is required")
+    private String levelId;
 }

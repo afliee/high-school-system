@@ -57,8 +57,7 @@ for (var i = 0; i < sidebarItems.length; i++) {
     sidebarItems[i]
         .querySelector('.sidebar-link')
         .addEventListener('click', function (e) {
-            e.preventDefault();
-
+            // e.preventDefault();
             let submenu = sidebarItem.querySelector('.submenu');
             if (submenu.classList.contains('active'))
                 submenu.style.display = 'block';

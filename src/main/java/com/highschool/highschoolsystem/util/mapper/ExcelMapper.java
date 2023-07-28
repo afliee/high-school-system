@@ -67,7 +67,6 @@ public class ExcelMapper {
                     }
                     case 7: {
                         Date enteredDate = currentCell.getDateCellValue();
-                        System.out.println(enteredDate);
                         student.setEnteredDate(enteredDate.toString());
                         break;
                     }

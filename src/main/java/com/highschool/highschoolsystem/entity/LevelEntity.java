@@ -28,4 +28,10 @@ public class LevelEntity extends BaseEntity<String> {
             targetEntity = ClassEntity.class
     )
     private Collection<ClassEntity> classes;
+
+    @OneToMany(
+            mappedBy = "level",
+            targetEntity = SubjectEntity.class
+    )
+    private Collection<SubjectEntity> subjects;
 }

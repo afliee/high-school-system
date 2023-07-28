@@ -9,6 +9,7 @@
     <th:block th:insert="~{fragments/admin/subject/navbar :: navbar(breadcumbs = ${breadCrumbs}, isDetail = false, isFilter = false, isSemesterShow = true)}"/>
     <th:block th:insert="~{fragments/admin/subject/lesson/dayShiftOption :: dayShiftOption(days = ${days}, shifts = ${shifts})}"/>
     <th:block th:insert="~{fragments/admin/subject/calendar :: calendar}" />
+    <th:block th:insert="~{fragments/admin/subject/lesson/lessonDetail :: lessonDetail}" />
     <input type="hidden" name="subjectId" id="subjectId" th:value="${subjectId}">
     <input type="hidden" name="semesterId" id="semesterId" th:value="${semester.getId()}" th:attr="data-start-time=${semester.getStartDate()}">
   </div>

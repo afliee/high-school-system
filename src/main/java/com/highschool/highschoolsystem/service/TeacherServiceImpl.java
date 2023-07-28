@@ -2,6 +2,7 @@ package com.highschool.highschoolsystem.service;
 
 import com.highschool.highschoolsystem.converter.TeacherConverter;
 import com.highschool.highschoolsystem.dto.response.TeacherResponse;
+import com.highschool.highschoolsystem.entity.BaseEntity;
 import com.highschool.highschoolsystem.entity.TeacherEntity;
 import com.highschool.highschoolsystem.exception.TokenInvalidException;
 import com.highschool.highschoolsystem.exception.UserNotFoundException;
@@ -37,6 +38,9 @@ public class TeacherServiceImpl implements TeacherService {
     @Autowired
     private ClassRepository classRepository;
 
+    @Autowired
+    private LessonRepository lessonRepository;
+
     private final PasswordEncoder passwordEncoder;
     @Override
     public TeacherEntity save(TeacherEntity teacherEntity) {
@@ -70,6 +74,8 @@ public class TeacherServiceImpl implements TeacherService {
             aClass.setChairman(null);
             classRepository.save(aClass);
         });
+
+        lessonRepository.deleteAllBySubjectIdIn(teacher.getSubjects().stream().map(BaseEntity::getId).toList());
 
         subjectRepository.deleteAllByTeacher(teacher);
         tokenRepository.deleteByUserId(userId).orElse(null);

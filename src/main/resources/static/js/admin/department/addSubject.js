@@ -9,6 +9,7 @@ $(document).ready(function () {
 
 
     getAllTeacher();
+    getAllLevel();
 
 
 //     ========== EVENT ==========
@@ -21,14 +22,15 @@ $(document).ready(function () {
         const subjectName = $("#name").val();
         const description = $(".description").html();
         const teacherId = $("#teacher").val();
-
+        const levelId = $("#level").val();
         const data = {
             name: subjectName,
             description: description,
             teacherId: teacherId,
-            departmentId: DEPARTMENT_ID
+            departmentId: DEPARTMENT_ID,
+            levelId: levelId
         }
-
+        console.log("data", data);
         addSubject(data);
     });
 
@@ -55,6 +57,29 @@ $(document).ready(function () {
                 console.log(err);
             }
         });
+    }
+
+    function getAllLevel() {
+        $.ajax({
+            url: `/api/v1/level/all?isDetail=true`,
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${TOKEN}`
+            },
+            success: function (res) {
+                console.log(res);
+
+                const select = $("#level");
+
+                const defaultOption = $('<option value="" selected disabled hidden>Choose Level</option>');
+                select.append(defaultOption);
+
+                res.forEach(level => {
+                    const option = $(`<option value="${level.id}">Level <span class="text-primary">${level.name}</span></option>`);
+                    select.append(option);
+                });
+            }
+        })
     }
 
     function addSubject(data) {

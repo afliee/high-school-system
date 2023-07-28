@@ -1,0 +1,57 @@
+<div th:fragment="lessonDetail" class="modal fade" id="lessonDetail" tabindex="-1" role="dialog"
+     aria-labelledby="modelTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center text-light">
+                <h4 class="modal-title" id="modelTitle"></h4>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h3 class="subject-name"></h3>
+                <div class="content">
+                    <div class="info">
+                        <div>
+                            <i><strong>Department: </strong></i>
+                            <span class="department-name"></span>
+                        </div>
+                        <div class="shift_time my-3">
+                            <div class="mb-2 gap-2 ">
+                                <i><strong>
+                                    Shift:
+                                </strong></i>
+                                <span class="shift-name"></span>
+                            </div>
+
+                            <div class="mb-2 gap-2">
+                                <i><strong>
+                                    Start time:
+                                </strong></i>
+                                <span class="start-date"></span>
+                            </div>
+
+                            <div class="mb-2 gap-2">
+                                <i><strong>
+                                    End time:
+                                </strong></i>
+                                <span class="end-date"></span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <i><strong>
+                                Teached by:
+                            </strong></i>
+                            <span class="teacher-name"></span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

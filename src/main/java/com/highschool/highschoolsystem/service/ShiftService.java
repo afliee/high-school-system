@@ -1,4 +1,4 @@
-package com.highschool.highschoolsystem.controller.api;
+package com.highschool.highschoolsystem.service;
 
 import com.highschool.highschoolsystem.converter.ShiftConverter;
 import com.highschool.highschoolsystem.dto.request.ShiftRequest;

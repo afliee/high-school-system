@@ -19,6 +19,7 @@ import java.util.List;
 public class ExcelUtil {
     private static final String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     private static final String SHEET = "Students";
+    private static final String DEFAULT_SHEET = "Sheet1";
     private static final String[] classHeader = new String[] {
             "Card ID",
             "Full Name",
@@ -37,6 +38,7 @@ public class ExcelUtil {
         try {
             Workbook workbook = new XSSFWorkbook(inputStream);
             Sheet sheet = workbook.getSheet(SHEET);
+            if (sheet == null) sheet = workbook.getSheet(DEFAULT_SHEET);
 
             List<StudentEntity> students = ExcelMapper.mapStudents(sheet, passwordEncoder);
 

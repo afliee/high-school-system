@@ -17,6 +17,8 @@ public class LessonConverter {
                 .day(DayConverter.toResponse(lesson.getDay()))
                 .shift(ShiftConverter.toResponse(lesson.getShift()))
                 .subject(SubjectConverter.toResponse(lesson.getSubject()))
+                .startDate(lesson.getStartDate())
+                .endDate(lesson.getEndDate())
                 .build();
     }
 

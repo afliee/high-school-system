@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 
@@ -18,7 +19,7 @@ import java.util.Collection;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class StudentEntity extends BaseEntity<String> {
+public class StudentEntity extends BaseEntity<String> implements Serializable {
     private String name;
     private String fullName;
     private String password;

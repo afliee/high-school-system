@@ -12,6 +12,9 @@ import java.util.Optional;
 
 public interface LessonRepository extends JpaRepository<LessonEntity, String> {
     Page<?> findAllBySubjectId(String subjectId, Pageable pageable);
+    List<LessonEntity> findAllBySubjectId(String subjectId);
+    List<LessonEntity> findAllBySubjectIdIn(List<String> subjectIds);
+    List<LessonEntity> findAllByIdIn(List<String> lessonIds);
 
     List<LessonEntity> findAllByWeekSemesterIdAndSubjectId(String semesterId, String subjectId);
 
@@ -45,4 +48,12 @@ public interface LessonRepository extends JpaRepository<LessonEntity, String> {
 
 
     Optional<LessonEntity> findTop1BySubjectIdAndWeekIdAndDayIdAndShiftId(String subjectId, String weekId, String dayId, String shiftId);
+
+// find all shift by subjectId by group by shiftId
+    List<LessonEntity> findAllSubjectIdAndGroupByShiftId(String subjectId);
+//    find distinct shiftId by subjectId
+    List<LessonEntity> findDistinctShiftIdBySubjectId(String subjectId);
+    void deleteAllBySubjectId(String subjectId);
+//    delete all lesson by list subjectId
+    void deleteAllBySubjectIdIn(List<String> subjectId);
 }

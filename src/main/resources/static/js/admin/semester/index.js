@@ -1,0 +1,123 @@
+$(document).ready(function () {
+    const TOKEN = getCookie("token") || localStorage.getItem("token");
+
+    const btnSave = $(".btn-save");
+    const semesters = $(".semesters")
+
+    const txtSemesterName = $("#semesterName");
+    const startDate = $("#startDate");
+    const endDate = $("#endDate");
+
+    btnSave.on('click', function () {
+        const startDateValue = startDate.val();
+        const endDateValue = endDate.val();
+        const semesterName  = txtSemesterName.val();
+
+        const data = {
+            name: semesterName,
+            startDate: startDateValue,
+            endDate: endDateValue
+        }
+        console.log("data", data)
+        let swal = Swal.mixin({
+            toast: true,
+            position: "center",
+            showConfirmButton: false,
+            timer: 2000
+        })
+
+        $.ajax({
+            url: '/api/v1/semester/add',
+            type: 'POST',
+            contentType: 'application/json',
+            headers: {
+                'Authorization': `Bearer ${TOKEN}`
+            },
+            data: JSON.stringify(data),
+            beforeSend: function () {
+                btnSave.html(`<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...`);
+            //     open alert loading
+                swal = Swal.fire({
+                    title: 'Loading...',
+                    html: 'Please wait a second',
+                    didOpen: () => {
+                        Swal.showLoading()
+                    }
+                })
+            },
+            success: function (data) {
+                btnSave.html(`Save`);
+                swal.close();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Add semester successfully!',
+                    text: 'You can add more semester or close this dialog',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                setTimeout(() => {
+                    window.location.href = "/auth/admin/semester";
+                }, 1500);
+            },
+            error: function (data) {
+                console.log(data.responseJSON.message)
+                btnSave.html(`Save`);
+                swal.fire({
+                    icon: 'error',
+                    title: 'Add semester failed!',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
+        })
+    })
+    fetchAllSemester();
+    function fetchAllSemester() {
+        $.ajax({
+            url: '/api/v1/semester',
+            type: 'GET',
+            headers: {
+                'Authorization': `Bearer ${TOKEN}`
+            },
+            success: function (data) {
+                console.log("data", data)
+                if (data.length === 0) {
+                    semesters.html(`
+                        <div class="col-12">
+                            <img src="/images/nodata.gif" class="img-fluid" alt="No Data Image">
+                        </div>
+                    `)
+                    return;
+                }
+                data.forEach(semester => {
+                    const startDate = moment(semester.startDate).format("DD/MM/YYYY");
+                    const endDate = moment(new Date(semester.endDate).toLocaleDateString()).format("DD/MM/YYYY");
+                    const template = $(`
+                        <div class="semsester-item pe-2 col-md-4" data-id="${semester.id}">
+                            <div class="card-tag rounded border-end mt-3 shadow p-2">
+                                <h4 class="text-title">${semester.name}</h4>
+                                <p><i><strong>Start date</strong></i>: ${startDate}</p>
+                                <p><i><strong>End date</strong></i>: ${endDate}</p>
+                            </div>
+                        </div>
+                    `);
+                    semesters.append(template);
+                });
+
+                registerSemesterClick();
+            },
+            error: function (data) {
+                console.log(data.responseJSON.message)
+            }
+        })
+    }
+
+    function registerSemesterClick() {
+        const semesterItem = $(".semsester-item");
+
+        // semesterItem.on('click', function () {
+        //     const id = $(this).attr("data-id");
+        //     window.location.href = `/auth/admin/semester/${id}`;
+        // });
+    }
+})

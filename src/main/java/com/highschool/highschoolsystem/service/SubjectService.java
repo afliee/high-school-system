@@ -2,10 +2,12 @@ package com.highschool.highschoolsystem.service;
 
 import com.highschool.highschoolsystem.converter.SubjectConverter;
 import com.highschool.highschoolsystem.dto.request.SubjectRequest;
+import com.highschool.highschoolsystem.dto.response.SubjectGroupByResponse;
 import com.highschool.highschoolsystem.dto.response.SubjectResponse;
 import com.highschool.highschoolsystem.entity.SubjectEntity;
 import com.highschool.highschoolsystem.exception.NotFoundException;
 import com.highschool.highschoolsystem.repository.DepartmentRepository;
+import com.highschool.highschoolsystem.repository.LevelRepository;
 import com.highschool.highschoolsystem.repository.SubjectRepository;
 import com.highschool.highschoolsystem.repository.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +16,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -25,6 +29,8 @@ public class SubjectService {
     private TeacherRepository teacherRepository;
     @Autowired
     private DepartmentRepository departmentRepository;
+    @Autowired
+    private LevelRepository levelRepository;
 
     public Page<?> getAll(int page, int size, String sort, String sortBy, String filter) {
 //        ?page=0&size=10&sort=ASC&sortBy=id&filter=name:chemical;teacherName:HuynhTruong;departmentId:0
@@ -105,6 +111,10 @@ public class SubjectService {
     }
 
     public SubjectResponse create(SubjectRequest subjectRequest) {
+        var level = levelRepository.findById(subjectRequest.getLevelId()).orElseThrow(
+                () -> new RuntimeException("Level not found")
+        );
+
         var teacher = teacherRepository.findById(subjectRequest.getTeacherId()).orElseThrow(
                 () -> new RuntimeException("Teacher not found")
         );
@@ -114,12 +124,14 @@ public class SubjectService {
         );
 
         var subject = subjectRepository.save(
-                SubjectConverter.toEntity(subjectRequest, teacher, department)
+                SubjectConverter.toEntity(subjectRequest, teacher, department, level)
         );
 
         department.getSubjects().add(subject);
-
         departmentRepository.save(department);
+
+        level.getSubjects().add(subject);
+        levelRepository.save(level);
 
         return SubjectConverter.toResponse(subject);
     }
@@ -171,5 +183,18 @@ public class SubjectService {
         );
 
         return SubjectConverter.toResponse(subject);
+    }
+
+    public List<SubjectGroupByResponse> findAllGroupByDepartment() {
+        List<SubjectEntity> subjects = subjectRepository.findAll();
+
+        Map<String, Object> subjectsGrouped = new HashMap<>();
+
+//        subjects.forEach(subject -> {
+//            if (subjectsGrouped.containsKey(subject.getDepartment().getId())) {
+//
+//            }
+//        });
+        return null;
     }
 }

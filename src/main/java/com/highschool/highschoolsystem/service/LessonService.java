@@ -33,6 +33,10 @@ public class LessonService {
     @Autowired
     private LessonRepository lessonRepository;
 
+    public LessonEntity save(LessonEntity lessonEntity) {
+        return lessonRepository.save(lessonEntity);
+    }
+
     public List<LessonResponse> create(LessonRequest request) {
         Map<String, List<String>> dataProcessed = preProcessRequest(request);
         var semester = semesterRepository.findById(request.getSemesterId()).orElseThrow(
@@ -130,6 +134,14 @@ public class LessonService {
                 "startDate",
                 "endDate"
         });
+    }
+
+    public List<LessonEntity> findAllBySubjectIdIn(List<String> subjectIds) {
+        return lessonRepository.findAllBySubjectIdIn(subjectIds);
+    }
+
+    public List<LessonEntity> findAllByIdIn(List<String> lessonIds) {
+        return lessonRepository.findAllByIdIn(lessonIds);
     }
 
     private Map<String, List<String>> preProcessRequest(LessonRequest request) {

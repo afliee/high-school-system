@@ -27,7 +27,7 @@
                         <span>Departments</span>
                     </a>
                 </li>
-
+                <li class="sidebar-title">Accounts</li>
                 <li th:class="'sidebar-item has-sub ' + ${#strings.equals(active, 'setting') ? 'active': ''}">
                     <a href="#" class="sidebar-link">
                         <i class="bi bi-person-fill-gear"></i>
@@ -42,12 +42,38 @@
                             </a>
                         </li>
                         <li th:class="'submenu-item ' + ${#strings.equals(sub, 'student') ? 'active' : ''}">
-                            <a  th:href="@{'/auth/admin/members?filter=student&page=1'}" class="submenu-link">
+                            <a th:href="@{'/auth/admin/members?filter=student&page=1'}" class="submenu-link">
                                 <i class="fa-solid fa-user-graduate"></i>
                                 <span>Students</span>
                             </a>
                         </li>
                     </ul>
+                </li>
+                <li class="sidebar-title">Level Management</li>
+                <li th:class="'sidebar-item has-sub ' + ${#strings.equals(active, 'levels') ? 'active': ''}">
+                    <a th:href="@{${#strings.equals(active, 'levels') ? '#' :  '/auth/admin/level'}}" class="sidebar-link">
+                        <i class="bi bi-person-fill-gear"></i>
+                        <span>Level</span>
+                    </a>
+
+                    <ul th:class="'submenu ' +  ${#strings.equals(active, 'levels') ? 'active': ''}">
+<!--                        will be rendered -->
+                        <th:block th:each="level : ${levels}">
+                            <li th:class="'submenu-item ' + ${#strings.equals(sub, level.getId()) ? 'active' : ''}">
+                                <a th:href="@{${'/auth/admin/level/' + level.getId()}}" class="submenu-link">
+                                    <i class="fa-solid fa-user-graduate"></i>
+                                    <span th:text="${level.getName()}"></span>
+                                </a>
+                            </li>
+                        </th:block>
+                    </ul>
+                </li>
+
+                <li th:class="'sidebar-item ' + ${#strings.equals(active, 'semesters') ? 'active' : ''}">
+                    <a th:href="@{/auth/admin/semester}" class='sidebar-link'>
+                        <i class="bi bi-clipboard-minus"></i>
+                        <span>Semester</span>
+                    </a>
                 </li>
 
                 <li th:class="'sidebar-item ' + ${#strings.equals(active, 'classes') ? 'active' : ''}">
@@ -57,6 +83,7 @@
                     </a>
                 </li>
 
+                <li class="sidebar-title">Scheduling</li>
                 <li th:class="'sidebar-item ' + ${#strings.equals(active, 'subjects') ? 'active' : ''}">
                     <a th:href="@{/auth/admin/subjects}" class='sidebar-link'>
                         <i class="bi bi-journal-bookmark-fill"></i>
@@ -64,49 +91,11 @@
                     </a>
                 </li>
 
-                <li class="sidebar-item  has-sub">
-                    <a href="#" class='sidebar-link'>
-                        <i class="bi bi-collection-fill"></i>
-                        <span>Extra Components</span>
+                <li th:class="'sidebar-item ' + ${#strings.equals(active, 'scheduling') ? 'active' : ''}">
+                    <a th:href="@{/auth/admin/range-scheduling}" class='sidebar-link'>
+                        <i class="bi bi-book-half"></i>
+                        <span>Scheduling</span>
                     </a>
-                    <ul class="submenu ">
-                        <li class="submenu-item ">
-                            <a href="extra-component-avatar.html">Avatar</a>
-                        </li>
-                        <li class="submenu-item ">
-                            <a href="extra-component-sweetalert.html">Sweet Alert</a>
-                        </li>
-                        <li class="submenu-item ">
-                            <a href="extra-component-toastify.html">Toastify</a>
-                        </li>
-                        <li class="submenu-item ">
-                            <a href="extra-component-rating.html">Rating</a>
-                        </li>
-                        <li class="submenu-item ">
-                            <a href="extra-component-divider.html">Divider</a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="sidebar-item  has-sub">
-                    <a href="#" class='sidebar-link'>
-                        <i class="bi bi-grid-1x2-fill"></i>
-                        <span>Layouts</span>
-                    </a>
-                    <ul class="submenu ">
-                        <li class="submenu-item ">
-                            <a href="layout-default.html">Default Layout</a>
-                        </li>
-                        <li class="submenu-item ">
-                            <a href="layout-vertical-1-column.html">1 Column</a>
-                        </li>
-                        <li class="submenu-item ">
-                            <a href="layout-vertical-navbar.html">Vertical with Navbar</a>
-                        </li>
-                        <li class="submenu-item ">
-                            <a href="layout-horizontal.html">Horizontal Menu</a>
-                        </li>
-                    </ul>
                 </li>
             </ul>
         </div>
