@@ -2,8 +2,46 @@ $(document).ready(function () {
     const TOKEN = getCookie("token") || localStorage.getItem("token");
     const CLASS_ID = $("#classId").val();
 
+    const btnDelete = $(".btn-delete");
+
     fetchClassDetails(CLASS_ID, 0, renderClassDetails);
     registerUpdateStudentEvent();
+
+    btnDelete.on("click", function () {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to delete this class?\n All students in this class will be deleted!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(result => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `/api/v1/class/delete?classId=${CLASS_ID}`,
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${TOKEN}`
+                    },
+                    success: function (res) {
+                        Swal.fire({
+                            title: 'Deleted!',
+                            text: 'Your class has been deleted.',
+                            icon: 'success',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'OK',
+                            timer: 1500
+                        })
+
+                        setTimeout(function () {
+                            window.location.href = "/auth/admin/classes";
+                        }, 1500)
+                    }
+                })
+            }
+        })
+    })
 
     function fetchClassDetails(classId, page, callback) {
         $.ajax({
@@ -42,9 +80,10 @@ $(document).ready(function () {
                                 <div class="col-6" class="class-info" data-id="${res.id}">
                                     <p>${res.id}</p>
                                     <p>
-                                        ${
-                                        res.chairman ? res.chairman : `<button class="btn btn-outline-primary btn-add-chairman"><i class="bi bi-plus-lg"></i></button>`
-                                        }
+                                        ${res.chairman}
+                                         <span>
+                                            <button class="btn btn-outline-primary btn-add-chairman" data-bs-toggle="tooltip" title="Change Chairman"><i class="bi bi-plus-lg"></i></button>
+                                        </span>
                                     </p>
                                     <p>${res.students.length}</p>
                                     <p>${new Date(res.createdDate).toLocaleDateString('en-GB')}</p>

@@ -1,0 +1,117 @@
+<div th:fragment="content" class="card mt-3 mx-3">
+    <style>
+        .notics-header {
+            background-color: var(--color-primary);
+            color: White;
+            padding: 0.1em;
+            text-transform: uppercase;
+            text-align: center;
+            font-weight: bold;
+            font-size: 2em;
+            min-height: 0.7em;
+        }
+
+        .notics-item {
+            background-color: #F7F7F7;
+            border: 1px dashed #0061AD;
+            padding: 1em;
+            font-family: Verdana;
+            color: #0061AD;
+            text-align: justify;
+            font-size: 13px;
+            text-decoration: none;
+            position: relative;
+        }
+
+        .notics-item-number {
+            position: absolute;
+            top: 2px;
+            left: -18px;
+            width: 2em;
+            height: 1.5em;
+            line-height: 1.5em;
+            text-align: center;
+            background-color: #2daaed;
+            color: White;
+            box-shadow: 3px 3px 5px #888888;
+            border-radius: 3px;
+        }
+
+
+        .notics-item-number:hover {
+            cursor: pointer;
+        }
+    </style>
+    <div>
+        <div class="notics notics-header">
+            BẢNG THÔNG TIN
+        </div>
+
+        <div class="notics notics-item" style="background-color: inherit; color: inherit;">
+            <div class="notics-item-number">
+                <i class="fa fa-calendar"></i>
+            </div>
+            <div>
+                <span style="color: rgb(107, 165, 74);"><b> HỌC KỲ HIỆN TẠI: 2/2022-2023<span
+                        class="lbl-lang"></span></b></span>
+            </div>
+        </div>
+        <div class="notics notics-item" style="background-color: inherit; color: inherit;">
+            <div class="notics-item-number">
+                <i class="fa fa-warning"></i>
+            </div>
+            <div>
+                <p><span style="color: rgb(255, 0, 0);"><span style="font-weight: bold;">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi, esse?</span>
+                    <br>+ Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorum nihil nisi nostrum pariatur perferendis qui quod repellat sed soluta voluptatem.
+                    <br>+ Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem nam nobis repellendus. Culpa, itaque, vitae!
+                    <br>+ Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nostrum, porro..<br></span>
+                </p>
+            </div>
+        </div>
+        <div class="notics notics-item" style="background-color: inherit; color: inherit;">
+            <div class="notics-item-number">
+                <i class="fa fa-star"></i>
+            </div>
+            <div>
+                <p><b class="fa-color-error"><span style="color: rgb(206, 0, 0);"><span
+                        style="background-color: inherit;">CẢNH BÁO
+            </span></span></b></p>
+                <p><b class="fa-color-error"><span style="color: rgb(206, 0, 0);"><span
+                        style="background-color: inherit;"></span></span></b>Lorem ipsum dolor sit amet, consectetur
+                    adipisicing elit. Accusantium blanditiis cumque debitis dolorum eligendi minima numquam sint tempore
+                    totam ut! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium blanditiis cumque
+                    <br>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam aliquid earum modi provident, sint
+                    veritatis.
+                    <br>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis debitis est, harum ipsa
+                    laudantium libero pariatur quam repellat vero voluptatem.
+                    <br>
+                    <span style="background-color: inherit;"><span style="color: rgb(206, 0, 0);"><b
+                            class="fa-color-error">Xem cách nhận diện các hệ thống của Nhà trường tại <a
+                            href="https://stdportal.tdtu.edu.vn/Home/dmht"
+                            target="_blank">DANH MỤC HỆ THỐNG</a></b> </span></span><b class="fa-color-info"><span
+                            style="background-color: inherit;"><span style="color: rgb(206, 0, 0);">
+                </span></span><br>
+                        <span style="color: rgb(57, 123, 33);"><span style="background-color: inherit;">LƯU Ý:
+                <br>
+                + Để đảm bảo an toàn thông tin, các bạn sinh viên PHẢI bảo quản tài khoản Cổng thông
+                tin sinh viên cẩn thận!</span></span></b></p>
+            </div>
+        </div>
+        <div class="notics notics-item" style="background-color: inherit; color: inherit;">
+            <div class="notics-item-number">
+                <i class="fa fa-star"></i>
+            </div>
+            <div>
+                <p><span style="color: rgb(255, 0, 0);"><b class="fa-color-error">CẢNH BÁO GIẢ MẠO</b></span>
+                    <br>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias animi dolorum earum iure quidem
+                    ratione sequi veritatis vitae. Aperiam delectus id ipsa temporibus vero. Expedita nisi possimus
+                    recusandae sequi vel.
+                    <br>
+                    lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias animi dolorum earum iure quidem
+            </div>
+        </div>
+    </div>
+</div>

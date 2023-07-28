@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 @Entity
@@ -16,7 +17,7 @@ import java.util.Collection;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class ClassEntity extends BaseEntity<String> {
+public class ClassEntity extends BaseEntity<String> implements Serializable {
     private String name;
 
     private int present;
@@ -56,4 +57,10 @@ public class ClassEntity extends BaseEntity<String> {
             targetEntity = AssignmentEntity.class
     )
     private Collection<AssignmentEntity> assignments;
+
+    @OneToOne(
+            mappedBy = "classEntity",
+            targetEntity = ScheduleEntity.class
+    )
+    private ScheduleEntity schedule;
 }

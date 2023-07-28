@@ -172,8 +172,20 @@ $(document).ready(function () {
                 btnDeletes.each(function (index, btnDelete) {
                     $(btnDelete).on('click', function (e) {
                         e.preventDefault();
-                        const id = $(this).data('id');
-                        deleteTeacher(id);
+                        Swal.fire({
+                            title: 'Are you sure?',
+                            text: "You won't be able to revert this!\nThis action will delete all data related to this teacher",
+                            icon: 'warning',
+                            confirmButtonColor: '#0DB473',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Yes, delete it!',
+                            showCancelButton: true,
+                        }).then(result => {
+                            if (result.isConfirmed) {
+                                const id = $(this).data('id');
+                                deleteTeacher(id);
+                            }
+                        });
                     })
                 });
             },

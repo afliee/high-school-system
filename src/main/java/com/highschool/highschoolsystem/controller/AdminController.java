@@ -1,8 +1,8 @@
 package com.highschool.highschoolsystem.controller;
 
-import com.highschool.highschoolsystem.controller.api.ShiftService;
+import com.highschool.highschoolsystem.service.ShiftService;
+import com.highschool.highschoolsystem.dto.response.LevelResponse;
 import com.highschool.highschoolsystem.dto.response.SemesterResponse;
-import com.highschool.highschoolsystem.entity.SemesterEntity;
 import com.highschool.highschoolsystem.service.*;
 import com.highschool.highschoolsystem.util.BreadCrumb;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,6 +37,8 @@ public class AdminController {
     private DayService dayService;
     @Autowired
     private ShiftService shiftService;
+    @Autowired
+    private LevelService levelService;
 
     @GetMapping({"/", "", "/dashboard"})
     public String index(
@@ -205,5 +207,66 @@ public class AdminController {
 
         String redirect = adminService.requireAdminLogin(request);
         return redirect != null ? redirect : "pages/admin/departmentDetails";
+    }
+
+    @GetMapping("/range-scheduling")
+    public String rangeScheduling(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Model model
+    ) {
+        String redirect = adminService.requireAdminLogin(request);
+
+        return redirect != null ? redirect : "pages/admin/rangeScheduling";
+    }
+
+    @GetMapping("/level")
+    public String levelShow(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Model model
+    ) {
+        String redirect = adminService.requireAdminLogin(request);
+        List<LevelResponse> levels = levelService.findAll();
+        model.addAttribute("levels", levels);
+        return redirect != null ? redirect : "pages/admin/level";
+    }
+
+    @GetMapping("/level/{levelId}")
+    public String levelDetail(
+            @PathVariable String levelId,
+            HttpServletRequest request,
+            Model model
+    ) {
+        String redirect = adminService.requireAdminLogin(request);
+        List<BreadCrumb> breadCrumbs = adminService.getLevelBreadCrumbs(levelId);
+        List<LevelResponse> levels = levelService.findAll();
+        model.addAttribute("breadCrumbs", breadCrumbs);
+        model.addAttribute("levelId", levelId);
+        model.addAttribute("levels", levels);
+        return redirect != null ? redirect : "pages/admin/levelDetails";
+    }
+
+    @GetMapping("/semester")
+    public String showSemester(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Model model
+    ) {
+        String redirect = adminService.requireAdminLogin(request);
+        List<BreadCrumb> breadCrumbs = adminService.getSemesterBreadCrumbs("");
+        model.addAttribute("breadCrumbs", breadCrumbs);
+        return redirect != null ? redirect : "pages/admin/semester";
+    }
+
+    @GetMapping("/semester/create")
+    public String createSemester(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Model model
+    ) {
+        String redirect = adminService.requireAdminLogin(request);
+
+        return redirect != null ? redirect : "pages/admin/semester/createSemester";
     }
 }

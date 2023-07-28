@@ -6,7 +6,7 @@
     <th:block th:insert="~{fragments/admin/dashboard/sidebar :: sidebar(active = 'classes')}"/>
     <div id="main">
         <th:block th:insert="~{fragments/admin/dashboard/navbar :: navbar}"/>
-        <th:block th:insert="~{fragments/admin/class/navbar :: navbar}"/>
+        <th:block th:insert="~{fragments/admin/class/navbar :: navbar(isDetail = true)}"/>
         <th:block th:insert="~{fragments/admin/class/student :: students}" />
         <th:block th:insert="~{fragments/admin/class/studentDetails :: studentDetail}"/>
         <th:block th:insert="~{fragments/admin/class/addChairman :: addChairman}"/>
@@ -16,5 +16,6 @@
 
 <th:block th:insert="~{fragments/script/admin/dashboardScript :: dashboardScript}"/>
 <th:block th:insert="~{fragments/script/admin/class/classesScript :: classesScrit}"/>
+<script th:src="@{/js/admin/classes/exportData.js}"></script>
 </body>
 </html>

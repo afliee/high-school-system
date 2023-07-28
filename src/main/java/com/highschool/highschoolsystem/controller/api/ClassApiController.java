@@ -69,11 +69,17 @@ public class ClassApiController {
     public ResponseEntity<Page<?>> get(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(name = "semesterId", defaultValue = "current") String semesterId
+            @RequestParam(name = "semesterId", defaultValue = "current") String semesterId,
+            @RequestParam(name = "levelId", defaultValue = "") String levelId
     ) {
+        if (!levelId.isEmpty()) {
+            return new ResponseEntity<>(classService.get(page, size, semesterId, levelId), HttpStatus.OK);
+        }
 
         return new ResponseEntity<>(classService.get(page, size, semesterId), HttpStatus.OK);
     }
+
+
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable String id, @RequestParam(name = "studentId", defaultValue = "") String studentId) {
@@ -81,6 +87,13 @@ public class ClassApiController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> delete(
+            @RequestParam String classId
+    ) {
+        classService.delete(classId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
     @PostMapping("/set-chairman")
     public ResponseEntity<?> setChairman(@RequestParam String classId, @RequestParam String teacherId) {
         classService.setChairman(classId, teacherId);

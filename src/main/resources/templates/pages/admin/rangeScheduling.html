@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:insert="~{fragments/heading/subjectHeading :: subjectHeading(title = 'Range Scheduling')}"/>
+<body>
+<div class="container-fluid">
+  <th:block th:insert="~{fragments/admin/dashboard/sidebar :: sidebar(active = 'scheduling')}"/>
+  <div id="main">
+    <th:block th:insert="~{fragments/admin/dashboard/navbar :: navbar}"/>
+    <th:block th:insert="~{fragments/admin/scheduling/navbar :: navbar(isDetail = false)}" />
+    <th:block th:insert="~{fragments/admin/scheduling/content :: content}" />
+    <th:block th:insert="~{fragments/admin/scheduling/subjectAvailable :: subjectAvailable}" />
+  </div>
+</div>
+
+<th:block th:insert="~{fragments/script/admin/dashboardScript :: dashboardScript}"/>
+<th:block th:insert="~{fragments/script/admin/scheduling/rangeSchedulingScript :: rangeSchedulingScript}"/>
+</body>
+</html>

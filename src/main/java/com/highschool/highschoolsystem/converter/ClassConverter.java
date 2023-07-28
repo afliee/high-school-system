@@ -41,4 +41,8 @@ public class ClassConverter {
                 .studentPage(studentPage)
                 .build();
     }
+
+    public static List<ClassResponse> toResponse(List<ClassEntity> classEntities) {
+        return classEntities.stream().map(ClassConverter::toResponse).toList();
+    }
 }

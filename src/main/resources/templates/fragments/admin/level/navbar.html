@@ -1,0 +1,30 @@
+<nav
+        xmlns:th="http://www.thymeleaf.org"
+        th:fragment="navbar"
+        class="navbar navbar-light bg-light  d-flex justify-content-between align-items-center px-3">
+  <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li th:each="breadcrumb : ${breadCrumbs}" th:class="'breadcrumb-item ' + ${breadcrumb.isActive ? 'active' : ''}">
+        <a th:href="${breadcrumb.url}" th:text="${breadcrumb.name}" th:class="'text-decoration-none ' + ${breadcrumb.isActive ? 'active' : ''}"></a>
+      </li>
+    </ol>
+  </nav>
+  <div th:class="'nav navbar-nav flex-row ' + ${isDetail ? 'd-none' : ''}">
+    <!--        list button add, filter, sort-->
+    <button data-bs-toggle="modal" type="button" data-bs-target="#levelModal" class="btn btn-primary mx-3">
+      <i class="bi bi-plus"></i>
+      <span>Add New Level</span>
+    </button>
+  </div>
+
+  <div th:class="'nav navbar-nav flex-row ' + ${!isDetail ? 'd-none' : ''}">
+    <!--        list button add, filter, sort-->
+    <div class="rs-select2--light rs-select2--md ms-3">
+      <select class="js-select2" id="select_semester" name="property">
+        <option selected disabled>Semester Options</option>
+      </select>
+      <div class="dropDownSelect2"></div>
+    </div>
+  </div>
+
+</nav>

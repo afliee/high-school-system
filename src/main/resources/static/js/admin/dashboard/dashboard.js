@@ -44,11 +44,54 @@ function generatePaginationOptions(currentPage, totalPages, MAX_PAGE = 5) {
 
     for (let i = startPage; i <= endPage; i++) {
         pagination += `
-                <li class="page-item ${currentPage === i ? 'active' : ''}">
+                <li data-page="${i}" class="page-item ${currentPage === i ? 'active' : ''}">
                     <span class="page-link">${i}</span>
                 </li>
             `
     }
 
     return pagination;
+}
+
+
+function fetchAllLevel(token, element) {
+    $.ajax({
+        url: `/api/v1/level/all?isDetail=true`,
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
+        success: function (res) {
+            console.log(res);
+
+            res.forEach(level => {
+                const option = $(`<option value="${level.id}">Level <span class="text-primary">${level.name}</span></option>`);
+                element.append(option);
+            });
+        },
+        error: function (err) {
+            console.log(err.responseJSON);
+        }
+    })
+}
+
+function fetchAllSemester(token, element) {
+    $.ajax({
+        url: '/api/v1/semester',
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
+        success: function (res) {
+            console.log(res);
+
+            res.forEach(semester => {
+                const option = $(`<option value="${semester.id}"><span class="text-primary">${semester.name}</span></option>`);
+                element.append(option);
+            });
+        },
+        error: function (err) {
+            console.log(err.responseText);
+        }
+    })
 }

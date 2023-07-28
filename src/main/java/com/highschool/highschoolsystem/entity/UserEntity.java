@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 @Entity
@@ -15,7 +16,7 @@ import java.util.Collection;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserEntity extends BaseEntity<String> {
+public class UserEntity extends BaseEntity<String> implements Serializable {
     @Column(unique = true)
     private String username;
     private String password;

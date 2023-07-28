@@ -32,6 +32,29 @@ $(document).ready(function () {
         },
         events: function (fetchInfo, successCallback, failureCallback) {
             fetchLessons(fetchInfo, successCallback, failureCallback);
+        },
+        eventClick: function ({event}) {
+            console.log("eventClick", event);
+            const {lessonId, subjectId, subjectName, department, color, teacher, shift, absent, startDate, endDate} = event.extendedProps;
+            // const startTime = new Date(startDate[0], startDate[1] - 1, startDate[2], startDate[3], startDate[4]).toISOString();
+            // const endTime = new Date(endDate[0], endDate[1] - 1, endDate[2], endDate[3], endDate[4]).toISOString();
+            const startTime = moment(startDate).format("DD-MM-YYYY HH:mm");
+            const endTime = moment(endDate).format("DD-MM-YYYY HH:mm");
+
+            const modal = $("#lessonDetail");
+
+            modal.find(".modal-title").text(subjectName);
+            modal.find(".modal-header").css("background-color", color);
+            // modal.find(".modal-body .subject-name").text(subjectName);
+            modal.find(".modal-body .department-name").text(department);
+            modal.find((`.modal-body .teacher-name`)).html(`${teacher.fullName} :: <span class="text-primary">${teacher.departmentName}</span> department`);
+            modal.find((`.modal-body .shift-name`)).text(shift.name);
+            modal.find((`.modal-body .start-date`)).text(startTime);
+            modal.find((`.modal-body .end-date`)).text(endTime);
+
+        //     show modal
+            modal.modal("show");
+
         }
     });
 
@@ -39,9 +62,9 @@ $(document).ready(function () {
     calendar.gotoDate(startTimeDefault);
     calendar.render();
 
-    getALlSemester()
+    getAllSemester()
 
-    function getALlSemester() {
+    function getAllSemester() {
         $.ajax({
             url: "/api/v1/semester",
             type: "GET",
@@ -94,7 +117,7 @@ $(document).ready(function () {
         const semesterId = $("#semesterId").val();
         console.log("semesterId", semesterId);
         $.ajax({
-            url: `/api/v1/lessons/get/${subjectId}?semesterId=${semesterId}&start=${startStr}&end=${endStr}`,
+            url: `/api/v1/lessons/get/${subjectId}?semesterId=${semesterId}&start=${startStr}&end=${endStr}&isDetail=true`,
             type: "GET",
             headers: {
                 "Authorization": `Bearer ${TOKEN}`
@@ -113,6 +136,7 @@ $(document).ready(function () {
                     const {startDate, endDate} = lesson;
                     const startTime = new Date(startDate[0], startDate[1] - 1, startDate[2], startDate[3], startDate[4]).toISOString();
                     const endTime = new Date(endDate[0], endDate[1] - 1, endDate[2], endDate[3], endDate[4]).toISOString();
+                    const {subject, shift, absent} = lesson;
                     return {
                         id: lesson.id,
                         title: lesson.subject.name,
@@ -120,7 +144,16 @@ $(document).ready(function () {
                         end: endTime,
                         color: lesson.subject.color,
                         extendedProps: {
-                            lessonId: lesson.id
+                            lessonId : lesson.id,
+                            subjectId: subject.id,
+                            subjectName: subject.name,
+                            department: subject.department,
+                            color: subject.color,
+                            teacher: subject.teacher,
+                            startDate: startDate,
+                            endDate: endDate,
+                            shift: shift,
+                            absent: absent
                         }
                     }
                 });

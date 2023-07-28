@@ -162,4 +162,44 @@ public class AdminService {
             );
         }
     }
+
+    public List<BreadCrumb> getLevelBreadCrumbs(String levelId) {
+        return List.of(
+                BreadCrumb.builder()
+                        .name("Dashboard")
+                        .url("/auth/admin")
+                        .isActive(false)
+                        .build(),
+                BreadCrumb.builder()
+                        .name("Level")
+                        .url("/auth/admin/level")
+                        .isActive(true)
+                        .build(),
+                BreadCrumb.builder()
+                        .name(levelId)
+                        .url("/auth/admin/level/" + levelId)
+                        .isActive(true)
+                        .build()
+        );
+    }
+
+    public List<BreadCrumb> getSemesterBreadCrumbs(String semesterId) {
+        return List.of(
+                BreadCrumb.builder()
+                        .name("Dashboard")
+                        .url("/auth/admin")
+                        .isActive(false)
+                        .build(),
+                BreadCrumb.builder()
+                        .name("Semester")
+                        .url("/auth/admin/semester")
+                        .isActive(true)
+                        .build(),
+                BreadCrumb.builder()
+                        .name(semesterId)
+                        .url("/auth/admin/semester/" + semesterId)
+                        .isActive(true)
+                        .build()
+        );
+    }
 }

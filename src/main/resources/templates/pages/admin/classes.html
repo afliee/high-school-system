@@ -6,12 +6,14 @@
     <th:block th:insert="~{fragments/admin/dashboard/sidebar :: sidebar(active = 'classes')}"/>
     <div id="main">
         <th:block th:insert="~{fragments/admin/dashboard/navbar :: navbar}"/>
-        <th:block th:insert="~{fragments/admin/class/navbar :: navbar}"/>
+        <th:block th:insert="~{fragments/admin/class/navbar :: navbar(isDetail = false)}"/>
         <th:block th:insert="~{fragments/admin/class/content :: content}"/>
+        <th:block th:insert="~{fragments/admin/class/addClass :: addClass}"/>
     </div>
 </div>
 
 <th:block th:insert="~{fragments/script/admin/dashboardScript :: dashboardScript}"/>
 <th:block th:insert="~{fragments/script/admin/class/classesScript :: classesScrit}"/>
+<script th:src="@{/js/admin/classes/importData.js}"></script>
 </body>
 </html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:insert="~{fragments/heading/dashboardHeading :: dashboardHeading(title = 'Semester Managerment')}"/>
+<body>
+<div class="container-fluid">
+  <th:block th:insert="~{fragments/admin/dashboard/sidebar :: sidebar(active = 'semesters')}"/>
+  <div id="main">
+    <th:block th:insert="~{fragments/admin/dashboard/navbar :: navbar}"/>
+    <th:block th:insert="~{fragments/admin/semester/navbar :: navbar(isDetail = true)}"/>
+    <th:block th:insert="~{fragments/admin/semester/createContent :: content}"/>
+  </div>
+</div>
+
+<th:block th:insert="~{fragments/script/admin/dashboardScript :: dashboardScript}"/>
+<script th:src="@{/vendors/moment/moment.min.js}"></script>
+<script th:src="@{/js/admin/semester/index.js}"></script>
+</body>
+</html>

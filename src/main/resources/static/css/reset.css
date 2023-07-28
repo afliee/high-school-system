@@ -44,7 +44,7 @@ body {
     --bs-btn-bg: var(--color-primary);
     --bs-btn-hover-bg: var(--color-primary-hover);
     --bs-btn-border-color: var(--color-primary);
-    --bs-btn-border-color-hover: var(--color-primary-hover);
+    --bs-btn-hover-border-color: var(--color-primary-hover);
     --bs-btn-color: #fff;
     --bs-btn-color-hover: #fff;
 }
@@ -71,4 +71,10 @@ a {
 
 .fc-col-header-cell-cushion:hover {
     color: var(--color-primary-hover);
+}
+
+.border {
+    --bs-border-width: 1px;
+    --bs-border-color: var(--color-primary);
+    --bs-border-style: solid;
 }

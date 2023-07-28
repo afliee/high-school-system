@@ -15,7 +15,15 @@ $(document).ready(function () {
     function addClass(res) {
         console.log(res)
         let html = '';
-
+        if (res.content.length === 0) {
+            html = `
+                <div class="d-flex justify-content-center align-items-center col-12">
+                    <img src="/images/nodata.gif" class="img-fluid|img-thumbnail|rounded|rounded-circle|rounded-top|rounded-right|rounded-bottom|rounded-left" alt="">
+                </div>
+            `;
+            classes.html(html);
+            return;
+        }
         res.content.forEach(function (classItem) {
             let r = Math.floor(Math.random() * 255);
             let g = Math.floor(Math.random() * 255);
@@ -25,7 +33,7 @@ $(document).ready(function () {
                     <div class="card class" style="border-right-color: rgb(${r}, ${g}, ${b})" data-id="${classItem.id}">
                         <div class="card-body">
                             <h3 class="name">${classItem.name}</h3>
-                            <h5 class="chairman">${classItem.chairman}</h5>
+                            <h5 class="chairman text-truncate" data-bs-toggle="tooltip" title="${classItem.chairman}">${classItem.chairman}</h5>
                             <div class="info d-flex justify-content-between align-items-center my-3">
                                 <span class="create-at">${new Date(classItem.createdDate).toLocaleDateString('en-GB')}</span>
                                 <span class="present">${classItem.present} Students</span>

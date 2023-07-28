@@ -2,6 +2,7 @@ package com.highschool.highschoolsystem.controller.api;
 
 import com.highschool.highschoolsystem.dto.request.ShiftRequest;
 import com.highschool.highschoolsystem.dto.response.ShiftResponse;
+import com.highschool.highschoolsystem.service.ShiftService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

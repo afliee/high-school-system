@@ -5,7 +5,21 @@
 
 .class,
 .department,
-.subject {
+.subject,
+.card-tag{
     border-right: 0.25rem solid;
     cursor: pointer;
 }
+
+.classes .class-item.active,
+.subjects .subject-item.active{
+    background-color: var(--color-primary);
+    border-right: 0.25rem solid var(--color-primary);
+    color: #fff;
+    transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+.subjects .subject-item.active .text-title {
+    color: #fff;
+}
+

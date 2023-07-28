@@ -1,0 +1,84 @@
+<div th:fragment="addClass" class="modal fade" id="addClass" tabindex="-1" role="dialog" aria-labelledby="addClassTitle"
+     aria-hidden="true">
+    <style>
+        .select2-container  {
+            border: 1px solid #4a4949 !important;
+            border-radius: 5px !important;
+        }
+    </style>
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="addClassTitle">Import New Class</h4>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body row form">
+                <div class="col-12">
+                    <div class="form-group has-icon-left">
+                        <div class="position-relative">
+                            <input type="text" class="form-control"
+                                   placeholder="Class Name" id="name" required>
+                            <div class="form-control-icon">
+                                <i class="bi bi-person-bounding-box"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header bg-transparent">
+                            <h5 class="card-title text-primary text-center">Choose The Best Options</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-body p-0 m-0">
+                                <div class="col-12">
+                                    <div class="rs-select2--light rs-select2--md d-block mt-2">
+                                        <label for="select_chairman" class="form-label"></label>
+                                        <select class="js-select2" required style="width: 100%" id="select_chairman" name="property">
+                                            <option selected="selected">Choose Chairman Option</option>
+                                        </select>
+                                        <div class="dropDownSelect2 w-100"></div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="rs-select2--light rs-select2--md d-block mt-2">
+                                        <label for="select_semester"  class="form-label"></label>
+                                        <select class="js-select2" required style="width: 100%" id="select_semester" name="property">
+                                            <option selected="selected">Choose Semester Option</option>
+                                        </select>
+                                        <div class="dropDownSelect2 w-100"></div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="rs-select2--light rs-select2--md d-block mt-2">
+                                        <label for="select_level" class="form-label"></label>
+                                        <select class="js-select2" required style="width: 100%" id="select_level" name="property">
+                                            <option selected="selected">Choose Level Option</option>
+                                        </select>
+                                        <div class="dropDownSelect2 w-100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="mt-3">
+                        <label for="students" class="form-label">Choose your students data
+                            <span style="color: red; font-size: 12px;">(*)</span>
+                        </label>
+                        <input class="form-control" type="file" id="students" required>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btn-import">Import</button>
+            </div>
+        </div>
+    </div>
+</div>

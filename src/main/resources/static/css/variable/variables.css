@@ -1,7 +1,16 @@
+
 :root {
     --color-primary: rgb(128, 196, 211);
     --color-primary-darker: rgb(87, 191, 214);
     --color-banner: rgb(237, 237, 237);
     --color-transparent: rgba(0, 0, 0, 0);
     --color-primary-hover: rgb(54, 175, 202);
+
+    --bs-border-width: 2px;
+    --bs-border-color: var(--color-primary);
+    --bs-border-style: solid;
+
+    --bs-primary-rgb: 128, 196, 211;
+    --bs-primary-rgba: 128, 196, 211, 0.5;
+    --bs-bg-opacity: 0.5;
 }
