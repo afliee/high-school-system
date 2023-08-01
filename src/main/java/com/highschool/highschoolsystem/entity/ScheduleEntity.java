@@ -1,15 +1,13 @@
 package com.highschool.highschoolsystem.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Set;
 
 @Entity
 @Table(name = "schedule")
@@ -18,6 +16,7 @@ import java.util.Collection;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
+@EqualsAndHashCode(exclude = {"expiredDate", "semester", "lessons", "classEntity"}, callSuper = false)
 public class ScheduleEntity extends BaseEntity<String> {
     private boolean isExpired;
 
@@ -29,10 +28,14 @@ public class ScheduleEntity extends BaseEntity<String> {
     private SemesterEntity semester;
 
     @ManyToMany(
-            mappedBy = "schedules",
             targetEntity = LessonEntity.class
     )
-    private Collection<LessonEntity> lessons;
+    @JoinTable(
+            name = "schedule_detail",
+            joinColumns = @JoinColumn(name = "lession_id"),
+            inverseJoinColumns = @JoinColumn(name = "schedule_id")
+    )
+    private Set<LessonEntity> lessons;
 
     @OneToOne(targetEntity = ClassEntity.class)
     @JoinColumn(name = "class_id")

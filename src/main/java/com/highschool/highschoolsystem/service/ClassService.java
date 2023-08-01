@@ -5,10 +5,7 @@ import com.highschool.highschoolsystem.converter.StudentConverter;
 import com.highschool.highschoolsystem.converter.UserConverter;
 import com.highschool.highschoolsystem.dto.request.AddClassRequest;
 import com.highschool.highschoolsystem.dto.response.ClassResponse;
-import com.highschool.highschoolsystem.entity.ClassEntity;
-import com.highschool.highschoolsystem.entity.LevelEntity;
-import com.highschool.highschoolsystem.entity.SemesterEntity;
-import com.highschool.highschoolsystem.entity.StudentEntity;
+import com.highschool.highschoolsystem.entity.*;
 import com.highschool.highschoolsystem.exception.NotFoundException;
 import com.highschool.highschoolsystem.repository.*;
 import com.highschool.highschoolsystem.util.spreadsheet.ExcelUtil;
@@ -48,6 +45,10 @@ public class ClassService {
     private TokenRepository tokenRepository;
     @Autowired
     private TeacherRepository teacherRepository;
+    @Autowired
+    private LessonService lessonService;
+    @Autowired
+    private ScheduleRepository scheduleRepository;
 
     public ClassResponse save(AddClassRequest request) {
         try {
@@ -216,8 +217,17 @@ public class ClassService {
             userRepository.deleteByUserId(student.getId());
             studentRepository.deleteById(student.getId());
         }
+
+        var schedule = classEntity.getSchedule();
+        if (schedule != null) {
+            var lessons = schedule.getLessons();
+
+
+            scheduleRepository.delete(schedule);
+        }
         classRepository.deleteById(classId);
     }
+
     public void setChairman(String classId, String teacherId) {
         var classEntity = classRepository.findById(classId).orElseThrow(
                 () -> new NotFoundException("Class not found")

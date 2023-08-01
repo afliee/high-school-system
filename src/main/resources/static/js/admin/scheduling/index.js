@@ -62,7 +62,7 @@ $(document).ready(function () {
         }
 
         btnSave.on("click", function () {
-            const classActive = $(".class-item.active");
+            const classActive = $(".class-item.active:not(.disable)");
             if (!classActive.length) {
                 Swal.fire({
                     icon: "warning",
@@ -106,12 +106,15 @@ $(document).ready(function () {
                 levelId,
                 lessonIds: currentLessonActive
             }
+
+            console.log("data", data);
             let swal = null;
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You want to save this schedule?",
                 icon: 'warning',
                 showCancelButton: true,
+                confirmButtonText: 'Yes, save it!',
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33'
             }).then(result => {
@@ -127,6 +130,7 @@ $(document).ready(function () {
                         beforeSend: function () {
                             swal = Swal.fire({
                                 title: 'Saving schedule...',
+                                text: 'Please wait a few seconds.',
                                 showConfirmButton: false,
                                 willOpen: () => {
                                     Swal.showLoading()
@@ -194,11 +198,12 @@ $(document).ready(function () {
                 registerPaginationClick(pagination)
                 response.content.forEach((item, index) => {
                     const classItem = $(`
-                        <div class="col-12 col-md-3 pe-2 mt-2">
-                            <div class="class-item class border-end rounded-2 p-2 shadow" data-id="${item.id}">
-                            <h5>${item.name}</h5>
-                            <i><strong>Teached by: </strong></i><span>${item.chairman ? item.chairman : `No Range`}</span>
-                        </div>
+                        <div class="col-12 col-md-3 pe-2 mt-2 ">
+                            <div class="class-item class border-end rounded-2 p-2 shadow ${item.hasSchedule ? 'active disable' : ''}" data-id="${item.id}">
+                                <h5>${item.name}</h5>
+                                <i><strong>Teached by: </strong></i>
+                                <span>${item.chairman ? item.chairman : `No Range`}</span>
+                            </div>
                         </div>
                     `);
 
@@ -245,7 +250,7 @@ $(document).ready(function () {
     }
 
     function activeClassItemClick() {
-        const classItems = $(".class-item");
+        const classItems = $(".class-item:not(.disable)");
 
         classItems.on("click", function () {
             if ($(this).hasClass("active")) {

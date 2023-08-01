@@ -23,6 +23,7 @@ public class ClassConverter {
         return ClassResponse.builder()
                 .id(classEntity.getId())
                 .name(classEntity.getName())
+                .hasSchedule(classEntity.getSchedule() != null)
                 .chairman(classEntity.getChairman() != null ? classEntity.getChairman().getName() : null)
                 .present(classEntity.getPresent())
                 .createdDate(classEntity.getCreatedDate().toString())

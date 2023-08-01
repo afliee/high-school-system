@@ -8,6 +8,9 @@ $(document).ready(function () {
 
     const days = [];
     const shiftsArray = [];
+
+    console.log("shiftsArray", shiftsArray);
+    console.log("days", days);
     shifts.on('click', function (e) {
         e.preventDefault();
         const shift = $(this);
@@ -17,13 +20,13 @@ $(document).ready(function () {
         const shiftId = shift.data('id');
         const dayId = shift.parent().data('id');
 
-        if (shift.hasClass('active')) {
-            shiftsArray.push(shiftId);
-            dayId && days.push(dayId);
-        } else {
-            shiftsArray.splice(shiftsArray.indexOf(shiftId), 1);
-            dayId && days.splice(days.indexOf(dayId), 1);
-        }
+        // if (shift.hasClass('active')) {
+        //     shiftsArray.push(shiftId);
+        //     days.push(dayId);
+        // } else {
+        //     shiftsArray.splice(shiftsArray.indexOf(shiftId), 1);
+        //     days.splice(days.indexOf(dayId), 1);
+        // }
 
         console.log(shiftsArray);
         console.log(days);
@@ -59,6 +62,28 @@ $(document).ready(function () {
             shifts
         }
     ) {
+        const shiftActives = $('.shift.active');
+        if (shiftActives.length === 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please choose at least one shift!'
+            })
+            return;
+        }
+
+        shiftActives.each(function (_, shift) {
+            const shiftItem = $(shift);
+            const shiftId = shiftItem.data('id');
+            const dayId = shiftItem.parent().data('id');
+            // if (!shifts.includes(shiftId) || !days.includes(dayId)) {
+            //     shifts.push(shiftId);
+            //     days.push(dayId);
+            // }
+            shifts.push(shiftId);
+            days.push(dayId);
+        })
+
         console.log({
             dayIds: days,
             semesterId: semesterId,

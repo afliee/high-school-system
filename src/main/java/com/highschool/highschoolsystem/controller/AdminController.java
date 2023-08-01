@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 @Controller
@@ -39,6 +41,8 @@ public class AdminController {
     private ShiftService shiftService;
     @Autowired
     private LevelService levelService;
+    @Autowired
+    private LessonService lessonService;
 
     @GetMapping({"/", "", "/dashboard"})
     public String index(
@@ -217,7 +221,18 @@ public class AdminController {
     ) {
         String redirect = adminService.requireAdminLogin(request);
 
-        return redirect != null ? redirect : "pages/admin/rangeScheduling";
+        return redirect != null ? redirect : "pages/admin/schedule/rangeScheduling";
+    }
+
+    @GetMapping("/review-scheduling")
+    public String reviewScheduling(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Model model
+    ) {
+        String redirect = adminService.requireAdminLogin(request);
+
+        return redirect != null ? redirect : "pages/admin/schedule/reviewScheduling";
     }
 
     @GetMapping("/level")

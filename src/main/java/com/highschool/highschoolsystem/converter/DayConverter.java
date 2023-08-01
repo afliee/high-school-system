@@ -22,7 +22,7 @@ public class DayConverter {
     }
 
     public static DayResponse toResponse(DayEntity day, String[] attrs) {
-        logger.info(day.getName());
+//        logger.info(day.getName());
         List<String> attributes = List.of(attrs);
         List<Field> rootFields = new ArrayList<>(List.of(day.getClass().getDeclaredFields()));
         rootFields.addAll(Arrays.asList(day.getClass().getSuperclass().getDeclaredFields()));
@@ -58,7 +58,7 @@ public class DayConverter {
         return response;
     }
 
-    public static Iterable<DayResponse> toResponse(List<DayEntity> days, String[] attr) {
+    public static List<DayResponse> toResponse(List<DayEntity> days, String[] attr) {
         return days.stream()
                 .map(day -> toResponse(day, attr))
                 .toList();

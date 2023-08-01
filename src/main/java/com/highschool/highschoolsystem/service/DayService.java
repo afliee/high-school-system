@@ -15,7 +15,7 @@ import java.util.List;
 public class DayService {
     @Autowired
     private DayRepository dayRepository;
-    public Iterable<DayResponse> getAllDays(){
+    public List<DayResponse> getAllDays(){
 //        order by dayofweek()
         List<DayEntity> days = dayRepository.findAll();
         var daySorted = days.stream().sorted((o1, o2) -> {

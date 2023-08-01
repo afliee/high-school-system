@@ -40,4 +40,13 @@ public class SubjectEntity extends BaseEntity<String> {
     )
     @JoinColumn(name = "level_id")
     private LevelEntity level;
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof SubjectEntity) {
+            SubjectEntity subjectEntity = (SubjectEntity) obj;
+            return subjectEntity.getId().equals(this.getId());
+        }
+        return false;
+    }
 }

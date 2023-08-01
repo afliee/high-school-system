@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:insert="~{fragments/heading/subjectHeading :: subjectHeading(title = 'Review Scheduling')}"/>
+<body>
+<div class="container-fluid">
+    <th:block th:insert="~{fragments/admin/dashboard/sidebar :: sidebar(active = 'scheduling_review')}"/>
+    <div id="main">
+        <th:block th:insert="~{fragments/admin/dashboard/navbar :: navbar}"/>
+        <th:block th:insert="~{fragments/admin/scheduling/navbar :: navbar(isDetail = false)}" />
+        <th:block th:insert="~{fragments/admin/scheduling/content :: content}" />
+    </div>
+</div>
+
+<th:block th:insert="~{fragments/script/admin/dashboardScript :: dashboardScript}"/>
+</body>
+</html>

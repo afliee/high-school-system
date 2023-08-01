@@ -6,15 +6,13 @@ import com.highschool.highschoolsystem.dto.response.LessonResponse;
 import com.highschool.highschoolsystem.entity.LessonEntity;
 import com.highschool.highschoolsystem.exception.NotFoundException;
 import com.highschool.highschoolsystem.repository.*;
+import com.highschool.highschoolsystem.util.Shift;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
 
@@ -32,6 +30,8 @@ public class LessonService {
     private ShiftRepository shiftRepository;
     @Autowired
     private LessonRepository lessonRepository;
+    @Autowired
+    private ScheduleRepository scheduleRepository;
 
     public LessonEntity save(LessonEntity lessonEntity) {
         return lessonRepository.save(lessonEntity);
@@ -39,6 +39,11 @@ public class LessonService {
 
     public List<LessonResponse> create(LessonRequest request) {
         Map<String, List<String>> dataProcessed = preProcessRequest(request);
+//        log dataProcessed
+        dataProcessed.forEach((key, value) -> {
+            logger.info("dayId key: " + key);
+            value.forEach(logger::info);
+        });
         var semester = semesterRepository.findById(request.getSemesterId()).orElseThrow(
                 () -> new NotFoundException("Semester not found")
         );
@@ -140,15 +145,69 @@ public class LessonService {
         return lessonRepository.findAllBySubjectIdIn(subjectIds);
     }
 
-    public List<LessonEntity> findAllByIdIn(List<String> lessonIds) {
+    public Set<LessonEntity> findAllByIdIn(List<String> lessonIds) {
         return lessonRepository.findAllByIdIn(lessonIds);
     }
 
     private Map<String, List<String>> preProcessRequest(LessonRequest request) {
         Map<String, List<String>> dataProcessed = new HashMap<>();
 
+        var semester = semesterRepository.findById(request.getSemesterId()).orElseThrow(
+                () -> new NotFoundException("Semester not found")
+        );
+
         List<String> dayIds = new ArrayList<>(request.getDayIds());
         List<String> shiftIds = new ArrayList<>(request.getShiftIds());
+        List<String> dayIdsChecked = new ArrayList<>();
+        logger.info("before remove");
+        logger.info("dayIds " + dayIds.toString());
+        logger.info("shiftId " + shiftIds.toString());
+
+        if (dayIds.size() != shiftIds.size()) {
+            throw new RuntimeException("Day and shift must be the same size");
+        }
+
+        var lessonAvailable = lessonRepository.findAllBySubjectIdAndWeekSemesterId(request.getSubjectId(), request.getSemesterId());
+        List<LessonEntity> lessons = new ArrayList<>();
+
+        IntStream.range(0, dayIds.size()).forEach(index -> {
+            var dayId = dayIds.get(index);
+            var shiftId = shiftIds.get(index);
+
+            var lessonExist = lessonRepository.findAllByDayIdAndShiftIdAndSubjectIdAndWeekSemesterId(dayId, shiftId, request.getSubjectId(), request.getSemesterId());
+
+            if (lessonExist.size() > 0) {
+                lessons.addAll(lessonExist);
+                logger.info("lesson exist with index: " + index);
+                dayIdsChecked.add(dayId);
+            }
+        });
+
+        dayIdsChecked.forEach(dayId -> {
+            int index = dayIds.indexOf(dayId);
+            logger.info("remove index: " + index + " with dayId: " + dayId);
+            dayIds.remove(index);
+            shiftIds.remove(index);
+        });
+        logger.info("lessonAvailable size: " + lessonAvailable.size());
+        logger.info("lessons size: " + lessons.size());
+        lessonAvailable.removeAll(lessons);
+        logger.info("lessonAvailable size: " + lessonAvailable.size());
+
+        lessonAvailable.forEach(lesson -> {
+            logger.info("day: " + lesson.getDay().getName() + " shift: " + lesson.getShift().getName());
+
+            var schedules = lesson.getSchedules();
+            schedules.forEach(schedule -> {
+                schedule.getLessons().remove(lesson);
+                scheduleRepository.save(schedule);
+            });
+            lessonRepository.delete(lesson);
+        });
+
+        logger.info("after remove");
+        logger.info(dayIds.toString());
+        logger.info(shiftIds.toString());
 
         int daySize = dayIds.size();
 
@@ -166,5 +225,10 @@ public class LessonService {
         });
 
         return dataProcessed;
+    }
+
+    public List<LessonResponse> getLessonTimeAvailable(String subjectId, String semesterId) {
+        var lessons = lessonRepository.findAllBySubjectIdAndWeekSemesterId(subjectId, semesterId);
+        return LessonConverter.toResponse(lessons);
     }
 }

@@ -1,16 +1,15 @@
 package com.highschool.highschoolsystem.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Set;
 
 @Entity
 @Table(name = "lession")
@@ -19,7 +18,8 @@ import java.util.Collection;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class LessonEntity extends BaseEntity<String> {
+@EqualsAndHashCode(exclude = {"startDate", "endDate", "day", "subject", "shift", "week", "schedules"}, callSuper = true)
+public class LessonEntity extends BaseEntity<String> implements Serializable {
     @ManyToOne(targetEntity = DayEntity.class)
     @JoinColumn(name = "day_id")
     private DayEntity day;
@@ -36,13 +36,12 @@ public class LessonEntity extends BaseEntity<String> {
     @JoinColumn(name = "week_id")
     private WeekEntity week;
 
-    @ManyToMany(targetEntity = ScheduleEntity.class)
-    @JoinTable(
-            name = "schedule_detail",
-            joinColumns = @JoinColumn(name = "lession_id"),
-            inverseJoinColumns = @JoinColumn(name = "schedule_id")
+    @ManyToMany(
+            mappedBy = "lessons",
+            targetEntity = ScheduleEntity.class
     )
-    private Collection<ScheduleEntity> schedules;
+    private Set<ScheduleEntity> schedules;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startDate;
 

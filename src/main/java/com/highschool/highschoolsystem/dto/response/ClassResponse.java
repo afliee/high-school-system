@@ -21,4 +21,5 @@ public class ClassResponse {
     private List<StudentResponse> students;
     private String chairman;
     private Page<StudentResponse> studentPage;
+    private boolean hasSchedule;
 }

@@ -83,8 +83,8 @@ $(document).ready(function () {
                 console.log("data", data)
                 if (data.length === 0) {
                     semesters.html(`
-                        <div class="col-12">
-                            <img src="/images/nodata.gif" class="img-fluid" alt="No Data Image">
+                        <div class="col-12 d-flex justify-content-center align-items-center">
+                            <img src="/images/nodata.gif" class="img-fluid|img-thumbnail|rounded|rounded-circle|rounded-top|rounded-right|rounded-bottom|rounded-left" alt="">
                         </div>
                     `)
                     return;
@@ -95,7 +95,7 @@ $(document).ready(function () {
                     const template = $(`
                         <div class="semsester-item pe-2 col-md-4" data-id="${semester.id}">
                             <div class="card-tag rounded border-end mt-3 shadow p-2">
-                                <h4 class="text-title">${semester.name}</h4>
+                                <h4 class="text-title text-truncate" data-bs-toggle="tooltip" title="${semester.name}">${semester.name}</h4>
                                 <p><i><strong>Start date</strong></i>: ${startDate}</p>
                                 <p><i><strong>End date</strong></i>: ${endDate}</p>
                             </div>

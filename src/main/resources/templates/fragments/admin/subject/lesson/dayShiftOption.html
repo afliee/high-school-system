@@ -22,20 +22,23 @@
             <thead class="text-center">
             <tr>
                 <th class="text-center">Time Shift</th>
-                <th:block th:each="day: ${days}">
-                    <th th:attr="data-id=${day.getId()}" th:text="${day.getName()}" scope="col"
+                <th:block th:each="day, iter : ${days}">
+                    <th th:attr="data-id=${day.getId()}, data-index=${iter.index}" th:text="${day.getName()}" scope="col"
                         data-bs-toggle="collapse" href="#contentCollapse" role="button" aria-expanded="false"
-                        aria-controls="contentCollapse"></th>
+                        aria-controls="contentCollapse">
+                    </th>
                 </th:block>
             </tr>
             </thead>
             <tbody class="collapse" id="contentCollapse">
-            <tr th:each="shift, iter : ${shifts}">
+            <tr th:each="shift, shiftIter : ${shifts}">
                 <td class="text-center text-primary"
-                    th:text="${shift.getStartTime() + '&rarr;' +  shift.getEndTime()}"></td>
-                <td class="text-center" th:each="day : ${days}" th:attr="data-id=${day.getId()}">
+                    th:text="${shift.getStartTime() + '&rarr;' +  shift.getEndTime()}">
+
+                </td>
+                <td class="text-center" th:each="day, dayIter : ${days}" th:attr="data-id=${day.getId()}">
                     <span class="badge badge-pill badge-outline-primary px-3 shift" th:text="${shift.getName}"
-                          th:attr="data-id=${shift.getId()}"></span>
+                          th:attr="data-id=${shift.getId()}, data-index=${dayIter.index + '-' + shiftIter.index}"></span>
                 </td>
             </tr>
             </tbody>

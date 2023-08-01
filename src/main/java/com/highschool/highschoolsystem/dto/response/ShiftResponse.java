@@ -24,4 +24,6 @@ public class ShiftResponse {
 
     @DateTimeFormat(pattern = "HH:mm")
     private LocalTime endTime;
+
+    private boolean isAvailable;
 }

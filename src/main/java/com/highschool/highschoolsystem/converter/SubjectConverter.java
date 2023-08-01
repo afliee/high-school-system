@@ -21,6 +21,9 @@ import java.util.Random;
 public class SubjectConverter {
 
     public static SubjectResponse toResponse(SubjectEntity subjectEntity) {
+        if (subjectEntity == null) {
+            return null;
+        }
 //        parse date to localdate
 //        format date to format yyyy-MM-dd
         return SubjectResponse.builder()

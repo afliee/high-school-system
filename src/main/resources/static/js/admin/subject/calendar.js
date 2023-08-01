@@ -94,6 +94,7 @@ $(document).ready(function () {
             semesterSelection.append(option);
         })
 
+        activeShiftAvailable();
         registerSemesterSelectionEvent();
     }
 
@@ -102,6 +103,7 @@ $(document).ready(function () {
             $("#semesterId").val($(this).val());
             const startDate = $(this).find(":selected").data("start-date");
             const endDate = $(this).find(":selected").data("end-date");
+            activeShiftAvailable();
 
             calendar.gotoDate(startDate);
         })
@@ -170,4 +172,37 @@ $(document).ready(function () {
     $(".btn-add-lessons").on('click', function () {
         location.href = `/auth/admin/subjects/${subjectId}/lessons/add`
     })
+
+    function activeShiftAvailable() {
+        const shifts = $(".shift");
+        if (shifts.length === 0) return;
+        const semesterId = $("#semesterId").val();
+        const subjectId = $("#subjectId").val();
+        console.log(`/api/v1/shift/available-time?semesterId=${semesterId}&subjectId=${subjectId}`)
+        $.ajax({
+            url: `/api/v1/shift/available-time?semesterId=${semesterId}&subjectId=${subjectId}`,
+            type: 'GET',
+            headers: {
+                'Authorization': `Bearer ${TOKEN}`
+            },
+            timeout: 0,
+            success: function (data) {
+                console.log(typeof data);
+                shifts.each(function (_, shift) {
+                    const index = $(shift).data("index");
+                    console.log("index", index, data[index])
+                    if (data[index]) {
+                        console.log("available", index);
+                        $(shift).addClass("active");
+                    } else {
+                        console.log("not available", index);
+                        $(shift).removeClass("active");
+                    }
+                })
+            },
+            error: function (error) {
+                console.log(error.responseText);
+            }
+        })
+    }
 })

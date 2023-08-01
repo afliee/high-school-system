@@ -8,6 +8,7 @@ function fetchAllSubjectByLevel(
     $.ajax({
         url: `/api/v1/schedule/subjects?level=${levelId}`,
         type: 'GET',
+        timeout: 10000,
         headers: {
             'Authorization': `Bearer ${token}`
         },
@@ -16,7 +17,7 @@ function fetchAllSubjectByLevel(
             callback(response);
         },
         error: function (error) {
-            console.log(error);
+            console.log(error.responseText);
         }
     })
 }

@@ -94,7 +94,13 @@
                 <li th:class="'sidebar-item ' + ${#strings.equals(active, 'scheduling') ? 'active' : ''}">
                     <a th:href="@{/auth/admin/range-scheduling}" class='sidebar-link'>
                         <i class="bi bi-book-half"></i>
-                        <span>Scheduling</span>
+                        <span>Range Scheduling</span>
+                    </a>
+                </li>
+                <li th:class="'sidebar-item ' + ${#strings.equals(active, 'scheduling_review') ? 'active' : ''}">
+                    <a th:href="@{/auth/admin/review-scheduling}" class='sidebar-link'>
+                        <i class="bi bi-book-half"></i>
+                        <span>Review</span>
                     </a>
                 </li>
             </ul>

@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/day")
 public class DayApiController {
@@ -14,7 +16,7 @@ public class DayApiController {
     private DayService dayService;
 
     @GetMapping("/all")
-    public Iterable<DayResponse> getAllDays(){
+    public List<DayResponse> getAllDays(){
         return dayService.getAllDays();
     }
 }
