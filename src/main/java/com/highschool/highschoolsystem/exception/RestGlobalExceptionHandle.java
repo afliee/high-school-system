@@ -29,14 +29,18 @@ public class RestGlobalExceptionHandle {
     public ResponseEntity<ErrorMessage> handleUserNotFoundException(Exception e) {
         return ResponseEntity.status(404).body(new ErrorMessage(404, e.getMessage()));
     }
+
     @ExceptionHandler(MissingParametersException.class)
     public ResponseEntity<ErrorMessage> handleMissingParametersException(Exception e) {
         return ResponseEntity.status(500).body(new ErrorMessage(500, e.getMessage()));
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorMessage> handleException(Exception e) {
-        return ResponseEntity.status(500).body(new ErrorMessage(500, e.getMessage()));
+    @ExceptionHandler({Exception.class})
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<?> handleException(Exception e) {
+//        handle exception with preset Content-Type = 'text/event-stream' of Stompjs
+        return ResponseEntity.status(500).body(e.getMessage());
+//        return ResponseEntity.status(500).body(new ErrorMessage(500, e.getMessage()));
     }
 
     @ExceptionHandler(BindException.class)

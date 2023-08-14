@@ -6,11 +6,13 @@
     <th:block th:insert="~{fragments/admin/dashboard/sidebar :: sidebar(active = 'scheduling_review')}"/>
     <div id="main">
         <th:block th:insert="~{fragments/admin/dashboard/navbar :: navbar}"/>
-        <th:block th:insert="~{fragments/admin/scheduling/navbar :: navbar(isDetail = false)}" />
-        <th:block th:insert="~{fragments/admin/scheduling/content :: content}" />
+        <th:block th:insert="~{fragments/admin/scheduling/navbar :: navbar(isDetail = true, isShow = true)}" />
+        <th:block th:insert="~{fragments/admin/scheduling/review :: review}" />
     </div>
 </div>
 
 <th:block th:insert="~{fragments/script/admin/dashboardScript :: dashboardScript}"/>
+<script th:src="@{/js/util/fetchClasses.js}"></script>
+<script th:src="@{/js/admin/scheduling/review.js}"></script>
 </body>
 </html>

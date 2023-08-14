@@ -202,4 +202,24 @@ public class AdminService {
                         .build()
         );
     }
+
+    public List<BreadCrumb> getScheduleDetail(String classId) {
+        return List.of(
+                BreadCrumb.builder()
+                        .name("Dashboard")
+                        .url("/auth/admin")
+                        .isActive(false)
+                        .build(),
+                BreadCrumb.builder()
+                        .name("Schedule")
+                        .url("/auth/admin/review-scheduling")
+                        .isActive(false)
+                        .build(),
+                BreadCrumb.builder()
+                        .name(classId)
+                        .url("/auth/admin/review-scheduling/" + classId)
+                        .isActive(true)
+                        .build()
+        );
+    }
 }

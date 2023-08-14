@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:insert="~{fragments/heading/subjectHeading :: subjectHeading(title = 'Review Scheduling')}"/>
+<body>
+<div class="container-fluid">
+    <th:block th:insert="~{fragments/admin/dashboard/sidebar :: sidebar(active = 'scheduling_review')}"/>
+    <div id="main">
+        <th:block th:insert="~{fragments/admin/dashboard/navbar :: navbar}"/>
+        <th:block th:insert="~{fragments/admin/scheduling/navbar :: navbar(breadCrumbs = ${breadCrumbs}, isDetail = true, isShow = false)}" />
+        <th:block th:insert="~{fragments/admin/scheduling/scheduleDetail :: scheduleDetail}" />
+    </div>
+    <input type="hidden" name="classId" th:value="${classId}" id="classId">
+    <input type="hidden" name="semesterId" id="semesterId" th:value="${semesterId}">
+</div>
+
+<th:block th:insert="~{fragments/script/admin/dashboardScript :: dashboardScript}"/>
+<script th:src="@{/vendors/moment/moment.min.js}"></script>
+<script th:src="@{/webjars/fullcalendar/5.11.3/main.min.js}"></script>
+<script th:src="@{/js/admin/scheduling/scheduleDetail.js}"></script>
+</body>
+</html>

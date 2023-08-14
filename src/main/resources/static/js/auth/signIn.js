@@ -24,7 +24,7 @@ $(document).ready(function () {
                 const {token , refreshToken} = response;
                 localStorage.setItem('token', token);
                 localStorage.setItem('refreshToken', refreshToken);
-                location.href = '/';
+                location.href = '/' + role + '/home';
             },
             error: function (error) {
                 console.log(error);

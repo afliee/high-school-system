@@ -6,7 +6,6 @@ import com.highschool.highschoolsystem.dto.response.LessonResponse;
 import com.highschool.highschoolsystem.entity.LessonEntity;
 import com.highschool.highschoolsystem.exception.NotFoundException;
 import com.highschool.highschoolsystem.repository.*;
-import com.highschool.highschoolsystem.util.Shift;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

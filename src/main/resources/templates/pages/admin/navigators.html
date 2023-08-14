@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:insert="~{fragments/heading/dashboardHeading :: dashboardHeading(title = 'Dashboard')}"/>
+<body>
+<div class="container-fluid">
+  <th:block th:insert="~{fragments/admin/dashboard/sidebar :: sidebar(active = 'setting', sub = 'nagigator')}"/>
+  <div id="main">
+    <th:block th:insert="~{fragments/admin/dashboard/navbar :: navbar}"/>
+    <th:block th:insert="~{fragments/admin/navigator/navbar :: navbar}"/>
+    <th:block th:insert="~{fragments/admin/navigator/navigatorTable :: content}" />
+    <input type="hidden" name="filter" id="filter" th:value="${filter}">
+    <input type="hidden" name="page" id="page" th:value="${page}">
+  </div>
+</div>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<th:block th:insert="~{fragments/script/admin/dashboardScript :: dashboardScript}"/>
+<script th:src="@{/js/admin/navigator/index.js}"></script>
+</body>
+</html>

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/teacher")
 @Tag(name = "Teacher", description = "Teacher views for CRUD")
 public class TeacherController {
-    @GetMapping({"/", ""})
+    @GetMapping({"/home", "/", ""})
     public String index() {
         return "Teacher";
     }

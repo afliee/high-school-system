@@ -18,7 +18,7 @@ $(document).ready(function () {
         token: TOKEN,
         levelId: LEVEL_ID
     }, function (subjects_data) {
-        if (subjects_data.length === 0) {
+        if (Object.keys(subjects_data).length === 0) {
             subjects.append(`
                 <div class="col-12">
                     <div class="alert alert-warning" role="alert">
@@ -28,8 +28,10 @@ $(document).ready(function () {
             `)
             return;
         }
-        subjects_data.forEach(subject => {
-            const template = $(`
+        Object.keys(subjects_data).forEach(semesterId => {
+            const subjectsAvailable = subjects_data[semesterId].subjects;
+            subjectsAvailable.forEach(subject => {
+                const template = $(`
                 <div class="content col-md-4 col-12 pe-2" data-id="${subject.id}">
                     <div class="card-tag rounded border-end mt-3 shadow p-2">
                         <h5 class="text-title text-truncate" data-bs-toggle="tooltip" title="${subject.name}">${subject.name}</h5>
@@ -38,7 +40,8 @@ $(document).ready(function () {
                 </div>
             `);
 
-            subjects.append(template);
+                subjects.append(template);
+            })
         })
     })
 

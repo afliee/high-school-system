@@ -235,6 +235,23 @@ public class AdminController {
         return redirect != null ? redirect : "pages/admin/schedule/reviewScheduling";
     }
 
+    @GetMapping("/review/{classId}")
+    public String scheduleDetail(
+            @PathVariable String classId,
+            @RequestParam String semesterId,
+            HttpServletRequest request,
+            Model model
+    ) {
+        String redirect = adminService.requireAdminLogin(request);
+        var breadCrumbs = adminService.getScheduleDetail(classId);
+
+        model.addAttribute("breadCrumbs", breadCrumbs);
+        model.addAttribute("classId", classId);
+        model.addAttribute("semesterId", semesterId);
+
+        return redirect != null ? redirect : "pages/admin/schedule/scheduleDetail";
+    }
+
     @GetMapping("/level")
     public String levelShow(
             HttpServletRequest request,

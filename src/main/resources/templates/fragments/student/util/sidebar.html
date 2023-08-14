@@ -1,0 +1,29 @@
+<div th:fragment="sidebar" id="sidebar" class="active" xmlns:th="http://www.thymeleaf.org">
+    <div class="sidebar-wrapper active">
+        <div class="sidebar-header">
+            <div class="d-flex justify-content-between">
+                <div class="logo">
+                    <a th:href="@{/student/home}" class="text-decoration-none text-title"><h2>Student Management</h2></a>
+                </div>
+                <div class="toggler">
+                    <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="sidebar-menu">
+            <ul class="menu">
+                <li class="sidebar-title">Menu</li>
+
+                <li th:class="'sidebar-item ' + ${#strings.equals(active, 'navigator') ? 'active' : ''}">
+                    <a th:href="@{/student/navigator-registration}" class='sidebar-link'>
+                        <i class="bi bi-grid-fill"></i>
+                        <span>Navigator Registration</span>
+                    </a>
+                </li>
+
+
+            </ul>
+        </div>
+        <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
+    </div>
+</div>

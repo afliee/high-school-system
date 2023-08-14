@@ -152,7 +152,7 @@ public class ClassService {
         }
     }
 
-    public Page<?> get(int page, int size, String semesterId, String levelId) {
+    public Page<ClassResponse> get(int page, int size, String semesterId, String levelId) {
         var pageRequest = PageRequest.of(page, size).withSort(Sort.by("name").ascending());
 
         if (semesterId.equals("current")) {

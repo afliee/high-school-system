@@ -16,7 +16,6 @@ public enum Permission {
     STUDENT_WRITE("student:write"),
     STUDENT_DELETE("student:delete");
 
-
     private final String permission;
 
     public String getPermission() {

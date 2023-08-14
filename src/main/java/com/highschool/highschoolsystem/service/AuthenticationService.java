@@ -25,6 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -83,6 +84,13 @@ public class AuthenticationService {
                 cookie.setHttpOnly(true);
                 cookie.setPath("/");
                 cookie.setMaxAge(7 * 24 * 60 * 60); // 7 days
+
+                Cookie tokenCookie = new Cookie("token", token);
+                tokenCookie.setHttpOnly(true);
+                tokenCookie.setPath("/");
+                tokenCookie.setMaxAge(7 * 24 * 60 * 60); // 7 days
+
+                httpServletResponse.addCookie(tokenCookie);
                 httpServletResponse.addCookie(cookie);
 
                 return AuthenticationResponse.builder()
@@ -107,6 +115,13 @@ public class AuthenticationService {
                 cookie.setHttpOnly(true);
                 cookie.setPath("/");
                 cookie.setMaxAge(7 * 24 * 60 * 60); // 7 days
+
+                Cookie tokenCookie = new Cookie("token", token);
+                tokenCookie.setHttpOnly(true);
+                tokenCookie.setPath("/");
+                tokenCookie.setMaxAge(7 * 24 * 60 * 60); // 7 days
+
+                httpServletResponse.addCookie(tokenCookie);
                 httpServletResponse.addCookie(cookie);
 
                 return AuthenticationResponse.builder()
@@ -446,6 +461,7 @@ public class AuthenticationService {
                 .tokenType(TokenType.BEARER.getTokenType())
                 .build();
     }
+
 
     private String generateResetCode() {
 //        random number include 6 number

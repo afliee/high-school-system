@@ -1,12 +1,14 @@
 package com.highschool.highschoolsystem.service;
 
 import com.highschool.highschoolsystem.converter.DayConverter;
+import com.highschool.highschoolsystem.converter.LessonConverter;
 import com.highschool.highschoolsystem.converter.ShiftConverter;
 import com.highschool.highschoolsystem.converter.SubjectConverter;
 import com.highschool.highschoolsystem.dto.request.SchedulingRequest;
 import com.highschool.highschoolsystem.dto.response.LessonResponse;
 import com.highschool.highschoolsystem.dto.response.SchedulingResponse;
 import com.highschool.highschoolsystem.dto.response.SubjectGroupByResponse;
+import com.highschool.highschoolsystem.dto.response.SubjectResponse;
 import com.highschool.highschoolsystem.entity.LessonEntity;
 import com.highschool.highschoolsystem.entity.ScheduleEntity;
 import com.highschool.highschoolsystem.entity.SubjectEntity;
@@ -14,16 +16,21 @@ import com.highschool.highschoolsystem.exception.NotFoundException;
 import com.highschool.highschoolsystem.repository.LessonRepository;
 import com.highschool.highschoolsystem.repository.LevelRepository;
 import com.highschool.highschoolsystem.repository.ScheduleRepository;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.logging.Logger;
 
 @Service
+@AllArgsConstructor
+@NoArgsConstructor
 public class ScheduleService {
+    private static final Logger logger = Logger.getLogger(ScheduleService.class.getName());
     @Autowired
     private LessonService lessonService;
     @Autowired
@@ -107,9 +114,6 @@ public class ScheduleService {
                 .build();
 
         scheduleRepository.save(schedule);
-//        schedule and lessons has a many-to-many relationship
-//        so we need to save the schedule first
-//        then save the lessons
     }
 
     public List<String> findAllSubjectInsideLessons(List<LessonEntity> lessons) {
@@ -123,4 +127,41 @@ public class ScheduleService {
         return subjects;
     }
 
+//    find all subject inside lessons with return type List<SubjectEntity>
+    public List<SubjectResponse> findAllSubjectInsideLessonsWithEntity(Set<LessonEntity> lessons) {
+        var subjects = new ArrayList<SubjectEntity>();
+
+        lessons.forEach(lesson -> {
+            var subject = lesson.getSubject();
+            if (!subjects.contains(subject)) {
+                subjects.add(subject);
+            }
+        });
+
+        return SubjectConverter.toResponse(subjects);
+    }
+
+    private List<ScheduleEntity> getAllScheduleByClassId(String classId) {
+        return scheduleRepository.findAllByClassEntity_Id(classId).stream().filter(schedule -> !schedule.isExpired()).toList();
+    }
+
+    public List<SubjectResponse> getSubjectAvailable(String classId) {
+        var schedule = getAllScheduleByClassId(classId).stream().findFirst().orElseThrow(
+                () -> new NotFoundException("Schedule not found")
+        );
+
+        return findAllSubjectInsideLessonsWithEntity(schedule.getLessons());
+    }
+
+    public List<LessonResponse> getScheduleDetail(String classId, String semesterId, LocalDate start, LocalDate end) {
+        var schedule = scheduleRepository.findAllByClassEntity_IdAndSemester_Id(classId, semesterId).stream().filter(scheduleEntity -> !scheduleEntity.isExpired()).findFirst().orElseThrow(
+                () -> new NotFoundException("Schedule not found")
+        );
+
+        var lessons = schedule.getLessons().stream().filter(lesson -> {
+            return lesson.getStartDate().isAfter(start.atStartOfDay()) && lesson.getEndDate().isBefore(end.atStartOfDay());
+        }).toList();
+
+        return LessonConverter.toResponse(lessons);
+    }
 }

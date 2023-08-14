@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:insert="~{fragments/heading/studentHeading :: studentHeading}"></th:block>
+<body>
+<div class="container-fluid">
+    <th:block th:insert="~{fragments/student/util/sidebar :: sidebar(active = 'navigator')}"/>
+    <div id="main">
+        <th:block th:if="${navigator?.status == null}">
+            <h1>Chua la navigator</h1>
+            <button class="btn btn-primary btn-register">Dang ky Navigator</button>
+        </th:block>
+
+    </div>
+    <input type="hidden" name="id" th:value="${student}" id="id">
+</div>
+<th:block th:replace="~{fragments/script/util/baseScript :: baseScript}"/>
+<th:block >
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+    <script type="text/javascript">
+        let stompClient = null;
+        const TOKEN = localStorage.getItem('token');
+        const ID = $('#id').val();
+        function connect() {
+            let socket = new SockJS('/ws');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function (frame) {
+                console.log('Connected: ' + frame);
+                stompClient.subscribe('/topic/register', function (notification) {
+                    console.log("notification ", JSON.parse(notification.body));
+                });
+
+                stompClient.subscribe(`/topic/do-check/${ID}`, function (notification) {
+                    console.log("do-check ", JSON.parse(notification.body));
+                });
+            });
+        }
+
+        $(".btn-register").click(function () {
+            send();
+        });
+
+        function send() {
+            const destination = '/app/navigator/register';
+            const headers = {
+                'Authorization': `Bearer ${TOKEN}`,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+
+            const data = {
+                'id': '8939504c-8e0e-4680-bac1-442b04c20f18',
+                'createdAt': '2023-08-14T15:00:00.000Z',
+            }
+
+            if (stompClient && stompClient.connected) {
+                stompClient.send(destination, headers, JSON.stringify(data));
+            } else {
+                console.log('Not connected')
+            }
+        }
+
+        connect();
+    </script>
+</th:block>
+</body>
+</html>

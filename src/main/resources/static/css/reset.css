@@ -61,6 +61,12 @@ body {
     color: var(--color-primary);
 }
 
+.text-title-small {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--color-primary);
+}
+
 a {
     text-decoration: none;
 }

@@ -41,6 +41,12 @@
                                 <span>Teachers</span>
                             </a>
                         </li>
+                        <li th:class="'submenu-item ' + ${#strings.equals(sub, 'navigator') ? 'active' : ''}">
+                            <a th:href="@{'/auth/admin/members?filter=navigator&page=1'}" class="submenu-link">
+                                <i class="fa-solid fa-user-graduate"></i>
+                                <span>Navigator</span>
+                            </a>
+                        </li>
                         <li th:class="'submenu-item ' + ${#strings.equals(sub, 'student') ? 'active' : ''}">
                             <a th:href="@{'/auth/admin/members?filter=student&page=1'}" class="submenu-link">
                                 <i class="fa-solid fa-user-graduate"></i>
@@ -99,7 +105,7 @@
                 </li>
                 <li th:class="'sidebar-item ' + ${#strings.equals(active, 'scheduling_review') ? 'active' : ''}">
                     <a th:href="@{/auth/admin/review-scheduling}" class='sidebar-link'>
-                        <i class="bi bi-book-half"></i>
+                        <i class="bi bi-calendar2-event"></i>
                         <span>Review</span>
                     </a>
                 </li>

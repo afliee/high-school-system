@@ -27,12 +27,18 @@ public class SecurityConfiguration {
     private final LogoutHandler logoutHandler;
     private final String[] publicRoutes = new String[] {
             "/",
+            "/app/**",
+            "/topic/**",
+            "/ws/**",
             "/login",
             "/register",
-            "/teacher",
-            "/student",
+            "/teacher/home",
+            "/student/home",
+            "/student/navigator-registration",
             "/forgot-password",
             "/auth/admin/**",
+            "/navigator/**",
+            "/topic/**",
             "/error/**",
             "/webjars/**",
             "/vendors/**",
@@ -56,6 +62,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> {
                             authorize
                                     .requestMatchers(publicRoutes)
