@@ -10,6 +10,8 @@ import com.highschool.highschoolsystem.repository.DepartmentRepository;
 import com.highschool.highschoolsystem.repository.LevelRepository;
 import com.highschool.highschoolsystem.repository.SubjectRepository;
 import com.highschool.highschoolsystem.repository.TeacherRepository;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -22,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@AllArgsConstructor
+@NoArgsConstructor
 public class SubjectService {
     @Autowired
     private SubjectRepository subjectRepository;

@@ -29,6 +29,7 @@ public class MemberWebSocketController {
             @DestinationVariable("id") String navigatorId,
             DoCheckRequest doCheckRequest
     ) {
-        return ResponseEntity.ok(navigatorService.doCheck(doCheckRequest));
+        System.out.println("doCheckRequest = " + doCheckRequest);
+        return ResponseEntity.ok(navigatorService.doCheck(doCheckRequest, navigatorId));
     }
 }

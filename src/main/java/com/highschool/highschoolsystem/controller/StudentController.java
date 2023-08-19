@@ -2,6 +2,7 @@ package com.highschool.highschoolsystem.controller;
 
 import com.highschool.highschoolsystem.entity.StudentEntity;
 import com.highschool.highschoolsystem.repository.TokenRepository;
+import com.highschool.highschoolsystem.repository.UserRepository;
 import com.highschool.highschoolsystem.service.AuthenticationService;
 import com.highschool.highschoolsystem.service.JwtService;
 import com.highschool.highschoolsystem.service.NavigatorService;
@@ -27,6 +28,8 @@ public class StudentController {
     private AuthenticationService authenticationService;
     @Autowired
     private TokenRepository tokenRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping({"/home", "/", ""})
     public String index() {
@@ -52,10 +55,10 @@ public class StudentController {
             return "redirect:/?component=chooseLogin";
         }
 
-        var tokenEntity = tokenRepository.findByToken(token.getValue()).orElseThrow();
-        String username = jwtService.extractUsername(token.getValue());
+        var username = jwtService.extractUsername(token.getValue());
+        var user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found."));
 
-        model.addAttribute("student", tokenEntity.getUser().getUserId());
+        model.addAttribute("student", user.getUserId());
         return "pages/student/navigator-registration";
     }
 }

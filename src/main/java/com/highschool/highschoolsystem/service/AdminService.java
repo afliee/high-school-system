@@ -11,6 +11,8 @@ import com.highschool.highschoolsystem.repository.UserRepository;
 import com.highschool.highschoolsystem.util.BreadCrumb;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
+@NoArgsConstructor
 public class AdminService {
     @Autowired
     private JwtService jwtService;

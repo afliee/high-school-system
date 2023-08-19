@@ -2,13 +2,12 @@ package com.highschool.highschoolsystem.entity;
 
 import com.highschool.highschoolsystem.config.Role;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Collection;
 
 
@@ -19,12 +18,16 @@ import java.util.Collection;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
+@EqualsAndHashCode(callSuper = false, exclude = {"birthday"})
 public class StudentEntity extends BaseEntity<String> implements Serializable {
     private String name;
     private String fullName;
     private String password;
     private String cardId;
     private String email;
+    private String phone;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate birthday;
     private String avatar;
     private boolean gender;
     private String location;

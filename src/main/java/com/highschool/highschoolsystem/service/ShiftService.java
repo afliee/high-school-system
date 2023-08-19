@@ -4,6 +4,8 @@ import com.highschool.highschoolsystem.converter.ShiftConverter;
 import com.highschool.highschoolsystem.dto.request.ShiftRequest;
 import com.highschool.highschoolsystem.dto.response.ShiftResponse;
 import com.highschool.highschoolsystem.repository.ShiftRepository;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -14,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@AllArgsConstructor
+@NoArgsConstructor
 public class ShiftService {
     @Autowired
     private ShiftRepository shiftRepository;

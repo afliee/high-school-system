@@ -135,12 +135,12 @@ $(document).ready(function () {
 
                 const navigatorId = btnAction.closest(".navigator").data("id");
                 const userId = btnAction.closest(".navigator").data("user-id");
-                stompClient.send(`/topic/do-check/${userId}`, {}, JSON.stringify({
+                stompClient.send(`/app/navigator/do-check/${userId}`, {}, JSON.stringify({
                     id: navigatorId,
                     status: action
                 }))
                 const pageItem = $(".page-item.active");
-                fetchAllNavigator({page: parseInt(pageItem.data("page")), size: 10})
+                fetchAllNavigator({page: parseInt(pageItem.data("page")) - 1, size: 10})
             }
         })
     }

@@ -5,6 +5,8 @@ import com.highschool.highschoolsystem.util.mail.MailSender;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +14,9 @@ import org.springframework.stereotype.Service;
 import java.util.Properties;
 
 @Service
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 public class EmailServiceImpl implements EmailService {
     @Autowired
     private ThymeLeafService thymeLeafService;

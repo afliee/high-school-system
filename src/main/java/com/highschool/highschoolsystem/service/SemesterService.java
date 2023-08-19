@@ -7,6 +7,8 @@ import com.highschool.highschoolsystem.entity.WeekEntity;
 import com.highschool.highschoolsystem.exception.NotFoundException;
 import com.highschool.highschoolsystem.repository.SemesterRepository;
 import com.highschool.highschoolsystem.repository.WeekRepository;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
+@NoArgsConstructor
 public class SemesterService {
     @Autowired
     private SemesterRepository semesterRepository;

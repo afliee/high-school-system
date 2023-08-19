@@ -10,6 +10,9 @@ import com.highschool.highschoolsystem.exception.NotFoundException;
 import com.highschool.highschoolsystem.exception.UserExistException;
 import com.highschool.highschoolsystem.repository.NavigatorRepository;
 import com.highschool.highschoolsystem.repository.StudentRepository;
+import io.jsonwebtoken.ExpiredJwtException;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +21,8 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 
 @Service
+@AllArgsConstructor
+@NoArgsConstructor
 public class NavigatorService {
     @Autowired
     private NavigatorRepository navigatorRepository;
@@ -81,7 +86,7 @@ public class NavigatorService {
                 .build();
     }
 
-    public NavigatorRegisterResponse doCheck(DoCheckRequest doCheckRequest) {
+    public NavigatorRegisterResponse doCheck(DoCheckRequest doCheckRequest, String navigatorId) {
         var navigator = navigatorRepository.findById(doCheckRequest.getId()).orElseThrow(
                 () -> new NotFoundException("Navigator not found.")
         );
@@ -90,7 +95,7 @@ public class NavigatorService {
         if (status == null) {
             throw new NotFoundException("Status not found.");
         }
-
+        System.out.println("status = " + status);
         navigator.setStatus(status);
         navigatorRepository.save(navigator);
 

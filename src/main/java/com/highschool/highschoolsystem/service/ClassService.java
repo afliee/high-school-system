@@ -10,6 +10,8 @@ import com.highschool.highschoolsystem.exception.NotFoundException;
 import com.highschool.highschoolsystem.repository.*;
 import com.highschool.highschoolsystem.util.spreadsheet.ExcelUtil;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -25,6 +27,8 @@ import java.util.List;
 import java.util.logging.Logger;
 
 @Service
+@AllArgsConstructor
+@NoArgsConstructor
 public class ClassService {
     private static final Logger logger = Logger.getLogger(ClassService.class.getName());
     private static final int DEFAULT_PAGE_NUMBER = 0;
@@ -248,6 +252,12 @@ public class ClassService {
 
     public ClassEntity get(String id) {
         return classRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Class not found")
+        );
+    }
+
+    public ClassEntity findByTeacher(String teacherId) {
+        return classRepository.findByChairmanId(teacherId).orElseThrow(
                 () -> new NotFoundException("Class not found")
         );
     }

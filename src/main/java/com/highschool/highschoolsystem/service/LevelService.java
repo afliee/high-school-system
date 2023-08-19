@@ -4,12 +4,16 @@ import com.highschool.highschoolsystem.converter.LevelConverter;
 import com.highschool.highschoolsystem.dto.request.LevelRequest;
 import com.highschool.highschoolsystem.dto.response.LevelResponse;
 import com.highschool.highschoolsystem.repository.LevelRepository;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@AllArgsConstructor
+@NoArgsConstructor
 public class LevelService {
     @Autowired
     private LevelRepository levelRepository;

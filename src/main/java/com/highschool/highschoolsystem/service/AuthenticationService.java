@@ -15,6 +15,8 @@ import com.highschool.highschoolsystem.util.principal.UserPrincipal;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -28,10 +30,13 @@ import java.io.IOException;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 public class AuthenticationService {
 
-    private final AuthenticationManager authenticationManager;
+    @Autowired
+    private  AuthenticationManager authenticationManager;
     @Autowired
     private TeacherRepository teacherRepository;
 
@@ -54,8 +59,9 @@ public class AuthenticationService {
     private JwtService jwtService;
 
 
-    private final EmailService emailService;
-
+//    private final EmailService emailService;
+    @Autowired
+    private EmailService emailService;
     public AuthenticationResponse authenticate(
             AuthenticationRequest request,
             HttpServletRequest httpServletRequest,

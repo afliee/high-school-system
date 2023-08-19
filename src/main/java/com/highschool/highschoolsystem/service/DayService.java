@@ -5,6 +5,8 @@ import com.highschool.highschoolsystem.dto.response.DayResponse;
 import com.highschool.highschoolsystem.entity.DayEntity;
 import com.highschool.highschoolsystem.repository.DayRepository;
 import com.highschool.highschoolsystem.util.DayOfWeek;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
+@NoArgsConstructor
 public class DayService {
     @Autowired
     private DayRepository dayRepository;

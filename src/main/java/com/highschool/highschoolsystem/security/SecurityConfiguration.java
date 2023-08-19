@@ -32,7 +32,7 @@ public class SecurityConfiguration {
             "/ws/**",
             "/login",
             "/register",
-            "/teacher/home",
+            "/teacher/**",
             "/student/home",
             "/student/navigator-registration",
             "/forgot-password",

@@ -4,6 +4,7 @@ import com.highschool.highschoolsystem.dto.response.TeacherResponse;
 import com.highschool.highschoolsystem.entity.TeacherEntity;
 import com.highschool.highschoolsystem.exception.TokenInvalidException;
 import com.highschool.highschoolsystem.exception.UserNotFoundException;
+import jakarta.servlet.http.Cookie;
 
 import javax.swing.text.html.Option;
 import java.util.Optional;
@@ -17,4 +18,6 @@ public interface TeacherService extends GeneralService<TeacherEntity> {
     TeacherEntity updateById(String id, TeacherResponse teacher);
     Iterable<TeacherResponse> findAllTeachers();
     Iterable<TeacherResponse> findByName(String query);
+    Optional<TeacherEntity> findByUsername(String username);
+    String requireTeacherToken(Cookie token);
 }

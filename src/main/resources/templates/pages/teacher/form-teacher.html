@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{/fragments/heading/teacherHeading :: teacherHeading(title = 'Teacher Dashboard')}"/>
+<body>
+<div class="container-fluid">
+    <th:block th:replace="~{/fragments/teacher/util/sidebar :: sidebar(active = 'form-teacher', teacher = ${teacher})}"/>
+    <div id="main">
+        <th:block th:insert="~{/fragments/teacher/util/navbar :: navbar(teacher = ${teacher})}"/>
+        <div class="table-responsive mt-3">
+            <table class="table table-striped table-hover table-bordered">
+                <thead class="table-header">
+                <tr>
+                    <th class="text-center">User Name</th>
+                    <th class="text-center">Full Name</th>
+                    <th class="text-center">Email</th>
+                    <th class="text-center">Avatar</th>
+                    <th class="text-center">Action</th>
+                </tr>
+                </thead>
+                <tbody class="">
+                <th:block th:each="student : ${classEntity.students}">
+                    <tr>
+                        <td class="text-center v-mid" th:text="${student.name}"></td>
+                        <td class="text-center v-mid" th:text="${student.fullName}"></td>
+                        <td class="text-center v-mid" th:text="${student.email}"></td>
+                        <td class="d-flex justify-content-center align-items-center">
+                            <img th:src="${student?.avatar != null ? student.avatar : '/images/1.jpg'}" alt="avatar"
+                                 class="rounded-circle img-fluid avatar"
+                                 width="50px" height="50px">
+                        </td>
+                        <td class="text-center">
+                            <a th:href="@{/teacher/form-teacher/{id}(id=${student.id})}"
+                               class="btn btn-primary">Detail</a>
+                        </td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<th:block th:replace="~{/fragments/script/util/baseScript :: baseScript}"/>
+</body>
+</html>

@@ -1,6 +1,8 @@
 package com.highschool.highschoolsystem.service;
 
 import com.highschool.highschoolsystem.util.mail.EmailDetails;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
@@ -11,6 +13,7 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
 @Service
+@AllArgsConstructor
 public class ThymeLeafService {
     public static final String EMAIL_TEMPLATE = "email/email-template";
     public static final String TEMPLATE_PREFIX = "/templates/";

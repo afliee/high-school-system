@@ -6,6 +6,8 @@ import com.highschool.highschoolsystem.dto.response.LessonResponse;
 import com.highschool.highschoolsystem.entity.LessonEntity;
 import com.highschool.highschoolsystem.exception.NotFoundException;
 import com.highschool.highschoolsystem.repository.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,8 @@ import java.util.logging.Logger;
 import java.util.stream.IntStream;
 
 @Service
+@AllArgsConstructor
+@NoArgsConstructor
 public class LessonService {
     private static final Logger logger = Logger.getLogger(LessonService.class.getName());
 

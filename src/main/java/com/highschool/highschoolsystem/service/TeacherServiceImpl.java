@@ -4,10 +4,13 @@ import com.highschool.highschoolsystem.converter.TeacherConverter;
 import com.highschool.highschoolsystem.dto.response.TeacherResponse;
 import com.highschool.highschoolsystem.entity.BaseEntity;
 import com.highschool.highschoolsystem.entity.TeacherEntity;
+import com.highschool.highschoolsystem.exception.NotFoundException;
 import com.highschool.highschoolsystem.exception.TokenInvalidException;
 import com.highschool.highschoolsystem.exception.UserNotFoundException;
 import com.highschool.highschoolsystem.repository.*;
+import jakarta.servlet.http.Cookie;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +20,9 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 @Transactional
+@AllArgsConstructor
 public class TeacherServiceImpl implements TeacherService {
     @Autowired
     private TeacherRepository teacherRepository;
@@ -41,7 +45,13 @@ public class TeacherServiceImpl implements TeacherService {
     @Autowired
     private LessonRepository lessonRepository;
 
-    private final PasswordEncoder passwordEncoder;
+//    private final PasswordEncoder passwordEncoder;
+//    private final JwtService jwtService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private JwtService jwtService;
+
     @Override
     public TeacherEntity save(TeacherEntity teacherEntity) {
         teacherEntity.setPassword(passwordEncoder.encode(teacherEntity.getPassword()));
@@ -133,6 +143,27 @@ public class TeacherServiceImpl implements TeacherService {
                         .fullName(teacher.getFullName())
                         .build()
         ).toList();
+    }
+
+    @Override
+    public Optional<TeacherEntity> findByUsername(String username) {
+        return teacherRepository.findByName(username);
+    }
+
+    @Override
+    public String requireTeacherToken(Cookie tokenCookie) {
+        if (tokenCookie == null || tokenCookie.getValue().isEmpty()) {
+            return "redirect:/login?with=teacher";
+        }
+
+        if (!jwtService.validateToken(tokenCookie.getValue())) {
+            return "redirect:/login?with=teacher";
+        }
+
+        if (!jwtService.isTeacher(tokenCookie.getValue())) {
+            return "redirect:/login?with=teacher";
+        }
+        return null;
     }
 
     @Override

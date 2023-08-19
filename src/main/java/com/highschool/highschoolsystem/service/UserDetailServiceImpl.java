@@ -9,6 +9,8 @@ import com.highschool.highschoolsystem.repository.AdminRepository;
 import com.highschool.highschoolsystem.util.principal.UserPrincipal;
 import com.highschool.highschoolsystem.repository.StudentRepository;
 import com.highschool.highschoolsystem.repository.TeacherRepository;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,6 +18,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserDetailServiceImpl implements UserDetailsService {
     @Autowired
     private TeacherRepository teacherRepository;

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{/fragments/heading/teacherHeading :: teacherHeading(title = 'Teacher Dashboard')}"/>
+<body>
+    <div class="container-fluid">
+        <th:block th:replace="~{/fragments/teacher/util/sidebar :: sidebar(active = 'index', teacher = ${teacher})}"/>
+        <div id="main">
+            <th:block th:insert="~{/fragments/teacher/util/navbar :: navbar(teacher = ${teacher})}"/>
+        </div>
+    </div>
+<th:block th:replace="~{/fragments/script/util/baseScript :: baseScript}"/>
+</body>
+</html>

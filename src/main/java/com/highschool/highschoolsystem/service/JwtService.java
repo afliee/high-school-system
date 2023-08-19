@@ -8,6 +8,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,6 +22,8 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
+@AllArgsConstructor
+@NoArgsConstructor
 public class JwtService {
     @Value("${application.security.jwt.secret-key}")
     private String SECRET_KEY;
@@ -109,5 +113,9 @@ public class JwtService {
 
     public boolean isAdmin(String token) {
         return hasRole(Role.ADMIN, token);
+    }
+
+    public boolean isTeacher(String token) {
+        return hasRole(Role.TEACHER, token);
     }
 }
