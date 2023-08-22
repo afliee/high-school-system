@@ -29,4 +29,6 @@ public class SchedulingRequest {
     @NotNull(message = "Class id must not be null")
     @NotEmpty(message = "Class id must not be empty")
     private String classId;
+
+    private List<String> subjectIds;
 }

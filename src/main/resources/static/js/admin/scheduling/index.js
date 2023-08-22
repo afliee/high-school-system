@@ -10,6 +10,7 @@ $(document).ready(function () {
     const lessons = {};
 
     let currentLessonActive = [];
+    let subjectItems = [];
 
     fetchAllLevel(TOKEN, levelSelection);
     fetchAllSemester(TOKEN, semesterSelection);
@@ -104,7 +105,8 @@ $(document).ready(function () {
                 classId,
                 semesterId,
                 levelId,
-                lessonIds: currentLessonActive
+                lessonIds: currentLessonActive,
+                subjectIds: subjectItems
             }
 
             console.log("data", data);
@@ -312,10 +314,10 @@ $(document).ready(function () {
                     $(subjectItem.this[0]).on("click", function () {
                         if ($(this).hasClass("active")) {
                             $(this).removeClass("active");
-                            removeCalendarLesson(lessons[$(this).data("id")]);
+                            removeCalendarLesson(lessons[$(this).data("id")], $(this).data("id"));
                         } else {
                             $(this).addClass("active");
-                            showCalendarLesson(lessons[$(this).data("id")], $(this).find(".subject__name").text());
+                            showCalendarLesson(lessons[$(this).data("id")], $(this).find(".subject__name").text(), $(this).data("id"));
                         }
                     })
                 }
@@ -338,7 +340,7 @@ $(document).ready(function () {
         return html;
     }
 
-    function showCalendarLesson(lessons, subjectName) {
+    function showCalendarLesson(lessons, subjectName, subjectId) {
         if (!lessons.length) {
             return;
         }
@@ -358,12 +360,13 @@ $(document).ready(function () {
         })
 
         console.log("events", events);
+        subjectItems.push(subjectId);
         calendar.addEventSource(events);
 
         calendar.refetchEvents()
     }
 
-    function removeCalendarLesson(lessons) {
+    function removeCalendarLesson(lessons, subjectId) {
         if (!lessons.length) {
             return;
         }
@@ -373,6 +376,9 @@ $(document).ready(function () {
             calendar.getEventById(lesson.id).remove();
         })
 
+        if (subjectId) {
+            subjectItems = subjectItems.filter(item => item !== subjectId);
+        }
         calendar.refetchEvents()
     }
 

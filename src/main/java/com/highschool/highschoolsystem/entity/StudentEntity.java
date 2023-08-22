@@ -9,6 +9,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Entity
@@ -18,7 +20,7 @@ import java.util.Collection;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-@EqualsAndHashCode(callSuper = false, exclude = {"birthday"})
+@EqualsAndHashCode(callSuper = false, exclude = {"birthday", "classEntity", "attendances", "faults", "submittingSet"})
 public class StudentEntity extends BaseEntity<String> implements Serializable {
     private String name;
     private String fullName;
@@ -56,4 +58,7 @@ public class StudentEntity extends BaseEntity<String> implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "fault_id")
     )
     private Collection<FaultEntity> faults;
+
+    @OneToMany(mappedBy = "student", targetEntity = Submitting.class)
+    private Set<Submitting> submittingSet = new HashSet<>();
 }

@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -40,4 +41,10 @@ public class ScheduleEntity extends BaseEntity<String> {
     @OneToOne(targetEntity = ClassEntity.class)
     @JoinColumn(name = "class_id")
     private ClassEntity classEntity;
+
+    @OneToMany(
+            mappedBy = "schedule",
+            targetEntity = SubjectEntity.class
+    )
+    private Set<SubjectEntity> subjects;
 }

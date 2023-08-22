@@ -16,6 +16,8 @@ import com.highschool.highschoolsystem.exception.NotFoundException;
 import com.highschool.highschoolsystem.repository.LessonRepository;
 import com.highschool.highschoolsystem.repository.LevelRepository;
 import com.highschool.highschoolsystem.repository.ScheduleRepository;
+import com.highschool.highschoolsystem.repository.SubjectRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,8 @@ public class ScheduleService {
     @Autowired
     private ScheduleRepository scheduleRepository;
     @Autowired
+    private SubjectRepository subjectRepository;
+    @Autowired
     private SemesterService semesterService;
     @Autowired
     private ClassService classService;
@@ -43,6 +47,8 @@ public class ScheduleService {
     private LevelRepository levelRepository;
     @Autowired
     private LessonRepository lessonRepository;
+    @Autowired
+    private SubjectService subjectService;
 
     public Map<String, SubjectGroupByResponse> getSubjectGroupedByLevel(String levelId) {
         var level = levelRepository.findById(levelId).orElseThrow(
@@ -97,22 +103,30 @@ public class ScheduleService {
         return subjectGroupByResponseMap;
     }
 
-
+    @Transactional
     public void create(SchedulingRequest request) {
         List<String> lessonIds = request.getLessonIds();
+        var subjectIds = request.getSubjectIds();
 
+        var subjects = subjectService.findAllByIdIn(subjectIds);
         var lessons = lessonService.findAllByIdIn(lessonIds);
         var semester = semesterService.findByIdEntity(request.getSemesterId());
-        var classEntity = classService.get(request.getClassId());
+        var classEntity = classService.findById(request.getClassId());
 
         var schedule = ScheduleEntity.builder()
                 .isExpired(false)
+                .subjects(new HashSet<>(subjects))
                 .expiredDate(semester.getEndDate())
                 .semester(semester)
                 .lessons(lessons)
                 .classEntity(classEntity)
                 .build();
 
+        subjects.forEach(subject -> {
+            subject.setSchedule(schedule);
+        });
+
+        subjectRepository.saveAll(subjects);
         scheduleRepository.save(schedule);
     }
 

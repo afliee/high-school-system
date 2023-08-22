@@ -11,7 +11,9 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @MappedSuperclass
@@ -33,12 +35,16 @@ public abstract class BaseEntity<T> {
             columnDefinition = "VARCHAR(255)"
     )
     private String id;
+
     @Column
     @CreatedDate
-    private Date createdDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate createdDate;
+
     @Column
     @LastModifiedDate
-    private Date updatedDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate updatedDate;
     @Column
     @CreatedBy
     private T createdBy;

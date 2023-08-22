@@ -31,8 +31,8 @@
 
                 <li class="sidebar-title">Subjects Enrolled</li>
                 <th:block th:each="subject : ${teacher.subjects}">
-                    <li th:class="'sidebar-item'">
-                        <a th:href="@{/teacher/enroll/{id}(id = subject.id)}" class="sidebar-link">
+                    <li th:class="'sidebar-item ' + ${#strings.equals(active, subject.id) ? 'active' : ''}">
+                        <a th:href="@{/teacher/enroll/{id}(id=${subject.id})}" class="sidebar-link">
                             <i class="bi bi-book-half"></i>
                             <span th:text="${subject.name}"></span>
                         </a>

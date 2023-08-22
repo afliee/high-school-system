@@ -4,12 +4,10 @@ import com.highschool.highschoolsystem.converter.SubjectConverter;
 import com.highschool.highschoolsystem.dto.request.SubjectRequest;
 import com.highschool.highschoolsystem.dto.response.SubjectGroupByResponse;
 import com.highschool.highschoolsystem.dto.response.SubjectResponse;
+import com.highschool.highschoolsystem.entity.StudentEntity;
 import com.highschool.highschoolsystem.entity.SubjectEntity;
 import com.highschool.highschoolsystem.exception.NotFoundException;
-import com.highschool.highschoolsystem.repository.DepartmentRepository;
-import com.highschool.highschoolsystem.repository.LevelRepository;
-import com.highschool.highschoolsystem.repository.SubjectRepository;
-import com.highschool.highschoolsystem.repository.TeacherRepository;
+import com.highschool.highschoolsystem.repository.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +33,10 @@ public class SubjectService {
     private DepartmentRepository departmentRepository;
     @Autowired
     private LevelRepository levelRepository;
+    @Autowired
+    private LessonRepository lessonRepository;
+    @Autowired
+    private ScheduleRepository scheduleRepository;
 
     public Page<?> getAll(int page, int size, String sort, String sortBy, String filter) {
 //        ?page=0&size=10&sort=ASC&sortBy=id&filter=name:chemical;teacherName:HuynhTruong;departmentId:0
@@ -167,6 +169,11 @@ public class SubjectService {
         return SubjectConverter.toResponse(subject);
     }
 
+    public SubjectEntity findByIdEntity(String id) {
+        return subjectRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("Subject not found")
+        );
+    }
     public SubjectResponse delete(String id) {
         var subject = subjectRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Subject not found")
@@ -189,16 +196,20 @@ public class SubjectService {
         return SubjectConverter.toResponse(subject);
     }
 
-    public List<SubjectGroupByResponse> findAllGroupByDepartment() {
-        List<SubjectEntity> subjects = subjectRepository.findAll();
+    public List<SubjectEntity> findAllByIdIn(List<String> subjectIds) {
+        return subjectRepository.findAllByIdIn(subjectIds);
+    }
+    public List<StudentEntity> getStudents(String subjectId) {
+        var subject = subjectRepository.findById(subjectId).orElseThrow(
+                () -> new NotFoundException("Subject not found")
+        );
+        var level = subject.getLevel();
+        var schedule = subject.getSchedule();
 
-        Map<String, Object> subjectsGrouped = new HashMap<>();
+        if (level == null || schedule == null) {
+            return new ArrayList<>();
+        }
 
-//        subjects.forEach(subject -> {
-//            if (subjectsGrouped.containsKey(subject.getDepartment().getId())) {
-//
-//            }
-//        });
-        return null;
+        return schedule.getClassEntity().getStudents().stream().toList();
     }
 }

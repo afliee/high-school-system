@@ -35,6 +35,8 @@ public class LessonService {
     private LessonRepository lessonRepository;
     @Autowired
     private ScheduleRepository scheduleRepository;
+    @Autowired
+    private SemesterService semesterService;
 
     public LessonEntity save(LessonEntity lessonEntity) {
         return lessonRepository.save(lessonEntity);
@@ -122,6 +124,15 @@ public class LessonService {
     }
 
     public List<?> get(String semesterId, String subjectId) {
+        if (semesterId.equals("current")) {
+            var semester = semesterService.findCurrentSemester();
+
+            if (semester == null) {
+                throw new NotFoundException("Semester not found");
+            }
+
+            semesterId = semester.getId();
+        }
 
         var lessons = lessonRepository.findAllByWeekSemesterIdAndSubjectId(semesterId, subjectId);
         return LessonConverter.toResponse(lessons);

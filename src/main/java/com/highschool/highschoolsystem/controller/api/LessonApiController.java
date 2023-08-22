@@ -29,7 +29,7 @@ public class LessonApiController {
 
     @GetMapping("/get")
     public List<?> get(
-            @RequestParam String semesterId,
+            @RequestParam(name = "semesterId" , defaultValue = "current") String semesterId,
             @RequestParam String subjectId
     ) {
         return lessonService.get(semesterId, subjectId);

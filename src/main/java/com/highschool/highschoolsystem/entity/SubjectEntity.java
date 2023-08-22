@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "subject")
@@ -40,6 +42,18 @@ public class SubjectEntity extends BaseEntity<String> {
     )
     @JoinColumn(name = "level_id")
     private LevelEntity level;
+
+    @ManyToOne(
+            targetEntity = ScheduleEntity.class
+    )
+    @JoinColumn(name = "schedule_id")
+    private ScheduleEntity schedule;
+
+    @OneToMany(
+            mappedBy = "subject",
+            targetEntity = AssignmentEntity.class
+    )
+    private Set<AssignmentEntity> assignments = new HashSet<>();
 
     @Override
     public boolean equals(Object obj) {

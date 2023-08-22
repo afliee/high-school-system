@@ -47,8 +47,12 @@ public class ScheduleApiController {
     public ResponseEntity<?> create(
             @RequestBody @Valid SchedulingRequest request
     ) {
-        if (request.getLessonIds().size() == 0) {
+        if (request.getLessonIds().isEmpty()) {
             return new ResponseEntity<>("LessonIds is required", HttpStatus.BAD_REQUEST);
+        }
+
+        if (request.getSubjectIds().isEmpty()) {
+            return new ResponseEntity<>("SubjectIds is required", HttpStatus.BAD_REQUEST);
         }
 
         scheduleService.create(request);

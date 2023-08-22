@@ -52,11 +52,11 @@ public class ClassEntity extends BaseEntity<String> implements Serializable {
     )
     private Collection<FaultEntity> faults;
 
-    @OneToMany(
-            mappedBy = "classEntity",
-            targetEntity = AssignmentEntity.class
-    )
-    private Collection<AssignmentEntity> assignments;
+//    @OneToMany(
+//            mappedBy = "classEntity",
+//            targetEntity = AssignmentEntity.class
+//    )
+//    private Collection<AssignmentEntity> assignments;
 
     @OneToOne(
             mappedBy = "classEntity",

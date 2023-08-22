@@ -1,12 +1,7 @@
 package com.highschool.highschoolsystem.controller;
 
-import com.highschool.highschoolsystem.entity.SubjectEntity;
 import com.highschool.highschoolsystem.exception.NotFoundException;
-import com.highschool.highschoolsystem.repository.TeacherRepository;
-import com.highschool.highschoolsystem.service.ClassService;
-import com.highschool.highschoolsystem.service.JwtService;
-import com.highschool.highschoolsystem.service.StudentService;
-import com.highschool.highschoolsystem.service.TeacherService;
+import com.highschool.highschoolsystem.service.*;
 import com.highschool.highschoolsystem.util.BreadCrumb;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,6 +26,8 @@ public class TeacherController {
     private final TeacherService teacherService;
     private final ClassService classService;
     private final StudentService studentService;
+    private final SubjectService subjectService;
+    private final AssignmentService assignmentService;
 
     @GetMapping({"/home", "/", ""})
     public String index(
@@ -119,6 +116,103 @@ public class TeacherController {
         model.addAttribute("student", student);
 
         return "pages/teacher/student-detail";
+    }
+
+    @GetMapping("/enroll/{subjectId}")
+    public String getSubjectEnroll(
+            @PathVariable String subjectId,
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Model model
+    ) {
+        var tokenCookie = WebUtils.getCookie(request, "token");
+
+        String isTeacher = teacherService.requireTeacherToken(tokenCookie);
+        if (isTeacher != null) return isTeacher;
+
+        assert tokenCookie != null;
+        var username = jwtService.extractUsername(tokenCookie.getValue());
+        var teacher = teacherService.findByUsername(username).orElseThrow(
+                () -> new NotFoundException("Teacher not found")
+        );
+
+        var subject = subjectService.findById(subjectId);
+        var students = subjectService.getStudents(subjectId);
+        var todos = assignmentService.getAssigmentBySubjectId(subjectId);
+
+        var breadCrumbs = generateBreadCrumbs();
+        breadCrumbs.add(new BreadCrumb(subject.getName(), "/teacher/enroll/" + subjectId, true));
+
+        model.addAttribute("breadCrumbs", breadCrumbs);
+        model.addAttribute("teacher", teacher);
+        model.addAttribute("subject", subject);
+        model.addAttribute("students", students);
+        model.addAttribute("todos", todos);
+
+        return "pages/teacher/enroll";
+    }
+
+    @GetMapping("/assign/{subjectId}")
+    public String getSubjectAssign(
+            @PathVariable String subjectId,
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Model model
+    ) {
+        var tokenCookie = WebUtils.getCookie(request, "token");
+
+        String isTeacher = teacherService.requireTeacherToken(tokenCookie);
+        if (isTeacher != null) return isTeacher;
+
+        assert tokenCookie != null;
+        var username = jwtService.extractUsername(tokenCookie.getValue());
+        var teacher = teacherService.findByUsername(username).orElseThrow(
+                () -> new NotFoundException("Teacher not found")
+        );
+
+        var subject = subjectService.findById(subjectId);
+
+        var breadCrumbs = generateBreadCrumbs();
+        breadCrumbs.add(new BreadCrumb(subject.getName(), "/teacher/assign/" + subjectId, true));
+
+        model.addAttribute("breadCrumbs", breadCrumbs);
+        model.addAttribute("teacher", teacher);
+        model.addAttribute("subject", subject);
+
+
+        return "pages/teacher/assign";
+    }
+
+    @GetMapping("/grade/{assignmentId}") // /teacher/grade/{assignmentId}
+    public String grade(
+            @PathVariable String assignmentId,
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Model model
+    ) {
+        var tokenCookie = WebUtils.getCookie(request, "token");
+
+        String isTeacher = teacherService.requireTeacherToken(tokenCookie);
+        if (isTeacher != null) return isTeacher;
+
+        assert tokenCookie != null;
+        var username = jwtService.extractUsername(tokenCookie.getValue());
+        var teacher = teacherService.findByUsername(username).orElseThrow(
+                () -> new NotFoundException("Teacher not found")
+        );
+
+        var assignment = assignmentService.findById(assignmentId);
+        int totalStudentTurnedIn = assignment.getSubmitting().stream().filter(Submitting -> Submitting.getFile() != null).toArray().length;
+        int totalStudentUnTurnedIn = assignment.getSubmitting().size() - totalStudentTurnedIn;
+        var breadCrumbs = generateBreadCrumbs();
+        breadCrumbs.add(new BreadCrumb(assignment.getTitle(), "/teacher/grade/" + assignmentId, true));
+        System.out.println("Submitting: " + assignment.getSubmitting().size());
+        model.addAttribute("breadCrumbs", breadCrumbs);
+        model.addAttribute("teacher", teacher);
+        model.addAttribute("assignment", assignment);
+        model.addAttribute("totalStudentTurnedIn", totalStudentTurnedIn);
+        model.addAttribute("totalStudentUnTurnedIn", totalStudentUnTurnedIn);
+        return "pages/teacher/grade";
     }
 
     private List<BreadCrumb> generateBreadCrumbs() {

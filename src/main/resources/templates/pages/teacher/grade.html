@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{/fragments/heading/teacherHeading :: teacherHeading(title = 'Gradement')}"/>
+<body>
+<div class="container-fluid">
+    <th:block th:replace="~{/fragments/teacher/util/sidebar :: sidebar(active = '', teacher = ${teacher})}"/>
+    <div id="main">
+        <th:block th:insert="~{/fragments/teacher/util/navbar :: navbar(teacher = ${teacher})}"/>
+        <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
+             aria-label="breadcrumb"
+             class="d-flex align-items-center my-3 justify-content-between"
+        >
+            <ol class="breadcrumb">
+                <li th:each="breadcrumb : ${breadCrumbs}"
+                    th:class="'breadcrumb-item ' + ${breadcrumb.isActive ? 'active' : ''}">
+                    <a th:href="${breadcrumb.url}" th:text="${breadcrumb.name}"
+                       th:class="'text-decoration-none ' + ${breadcrumb.isActive ? 'active' : ''}"></a>
+                </li>
+            </ol>
+
+            <div class="ms-auto">
+                <div class="rs-select2--light rs-select2--md ms-3">
+                    <label for="student_filter"></label>
+                    <select class="js-select2" id="student_filter" name="student_filter">
+                        <option value="0">All Student</option>
+                        <option value="1">Turned In</option>
+                        <option value="2">Not Turned In</option>
+                    </select>
+                    <div class="dropDownSelect2"></div>
+                </div>
+            </div>
+        </nav>
+        <div class="content">
+            <div class="d-flex gap-3 ">
+                <div class="turned-in">
+                    <h1 th:text="${totalStudentTurnedIn}"></h1>
+                    <p>Turned In</p>
+                </div>
+                <div style="width: 2px" class="bg-black">
+                </div>
+                <div>
+                    <h1 th:text="${totalStudentUnTurnedIn}"></h1>
+                    <p>Submit</p>
+                </div>
+            </div>
+            <div class="grid">
+                <div th:each="submit : ${assignment.submitting}" class="g-col-4">
+                    <h5 th:text="${submit.student.fullName}"></h5>
+                    <div class="d-flex justify-content-between">
+                        <span th:text="${submit.student.name}" class="text-primary"></span>
+                        <div>
+                            <span th:text="${submit.score}"></span>
+                            <span class="mx-2 text-muted">/</span>
+                            <span th:text="${assignment.points}"></span>
+                        </div>
+                    </div>
+
+<!--                    attachment-->
+                    <div>
+                        <a href="#" th:if="${submit.file == null}">No submit yet.</a>
+                        <a th:if="${submit.file != null}" href="#" th:text="${submit.file}"></a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:replace="~{/fragments/script/util/baseScript :: baseScript}"/>
+<script th:src="@{/vendors/select2/select2.min.js}"></script>
+<script !src="">
+    try {
+
+        $(".js-select2").each(function () {
+            $(this).select2({
+                minimumResultsForSearch: 20,
+                dropdownParent: $(this).next('.dropDownSelect2')
+            });
+        });
+
+    } catch (error) {
+        console.log(error);
+    }
+</script>
+</body>
+</html>

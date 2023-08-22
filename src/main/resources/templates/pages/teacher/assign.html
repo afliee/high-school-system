@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{/fragments/heading/teacherHeading :: teacherHeading(title = 'Teacher Dashboard')}"/>
+<body>
+<div class="container-fluid">
+    <th:block th:replace="~{/fragments/teacher/util/sidebar :: sidebar(active = '', teacher = ${teacher})}"/>
+    <div id="main">
+        <th:block th:insert="~{/fragments/teacher/util/navbar :: navbar(teacher = ${teacher})}"/>
+
+        <div class="card mt-3">
+            <div class="card-header-tabs">
+                <ul class="nav nav-tabs mx-3 assignment-nav">
+                    <li class="nav-item px-2">
+                        <button
+                                class="nav-link active"
+                                id="step_1-tab"
+                                data-bs-toggle="tab"
+                                data-bs-target="#step_1"
+                                type="button"
+                                role="tab"
+                                aria-controls="step_1"
+                                aria-selected="true"
+                        >
+                            Create
+                        </button>
+                    </li>
+                    <li class="nav-item px-2">
+                        <button
+                                class="nav-link"
+                                id="step_2-tab"
+                                data-bs-toggle="tab"
+                                data-bs-target="#step_2"
+                                type="button"
+                                role="tab"
+                                aria-controls="step_2"
+                                aria-selected="false"
+                        >
+                            Assign
+                        </button>
+                    </li>
+
+                    <li class="nav-item">
+                        <button
+                                class="nav-link disabled"
+                                id="step_3-tab"
+                                data-bs-toggle="tab"
+                                data-bs-target="#step_3"
+                                type="button"
+                                role="tab"
+                                aria-controls="step_3"
+                                aria-selected="false"
+                        >
+                            Review
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body mt-3">
+                <div class="tab-content">
+                    <div
+                            class="tab-pane fade show active"
+                            id="step_1"
+                            role="tabpanel"
+                            aria-labelledby="step_1-tab"
+                    >
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group has-icon-left">
+                                    <div class="position-relative">
+                                        <input type="text" class="form-control"
+                                               placeholder="Title" id="title">
+                                        <div class="form-control-icon">
+                                            <i class="bi bi-file-text"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group has-icon-left">
+                                    <div class="position-relative">
+                                        <label for="description"></label>
+                                        <textarea class="form-control" id="description" rows="10"
+                                                  placeholder="Description"></textarea>
+                                        <div class="form-control-icon">
+                                            <i class="bi bi-body-text"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <!--                                add attachment-->
+                                <label for="attachment" class="btn btn-outline-primary">
+                                    <i class="bi bi-paperclip"></i>
+                                    <span id="attachment_name">Attachment</span>
+                                </label>
+
+                                <input type="file" id="attachment" name="attachment"
+                                       accept="image/*, .pdf, .doc, .docx, .ppt, .pptx, .txt" class="d-none"
+                                       onchange="document.getElementById('attachment_name').innerHTML = this.files[0].name">
+
+                                <span class="attachment-name"></span>
+                            </div>
+
+                            <div class="col-12 d-flex justify-content-end gap-3 buttons">
+                                <button>
+                                    <a href="javascript:history.back()" class="btn btn-outline-secondary">Cancel</a>
+                                </button>
+                                <button
+                                        class="btn btn-primary"
+                                        id="next_btn"
+                                        type="button"
+                                        onclick="nextPrev(1)"
+                                >
+                                    Next
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                            class="tab-pane fade"
+                            id="step_2"
+                            role="tabpanel"
+                            aria-labelledby="step_2-tab"
+                    >
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group has-icon-left">
+                                    <label for="points">
+                                        Points
+                                    </label>
+                                    <div class="position-relative mt-2 mb-3">
+                                        <input type="number" class="form-control"
+                                               placeholder="Points" id="points">
+                                        <div class="form-control-icon">
+                                            <i class="bi bi-file-text"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group has-icon-left">
+                                    <label for="due">
+                                        Due
+                                    </label>
+                                    <div class="position-relative mt-2 mb-3">
+                                        <input type="datetime-local" class="form-control"
+                                               placeholder="Due" id="due" th:min="${#strings.replace(#dates.format(#dates.createNow(), 'yyyy-MM-dd HH:mm'), ' ', 'T')}">
+                                        <div class="form-control-icon">
+                                            <i class="bi bi-calendar2-check"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-check d-flex align-items-center gap-2">
+                                    <input type="checkbox" id="no_due" class="form-check-input">
+                                    <label for="no_due" class="form-check-label text-muted">No due date</label>
+                                </div>
+                            </div>
+
+                            <div class="col-12 d-flex justify-content-end gap-3 buttons">
+                                <button
+                                        class="btn btn-outline-secondary"
+                                        id="prev_btn"
+                                        type="button"
+                                        onclick="nextPrev(0)"
+                                >
+                                    Previous
+                                </button>
+
+                                <button
+                                        class="btn btn-primary review_btn"
+                                        type="button"
+                                        onclick="nextPrev(2)"
+                                >
+                                    Review
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                            class="tab-pane fade"
+                            id="step_3"
+                            role="tabpanel"
+                            aria-labelledby="step_3-tab">
+                        <!--                        review on content in step 1 and 2-->
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" name="teacher_id" id="teacher_id" th:value="${teacher.id}">
+    <input type="hidden" name="subject_id" id="subject_id" th:value="${subjectId}">
+</div>
+<th:block th:replace="~{/fragments/script/util/baseScript :: baseScript}"/>
+<script th:src="@{/vendors/sweetalert2/sweetalert2.all.min.js}"></script>
+<script th:src="@{/js/teacher/createAssignment.js}"></script>
+<script>
+    function nextPrev(n) {
+        var x = document.querySelectorAll(".tab-pane");
+        x[n].classList.add("active");
+        x[n].classList.add("show");
+        if (n > 0) {
+            x[n - 1].classList.remove("active");
+            x[n - 1].classList.remove("show");
+        } else {
+            x[n + 1].classList.remove("active");
+            x[n + 1].classList.remove("show");
+        }
+
+        var y = document.querySelectorAll(".assignment-nav .nav-link");
+        y[n].classList.add("active");
+        y[n].setAttribute("aria-selected", "true");
+        if (n > 0) {
+            y[n - 1].classList.remove("active");
+            y[n - 1].setAttribute("aria-selected", "false");
+        } else {
+            y[n + 1].classList.remove("active");
+            y[n + 1].setAttribute("aria-selected", "false");
+        }
+    }
+</script>
+</body>
+</html>

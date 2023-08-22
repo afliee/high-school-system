@@ -13,6 +13,7 @@ import java.util.Optional;
 
 public interface SubjectRepository extends JpaRepository<SubjectEntity, String> {
     Optional<SubjectEntity> findByTeacher(TeacherEntity teacher);
+    List<SubjectEntity> findAllByIdIn(List<String> ids);
     List<SubjectEntity> findAllByNameContainingOrDepartment_Id(String name, String departmentId);
     List<SubjectEntity> findAllByNameContaining(String name);
     List<SubjectEntity> findAllByDepartment_Id(String departmentId);

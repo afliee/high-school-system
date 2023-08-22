@@ -250,7 +250,7 @@ public class ClassService {
         classRepository.save(classEntity);
     }
 
-    public ClassEntity get(String id) {
+    public ClassEntity findById(String id) {
         return classRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Class not found")
         );
