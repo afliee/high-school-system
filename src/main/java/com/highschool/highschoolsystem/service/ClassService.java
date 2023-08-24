@@ -254,4 +254,10 @@ public class ClassService {
                 () -> new NotFoundException("Class not found")
         );
     }
+
+    public ClassEntity findByTeacher(String teacherId) {
+        return classRepository.findByChairmanId(teacherId).orElseThrow(
+                () -> new NotFoundException("Class not found")
+        );
+    }
 }

@@ -70,7 +70,7 @@ public class ClassServiceTest {
         when(semesterRepository.findById(semesterEntity.getId())).thenReturn(java.util.Optional.of(semesterEntity));
         when(teacherRepository.findById(teacherEntity.getId())).thenReturn(java.util.Optional.of(teacherEntity));
         when(classRepository.save(any())).thenReturn(classResponse);
-        when(addClassRequest.getStudents()).thenReturn(new MultipartFile());
+//        when(addClassRequest.getStudents()).thenReturn(new MultipartFile());
 
         ClassResponse classResponse1 = classService.save(addClassRequest);
 
@@ -81,7 +81,4 @@ public class ClassServiceTest {
         verify(teacherRepository, times(1)).findById(teacherEntity.getId());
         verify(classRepository, times(1)).save(any());
     }
-
-    @Test
-
 }

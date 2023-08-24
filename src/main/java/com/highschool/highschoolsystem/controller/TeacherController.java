@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.WebUtils;
 
 import java.util.ArrayList;
@@ -74,7 +75,7 @@ public class TeacherController {
                 () -> new NotFoundException("Teacher not found")
         );
 
-        var classEntity = classService.get(teacher.getId());
+        var classEntity = classService.findByTeacher(teacher.getId());
         if (classEntity == null) {
             return "redirect:/?component=chooseLogin";
         }
@@ -186,6 +187,7 @@ public class TeacherController {
     @GetMapping("/grade/{assignmentId}") // /teacher/grade/{assignmentId}
     public String grade(
             @PathVariable String assignmentId,
+            @RequestParam(name = "filter", required = false, defaultValue = "all") String filter, // all, turned-in, unturned-in
             HttpServletRequest request,
             HttpServletResponse response,
             Model model
@@ -202,16 +204,25 @@ public class TeacherController {
         );
 
         var assignment = assignmentService.findById(assignmentId);
+
+        switch (filter) {
+            case "turned-in" -> assignment.getSubmitting().removeIf(Submitting -> Submitting.getFile() == null);
+            case "unturned-in" -> assignment.getSubmitting().removeIf(Submitting -> Submitting.getFile() != null);
+            default -> {
+            } // all
+        }
+
+
         int totalStudentTurnedIn = assignment.getSubmitting().stream().filter(Submitting -> Submitting.getFile() != null).toArray().length;
         int totalStudentUnTurnedIn = assignment.getSubmitting().size() - totalStudentTurnedIn;
         var breadCrumbs = generateBreadCrumbs();
         breadCrumbs.add(new BreadCrumb(assignment.getTitle(), "/teacher/grade/" + assignmentId, true));
-        System.out.println("Submitting: " + assignment.getSubmitting().size());
         model.addAttribute("breadCrumbs", breadCrumbs);
         model.addAttribute("teacher", teacher);
         model.addAttribute("assignment", assignment);
         model.addAttribute("totalStudentTurnedIn", totalStudentTurnedIn);
         model.addAttribute("totalStudentUnTurnedIn", totalStudentUnTurnedIn);
+        model.addAttribute("filter", filter);
         return "pages/teacher/grade";
     }
 
