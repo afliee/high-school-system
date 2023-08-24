@@ -74,7 +74,7 @@ public class TeacherController {
                 () -> new NotFoundException("Teacher not found")
         );
 
-        var classEntity = classService.findByTeacher(teacher.getId());
+        var classEntity = classService.get(teacher.getId());
         if (classEntity == null) {
             return "redirect:/?component=chooseLogin";
         }

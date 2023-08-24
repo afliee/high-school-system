@@ -61,7 +61,6 @@ public class ClassService {
             LevelEntity levelEntity = levelRepository.findById(request.getLevelId()).orElseThrow(
                     () -> new RuntimeException("Level not found")
             );
-
             SemesterEntity semesterEntity = semesterRepository.findById(request.getSemesterId()).orElseThrow(
                     () -> new RuntimeException("Semester not found")
             );
@@ -252,12 +251,6 @@ public class ClassService {
 
     public ClassEntity findById(String id) {
         return classRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Class not found")
-        );
-    }
-
-    public ClassEntity findByTeacher(String teacherId) {
-        return classRepository.findByChairmanId(teacherId).orElseThrow(
                 () -> new NotFoundException("Class not found")
         );
     }

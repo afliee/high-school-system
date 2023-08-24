@@ -136,8 +136,15 @@
             <artifactId>font-awesome</artifactId>
             <version>6.4.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <version>6.1.2</version>
+            <scope>test</scope>
+        </dependency>
 
-<!--        swrager openapi-->
+
+        <!--        swrager openapi-->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
