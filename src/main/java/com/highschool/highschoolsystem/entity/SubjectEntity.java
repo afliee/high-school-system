@@ -22,6 +22,7 @@ public class SubjectEntity extends BaseEntity<String> {
     private String name;
     private String description;
     private String color;
+    private String image;
 
     @ManyToOne(targetEntity = TeacherEntity.class)
     @JoinColumn(name = "teached_by")

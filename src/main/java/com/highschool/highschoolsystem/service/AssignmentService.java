@@ -4,6 +4,7 @@ import com.highschool.highschoolsystem.dto.request.CreateAssignmentRequest;
 import com.highschool.highschoolsystem.entity.AssignmentEntity;
 import com.highschool.highschoolsystem.entity.StudentEntity;
 import com.highschool.highschoolsystem.entity.Submitting;
+import com.highschool.highschoolsystem.exception.NotFoundException;
 import com.highschool.highschoolsystem.repository.AssignmentRepository;
 import com.highschool.highschoolsystem.repository.ClassRepository;
 import com.highschool.highschoolsystem.repository.StudentRepository;
@@ -49,7 +50,9 @@ public class AssignmentService {
     public void create(CreateAssignmentRequest request) {
         boolean isDue = request.getIsDue().equals("true");
         var teacher = teacherService.findById(request.getTeacherId());
-        var subject = subjectService.findByIdEntity(request.getSubjectId());
+        var subject = subjectService.findByIdEntity(request.getSubjectId()).orElseThrow(
+                () -> new NotFoundException("Subject not found")
+        );
         var assignment = AssignmentEntity.builder();
 
         assignment.title(request.getTitle());
@@ -58,11 +61,11 @@ public class AssignmentService {
         assignment.points(Double.parseDouble(request.getPoints()));
         assignment.isDue(isDue);
 
+        var statedDate = LocalDateTime.parse(request.getStartedDate(), formatter);
+        assignment.startedDate(statedDate);
         if (isDue) {
-            var statedDate = LocalDateTime.parse(request.getStartedDate(), formatter);
             var dueDate = LocalDateTime.parse(request.getClosedDate(), formatter);
 
-            assignment.startedDate(statedDate);
             assignment.closedDate(dueDate);
         }
 

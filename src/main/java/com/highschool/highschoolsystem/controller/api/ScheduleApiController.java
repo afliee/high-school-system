@@ -1,5 +1,6 @@
 package com.highschool.highschoolsystem.controller.api;
 
+import com.highschool.highschoolsystem.converter.ScheduleConverter;
 import com.highschool.highschoolsystem.dto.request.SchedulingRequest;
 import com.highschool.highschoolsystem.repository.LessonRepository;
 import com.highschool.highschoolsystem.repository.LevelRepository;
@@ -7,7 +8,6 @@ import com.highschool.highschoolsystem.repository.ScheduleRepository;
 import com.highschool.highschoolsystem.service.ScheduleService;
 import com.highschool.highschoolsystem.service.SubjectService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -16,7 +16,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.logging.Logger;
 
 @RestController
@@ -32,9 +31,6 @@ public class ScheduleApiController {
     private SubjectService subjectService;
     @Autowired
     private ScheduleService scheduleService;
-    @Autowired
-    private ScheduleRepository scheduleRepository;
-
     @GetMapping("/subjects")
     public ResponseEntity<?> getSubjects(
             @RequestParam(value = "level", defaultValue = "") String levelId

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:insert="~{fragments/heading/studentHeading :: studentHeading(title = 'Student Dashboard')}"></th:block>
+<body>
+<div class="container-fluid">
+    <th:block th:insert="~{fragments/student/util/sidebar :: sidebar(active = 'time-table', navigator = ${navigator})}"/>
+    <div id="main">
+        <th:block th:replace="~{fragments/student/util/navbar :: navbar(student = ${student})}"/>
+        <div class="calendar mt-3"></div>
+        <div class="no-schedule hide">
+            <!--            alert do not schedule for your class-->
+            <div class="alert alert-danger alert-dismissible fade show" role="alert" id="alert" style="display: none">
+                <strong>Alert!</strong> You can not schedule for your class.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"
+                        onclick="$('#alert').hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+        <th:block th:replace="~{/fragments/admin/subject/lesson/lessonDetail :: lessonDetail}"/>
+    </div>
+
+    <input type="hidden" name="id" th:value="${student.id}" id="id">
+    <input type="hidden" name="schedule_id" id="schedule_id" th:value="${student?.classEntity?.schedule?.id}">
+</div>
+<th:block th:replace="~{fragments/script/util/baseScript :: baseScript}"/>
+<script th:src="@{/vendors/moment/moment.min.js}"></script>
+<script th:src="@{/webjars/fullcalendar/5.11.3/main.min.js}"></script>
+<script th:src="@{/js/student/timeTable.js}"></script>
+</body>
+</html>

@@ -56,6 +56,8 @@ public class SubjectConverter {
         int g = ramdom.nextInt(255);
         int b = ramdom.nextInt(255);
 
+        int imageRand = ramdom.nextInt(4);
+
         return SubjectEntity.builder()
                 .name(request.getName())
                 .description(request.getDescription())
@@ -63,6 +65,7 @@ public class SubjectConverter {
                 .level(level)
                 .department(department)
                 .color("rgb(" + r + "," + g + "," + b + ")")
+                .image("/images/img_" + (imageRand + 1) + ".jpg")
                 .build();
     }
 

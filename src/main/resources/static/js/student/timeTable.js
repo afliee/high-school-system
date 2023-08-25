@@ -1,11 +1,19 @@
 $(document).ready(function () {
-    const TOKEN = getCookie('token') || localStorage.getItem('token');
+    const TOKEN = getCookie("token") || localStorage.getItem("token");
 
-    const SUBJECT_ID = $("#subject_id").val();
+    const STUDENT_ID = $("#id").val();
+    const SCHEDULE_ID = $("#schedule_id").val();
 
-    const container = $("#time-table");
+    const calendarContainer = $(".calendar");
 
-    const calender = new FullCalendar.Calendar(container[0], {
+    if (SCHEDULE_ID === 'null') {
+        calendarContainer.hide();
+        $(".no-schedule").show();
+        return;
+    }
+
+
+    const calendar = new FullCalendar.Calendar(calendarContainer[0], {
         initialView: 'dayGridMonth',
         initialDate: Date.now(),
         rerenderDelay: 500,
@@ -42,22 +50,24 @@ $(document).ready(function () {
             //     show modal
             modal.modal("show");
         }
-    })
+    });
 
-    // get all lesson by subject
+    calendar.render();
     $.ajax({
-        url: `/api/v1/lessons/get?subjectId=${SUBJECT_ID}`,
+        url: `/api/v1/student/schedule/${SCHEDULE_ID}`,
         type: 'GET',
         headers: {
             'Authorization': `Bearer ${TOKEN}`
         },
-        success: function (data) {
-            data.forEach(lesson => {
+        success: function (response) {
+            console.log(response);
+            const {lessons} = response;
+            lessons.forEach(lesson => {
                 const {startDate, endDate} = lesson;
                 const startTime = new Date(startDate[0], startDate[1] - 1, startDate[2], startDate[3], startDate[4]).toISOString();
                 const endTime = new Date(endDate[0], endDate[1] - 1, endDate[2], endDate[3], endDate[4]).toISOString();
 
-                calender.addEvent({
+                calendar.addEvent({
                     title: lesson.subject.name,
                     start: startTime,
                     end: endTime,
@@ -69,10 +79,13 @@ $(document).ready(function () {
                     }
                 })
             })
+
+
         },
-        error: function (error) {
-            console.log(error);
+        error: function (err) {
+            console.log(err.responseText)
         }
     })
-    calender.render();
+
+
 })

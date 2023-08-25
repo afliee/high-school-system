@@ -1,10 +1,11 @@
 package com.highschool.highschoolsystem.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "submitting")
@@ -13,6 +14,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true, exclude = {"assignment"})
+@EntityListeners(AuditingEntityListener.class)
 public class Submitting extends BaseEntity<String> {
     @ManyToOne(targetEntity = AssignmentEntity.class)
     @JoinColumn(name = "assignment_id")
@@ -26,4 +28,8 @@ public class Submitting extends BaseEntity<String> {
     private double score;
     private String comment;
     private boolean isTurnedLate;
+
+    @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
+    private LocalDateTime turnedAt;
+
 }

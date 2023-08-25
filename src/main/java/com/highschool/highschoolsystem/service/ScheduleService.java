@@ -178,4 +178,8 @@ public class ScheduleService {
 
         return LessonConverter.toResponse(lessons);
     }
+
+    public Optional<ScheduleEntity> findById(String id) {
+        return scheduleRepository.findById(id);
+    }
 }

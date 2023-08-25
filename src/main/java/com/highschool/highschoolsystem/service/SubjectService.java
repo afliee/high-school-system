@@ -16,10 +16,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -169,10 +166,8 @@ public class SubjectService {
         return SubjectConverter.toResponse(subject);
     }
 
-    public SubjectEntity findByIdEntity(String id) {
-        return subjectRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("Subject not found")
-        );
+    public Optional<SubjectEntity> findByIdEntity(String id) {
+        return subjectRepository.findById(id);
     }
     public SubjectResponse delete(String id) {
         var subject = subjectRepository.findById(id).orElseThrow(

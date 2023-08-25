@@ -12,16 +12,52 @@
         </div>
         <div class="sidebar-menu">
             <ul class="menu">
-                <li class="sidebar-title">Menu</li>
-
-                <li th:class="'sidebar-item ' + ${#strings.equals(active, 'navigator') ? 'active' : ''}">
-                    <a th:href="@{/student/navigator-registration}" class='sidebar-link'>
-                        <i class="bi bi-grid-fill"></i>
-                        <span>Navigator Registration</span>
+                <li class="sidebar-title">Dashboard</li>
+                <li th:class="'sidebar-item ' + ${#strings.equals(active, 'index') ? 'active' : ''}">
+                    <a th:href="@{/student/home}" class='sidebar-link'>
+                        <i class="bi bi-file-zip-fill"></i>
+                        <span>Subjects Enrolled</span>
                     </a>
                 </li>
 
+                <li class="sidebar-title">Menu</li>
 
+                <li th:class="'sidebar-item ' + ${#strings.equals(active, 'time-table') ? 'active' : ''}">
+                    <a th:href="@{/student/time-table}" class='sidebar-link'>
+                        <i class="bi bi-grid-fill"></i>
+                        <span>Time Table</span>
+                    </a>
+                </li>
+                <li th:class="'sidebar-item ' + ${#strings.equals(active, 'navigator') ? 'active' : ''}">
+                    <th:block th:if="${navigator?.status == null}">
+                        <a th:href="@{/student/navigator-registration}" class='sidebar-link'>
+                            <i class="bi bi-grid-fill"></i>
+                            <span>Navigator Registration</span>
+                        </a>
+                    </th:block>
+
+                    <th:block th:if="${navigator?.status != null}">
+                        <a th:href="@{/student/navigator-registration}" class='sidebar-link'>
+                            <i class="bi bi-grid-fill"></i>
+                            <span>Navigator</span>
+                        </a>
+                    </th:block>
+                </li>
+
+                <li class="sidebar-title">Account</li>
+                <li th:class="'sidebar-item ' + ${#strings.equals(active, 'profile') ? 'active' : ''}">
+                    <a th:href="@{/student/profile}" class='sidebar-link'>
+                        <i class="bi bi-person-fill"></i>
+                        <span>Profile</span>
+                    </a>
+                </li>
+
+                <li th:class="'sidebar-item ' + ${#strings.equals(active, 'change-password') ? 'active' : ''}">
+                    <a th:href="@{/student/change-password}" class='sidebar-link'>
+                        <i class="bi bi-key-fill"></i>
+                        <span>Change Password</span>
+                    </a>
+                </li>
             </ul>
         </div>
         <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>

@@ -22,9 +22,10 @@
                 <div class="rs-select2--light rs-select2--md ms-3">
                     <label for="student_filter"></label>
                     <select class="js-select2" id="student_filter" name="student_filter">
-                        <option value="0">All Student</option>
-                        <option value="1">Turned In</option>
-                        <option value="2">Not Turned In</option>
+                        <option value=""></option>
+                        <option value="all" th:selected="${#strings.equals(filter, 'all')}">All Student</option>
+                        <option value="turned-in" th:selected="${#strings.equals(filter, 'turned-in')}">Turned In</option>
+                        <option value="unturned-in" th:selected="${#strings.equals(filter, 'unturned-in')}">Not Turned In</option>
                     </select>
                     <div class="dropDownSelect2"></div>
                 </div>
@@ -43,31 +44,46 @@
                     <p>Submit</p>
                 </div>
             </div>
-            <div class="grid">
-                <div th:each="submit : ${assignment.submitting}" class="g-col-4">
-                    <h5 th:text="${submit.student.fullName}"></h5>
-                    <div class="d-flex justify-content-between">
-                        <span th:text="${submit.student.name}" class="text-primary"></span>
+            <hr style="height: 2px" class="bg-primary my-2">
+
+            <div class="card collapse" id="submit_info">
+<!--                it will be rendered by js file : /js/teacher/showSubmitting.js-->
+            </div>
+            <div class="row submits">
+                <div th:each="submit : ${assignment.submitting}" class="col-xl-4 col-md-6 col-12 my-2 ">
+                    <div class="submit card card-body shadow-sm" th:attr="data-id=${submit.id}">
+                        <div class="student-info">
+                            <div class="d-flex align-items-center mb-2">
+                                <img th:src="${submit.student?.avatar != null ? submit.student.avatar : '/images/1.jpg'}" alt="avatar" class="avatar" width="25">
+                                <div class="ms-2">
+                                    <h5 th:text="${submit.student.fullName}" class="mb-0"></h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span th:text="${submit.student.name}" class="text-primary"></span>
+                            <div>
+                                <span th:text="${submit.score}"></span>
+                                <span class="mx-2 text-muted">/</span>
+                                <span th:text="${assignment.points}"></span>
+                            </div>
+                        </div>
+
+                        <!--                    attachment-->
                         <div>
-                            <span th:text="${submit.score}"></span>
-                            <span class="mx-2 text-muted">/</span>
-                            <span th:text="${assignment.points}"></span>
+                            <a href="#" th:if="${submit.file == null}">No submit yet.</a>
+                            <a th:if="${submit.file != null}" href="#" th:text="${submit.file}"></a>
                         </div>
                     </div>
-
-<!--                    attachment-->
-                    <div>
-                        <a href="#" th:if="${submit.file == null}">No submit yet.</a>
-                        <a th:if="${submit.file != null}" href="#" th:text="${submit.file}"></a>
-                    </div>
-
                 </div>
             </div>
         </div>
     </div>
 </div>
+<input type="hidden" name="assignment_id" id="assignment_id" th:value="${assignment.id}">
 <th:block th:replace="~{/fragments/script/util/baseScript :: baseScript}"/>
 <script th:src="@{/vendors/select2/select2.min.js}"></script>
+<script th:src="@{/js/teacher/showSubmitting.js}"></script>
 <script !src="">
     try {
 
@@ -81,6 +97,17 @@
     } catch (error) {
         console.log(error);
     }
+</script>
+<script>
+    $(document).ready(function () {
+        const ASSIGNMENT_ID = $('#assignment_id').val();
+        const studentFilter = $('#student_filter');
+        studentFilter.on('change', function () {
+            const value = $(this).val();
+            console.log("value", value)
+            window.location.href = `/teacher/grade/${ASSIGNMENT_ID}?filter=${value}`;
+        })
+    })
 </script>
 </body>
 </html>

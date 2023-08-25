@@ -1,12 +1,39 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<th:block th:insert="~{fragments/heading/studentHeading :: studentHeading}"></th:block>
+<th:block th:insert="~{fragments/heading/studentHeading :: studentHeading(title = 'Student Dashboard')}"></th:block>
+<link rel="stylesheet" th:href="@{/css/student/subjectContent.css}">
 <body>
 <div class="container-fluid">
-    <th:block th:insert="~{fragments/student/util/sidebar :: sidebar(active = 'navigator')}"/>
+    <th:block th:insert="~{fragments/student/util/sidebar :: sidebar(active = 'index', navigator = ${navigator})}"/>
     <div id="main">
 
+        <th:block th:replace="~{fragments/student/util/navbar :: navbar(student = ${student})}"/>
+        <th:block th:if="${subjects == null}">
+            <div class="d-flex justify-content-center mt-3">
+                <img th:src="@{/images/nodata.gif}" alt="No data">
+            </div>
+        </th:block>
+
+        <th:block th:if="${subjects != null}">
+            <div class="row mt-3">
+                <a class="col-xl-3 col-md-4 col-sm-6 col-12 my-2 text-black" th:each="subject : ${subjects}" th:href="@{/student/subject/{id}(id=${subject.id})}">
+                    <div class="subject__content card rounded shadow ">
+                        <div class="card-title heading" th:style="'background-image: url(' + ${subject.image} +');'">
+                        </div>
+                        <div class="card-body subject__content--body position-relative">
+                            <div class="subject__avatar d-flex justify-content-end">
+                                <img th:src="@{${subject?.teacher?.avatar != null ? subject?.teacher?.avatar : '/images/1.jpg'}}" alt="" class="avatar border shadow-sm" width="50">
+                            </div>
+                            <p class="text-truncate text-title-small" th:text="${subject.name}" style="font-size: 1.375rem;"></p>
+                            <div class="my-2 text-truncate" th:text="'GV: ' + ${subject?.teacher.fullName}"></div>
+                            <div class="text-truncate" th:text="${subject?.department.name} + ' Department'"></div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </th:block>
     </div>
 </div>
+<th:block th:replace="~{fragments/script/util/baseScript :: baseScript}"/>
 </body>
 </html>

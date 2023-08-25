@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<th:block th:insert="~{fragments/heading/studentHeading :: studentHeading}"></th:block>
+<th:block th:insert="~{fragments/heading/studentHeading :: studentHeading(title = 'Student Dashboard')}"></th:block>
 <body>
 <div class="container-fluid">
-    <th:block th:insert="~{fragments/student/util/sidebar :: sidebar(active = 'navigator')}"/>
+    <th:block th:insert="~{fragments/student/util/sidebar :: sidebar(active = 'navigator', student = ${student})}"/>
     <div id="main">
         <th:block th:if="${navigator?.status == null}">
             <h1>Chua la navigator</h1>

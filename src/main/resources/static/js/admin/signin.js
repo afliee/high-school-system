@@ -25,7 +25,7 @@ $(document).ready(function () {
                 localStorage.setItem('token', token);
                 localStorage.setItem('refreshToken', refreshToken);
                 // set to cookie
-                document.cookie = "token=" + token;
+                // document.cookie = "token=" + token;
                 location.href = '/auth/admin/dashboard';
             },
             error: function (error) {
