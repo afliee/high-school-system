@@ -1,12 +1,15 @@
 package com.highschool.highschoolsystem.service;
 
 import com.highschool.highschoolsystem.converter.SemesterConverter;
+import com.highschool.highschoolsystem.dto.request.SemesterRequest;
 import com.highschool.highschoolsystem.dto.response.SemesterResponse;
 import com.highschool.highschoolsystem.entity.SemesterEntity;
 import com.highschool.highschoolsystem.entity.WeekEntity;
 import com.highschool.highschoolsystem.exception.NotFoundException;
+import com.highschool.highschoolsystem.repository.ClassRepository;
 import com.highschool.highschoolsystem.repository.SemesterRepository;
 import com.highschool.highschoolsystem.repository.WeekRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +27,8 @@ public class SemesterService {
     private SemesterRepository semesterRepository;
     @Autowired
     private WeekRepository weekRepository;
+    @Autowired
+    private ClassRepository classRepository;
 
     public SemesterResponse save(SemesterEntity semesterEntity) {
         var semester = semesterRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqual(semesterEntity.getStartDate(), semesterEntity.getStartDate());
@@ -94,5 +99,42 @@ public class SemesterService {
         }
 
         return semester.get();
+    }
+
+    public SemesterResponse update(String semesterId, SemesterRequest request) {
+        var semester = semesterRepository.findById(semesterId);
+
+        if (semester.isEmpty()) {
+            throw new NotFoundException("Semester not found");
+        }
+
+        var semesterEntity = semester.get();
+
+        semesterEntity.setName(request.getName());
+        semesterEntity.setStartDate(request.getStartDate());
+        semesterEntity.setEndDate(request.getEndDate());
+
+        var semesterSaved = semesterRepository.save(semesterEntity);
+
+        return SemesterConverter.toResponse(semesterSaved);
+    }
+
+    @Transactional
+    public void delete(String semesterId) {
+        var semester = semesterRepository.findById(semesterId);
+
+        if (semester.isEmpty()) {
+            throw new NotFoundException("Semester not found");
+        }
+
+        var semesterEntity = semester.get();
+
+        semesterEntity.getClasses().forEach(classEntity -> {
+            classEntity.setSemester(null);
+            classRepository.save(classEntity);
+        });
+
+
+        semesterRepository.delete(semester.get());
     }
 }

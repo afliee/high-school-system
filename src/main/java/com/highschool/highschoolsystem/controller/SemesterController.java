@@ -38,4 +38,23 @@ public class SemesterController {
 
         return ResponseEntity.ok(semesterService.save(SemesterConverter.toEntity(request)));
     }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> update(@PathVariable("id") String id, @RequestBody SemesterRequest request) {
+        if (request.getStartDate().isAfter(request.getEndDate())) {
+            return ResponseEntity.badRequest().body("Start date must be before end date");
+        }
+
+        if (request.getStartDate().isBefore(LocalDate.now()) || request.getEndDate().isBefore(LocalDate.now())) {
+            return ResponseEntity.badRequest().body("Start date or end date is invalid");
+        }
+
+        return ResponseEntity.ok(semesterService.update(id, request));
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") String id) {
+        semesterService.delete(id);
+        return ResponseEntity.ok("Delete success");
+    }
 }

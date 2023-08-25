@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -36,7 +37,7 @@ public class ScheduleEntity extends BaseEntity<String> {
             joinColumns = @JoinColumn(name = "lession_id"),
             inverseJoinColumns = @JoinColumn(name = "schedule_id")
     )
-    private Set<LessonEntity> lessons;
+    private Set<LessonEntity> lessons = new HashSet<>();
 
     @OneToOne(targetEntity = ClassEntity.class)
     @JoinColumn(name = "class_id")

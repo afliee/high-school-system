@@ -153,7 +153,15 @@ public class AuthenticationService {
                 cookie.setHttpOnly(true);
                 cookie.setPath("/");
                 cookie.setMaxAge(7 * 24 * 60 * 60); // 7 days
+
+
+                Cookie tokenCookie = new Cookie("token", token);
+                tokenCookie.setHttpOnly(true);
+                tokenCookie.setPath("/");
+                tokenCookie.setMaxAge(7 * 24 * 60 * 60); // 7 days
+
                 httpServletResponse.addCookie(cookie);
+                httpServletResponse.addCookie(tokenCookie);
 
                 return AuthenticationResponse.builder()
                         .token(token)

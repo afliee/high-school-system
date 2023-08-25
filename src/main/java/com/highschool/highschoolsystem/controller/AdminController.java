@@ -301,4 +301,17 @@ public class AdminController {
 
         return redirect != null ? redirect : "pages/admin/semester/createSemester";
     }
+
+    @GetMapping("/semester/update/{semesterId}")
+    public String updateSemester(
+            @PathVariable String semesterId,
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Model model
+    ) {
+        String redirect = adminService.requireAdminLogin(request);
+        var semester = semesterService.findById(semesterId);
+        model.addAttribute("semester", semester);
+        return redirect != null ? redirect : "pages/admin/semester/updateSemester";
+    }
 }

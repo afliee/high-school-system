@@ -1,10 +1,7 @@
 package com.highschool.highschoolsystem.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -33,7 +30,8 @@ public class SemesterEntity extends BaseEntity<String> implements Serializable {
 
     @OneToMany(
             mappedBy = "semester",
-            targetEntity = WeekEntity.class
+            targetEntity = WeekEntity.class,
+            cascade = CascadeType.ALL
     )
     private Collection<WeekEntity> weeks;
 

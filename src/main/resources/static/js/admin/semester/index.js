@@ -90,12 +90,25 @@ $(document).ready(function () {
                     return;
                 }
                 data.forEach(semester => {
-                    const startDate = moment(semester.startDate).format("DD/MM/YYYY");
+                    console.log("semester", semester)
+                    const startDate = moment(new Date(semester.startDate).toLocaleDateString()).format("DD/MM/YYYY");
                     const endDate = moment(new Date(semester.endDate).toLocaleDateString()).format("DD/MM/YYYY");
                     const template = $(`
-                        <div class="semsester-item pe-2 col-md-4" data-id="${semester.id}">
+                        <div class="semsester-item pe-2 col-md-4 text-black" data-id="${semester.id}">
                             <div class="card-tag rounded border-end mt-3 shadow p-2">
+                                <div class="d-flex justify-content-between">
                                 <h4 class="text-title text-truncate" data-bs-toggle="tooltip" title="${semester.name}">${semester.name}</h4>
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </button>
+                                        
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                            <li><a class="dropdown-item" href="/auth/admin/semester/update/${semester.id}">Update</a></li>
+                                            <li><a class="dropdown-item text-danger btn-delete" data-id="${semester.id}" href="#">Delete</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
                                 <p><i><strong>Start date</strong></i>: ${startDate}</p>
                                 <p><i><strong>End date</strong></i>: ${endDate}</p>
                             </div>
@@ -117,7 +130,7 @@ $(document).ready(function () {
 
         // semesterItem.on('click', function () {
         //     const id = $(this).attr("data-id");
-        //     window.location.href = `/auth/admin/semester/${id}`;
+        //     window.location.href = `/auth/admin/semester/update/${id}`;
         // });
     }
 })
