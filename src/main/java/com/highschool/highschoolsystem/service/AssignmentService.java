@@ -1,6 +1,8 @@
 package com.highschool.highschoolsystem.service;
 
+import com.highschool.highschoolsystem.converter.AssignmentConverter;
 import com.highschool.highschoolsystem.dto.request.CreateAssignmentRequest;
+import com.highschool.highschoolsystem.dto.response.AssignmentResponse;
 import com.highschool.highschoolsystem.entity.AssignmentEntity;
 import com.highschool.highschoolsystem.entity.StudentEntity;
 import com.highschool.highschoolsystem.entity.Submitting;
@@ -153,5 +155,77 @@ public class AssignmentService {
         var submitting = assignment.getSubmitting();
         if (submitting == null) return null;
         return submitting.stream().filter(submitting1 -> submitting1.getFile() == null).map(Submitting::getStudent).collect(Collectors.toList());
+    }
+
+    public AssignmentResponse update(String id, CreateAssignmentRequest request) {
+        var assignment = assignmentRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("Assignment not found")
+        );
+        boolean isDue = request.getIsDue().equals("true");
+        var teacher = teacherService.findById(request.getTeacherId());
+        var subject = subjectService.findByIdEntity(request.getSubjectId()).orElseThrow(
+                () -> new NotFoundException("Subject not found")
+        );
+
+        assignment.setTitle(request.getTitle());
+        assignment.setDescription(request.getDescription());
+        assignment.setSubject(subject);
+        assignment.setPoints(Double.parseDouble(request.getPoints()));
+        assignment.setDue(isDue);
+
+        var statedDate = LocalDateTime.parse(request.getStartedDate(), formatter);
+        assignment.setStartedDate(statedDate);
+        if (isDue) {
+            var dueDate = LocalDateTime.parse(request.getClosedDate(), formatter);
+
+            assignment.setClosedDate(dueDate);
+        }
+
+        assignment.setTeacher(teacher);
+
+        if (request.getAttachment() != null) {
+//            remove old file
+            if (assignment.getAttachment() != null) {
+                try {
+                    FileUploadUtils.removeFile(assignment.getAttachment());
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            String fileName = request.getAttachment().getOriginalFilename();
+            String oldFileName = assignment.getAttachment().substring(assignment.getAttachment().lastIndexOf("/") + 1);
+            String path = assignment.getAttachment().substring(0, assignment.getAttachment().lastIndexOf("/"));
+            try {
+                FileUploadUtils.saveAssignmentFile(path, fileName, request.getAttachment());
+                assignment.setAttachment(path + "/" + fileName);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new RuntimeException("Could not save file: " + fileName, e);
+            }
+        }
+
+        return AssignmentConverter.toResponse(assignmentRepository.save(assignment));
+    }
+
+    public void delete(String id) {
+        var assignment = assignmentRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("Assignment not found")
+        );
+        if (assignment.getAttachment() != null) {
+            try {
+                FileUploadUtils.removeDir(assignment.getAttachment());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        assignment.getSubmitting().forEach(submitting -> {
+            submitting.setAssignment(null);
+            submitting.setStudent(null);
+            submittingRepository.delete(submitting);
+        });
+
+        assignmentRepository.delete(assignment);
     }
 }

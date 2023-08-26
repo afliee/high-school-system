@@ -23,5 +23,6 @@ public interface SubjectRepository extends JpaRepository<SubjectEntity, String> 
 //    select all subject group by department
     @Query("SELECT s FROM SubjectEntity s WHERE s.teacher.fullName LIKE %?1% OR s.teacher.name LIKE %?1% OR s.teacher.email LIKE %?1%")
     Page<SubjectEntity> findAllByTeacherContaining(String teacher, Pageable pageable);
+    List<SubjectEntity> findAllBySchedule_Id(String scheduleId);
     void deleteAllByTeacher(TeacherEntity teacher);
 }

@@ -57,7 +57,7 @@ public class ClassServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        classService = new ClassService(classRepository, levelRepository, studentRepository, semesterRepository, userRepository, passwordEncoder, tokenRepository, teacherRepository, lessonService, scheduleRepository);
+        classService = new ClassService(classRepository, levelRepository, studentRepository, semesterRepository, userRepository, passwordEncoder, tokenRepository, teacherRepository, scheduleRepository);
     }
 
     @Test

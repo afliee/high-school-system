@@ -153,6 +153,37 @@ public class TeacherController {
         return "pages/teacher/enroll";
     }
 
+    @GetMapping("/enroll/update/{assignmentId}")
+    public String updateAssignment(
+            @PathVariable String assignmentId,
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Model model
+    ) {
+        var tokenCookie = WebUtils.getCookie(request, "token");
+
+        String isTeacher = teacherService.requireTeacherToken(tokenCookie);
+        if (isTeacher != null) return isTeacher;
+
+        assert tokenCookie != null;
+        var username = jwtService.extractUsername(tokenCookie.getValue());
+        var teacher = teacherService.findByUsername(username).orElseThrow(
+                () -> new NotFoundException("Teacher not found")
+        );
+
+        var assignment = assignmentService.findById(assignmentId);
+
+        var breadCrumbs = generateBreadCrumbs();
+        breadCrumbs.add(new BreadCrumb(assignment.getTitle(), "/teacher/enroll/update/" + assignmentId, true));
+
+        model.addAttribute("breadCrumbs", breadCrumbs);
+        model.addAttribute("teacher", teacher);
+        model.addAttribute("assignment", assignment);
+
+        return "pages/teacher/editAssignment";
+    }
+
+
     @GetMapping("/assign/{subjectId}")
     public String getSubjectAssign(
             @PathVariable String subjectId,

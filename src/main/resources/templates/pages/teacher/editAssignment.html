@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{/fragments/heading/teacherHeading :: teacherHeading(title = 'Teacher Dashboard')}"/>
+<body>
+<div class="container-fluid">
+    <th:block th:replace="~{/fragments/teacher/util/sidebar :: sidebar(active = '', teacher = ${teacher})}"/>
+    <div id="main">
+        <th:block th:insert="~{/fragments/teacher/util/navbar :: navbar(teacher = ${teacher})}"/>
+        <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
+             aria-label="breadcrumb"
+             class="d-flex align-items-center my-3 justify-content-between"
+        >
+            <ol class="breadcrumb">
+                <li th:each="breadcrumb : ${breadCrumbs}"
+                    th:class="'breadcrumb-item ' + ${breadcrumb.isActive ? 'active' : ''}">
+                    <a th:href="${breadcrumb.url}" th:text="${breadcrumb.name}"
+                       th:class="'text-decoration-none ' + ${breadcrumb.isActive ? 'active' : ''}"></a>
+                </li>
+            </ol>
+
+            <button class="btn btn-primary btn-save">
+<!--                save-->
+                <i class="bi bi-arrow-bar-down"></i>
+                <span>Save</span>
+
+            </button>
+        </nav>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group has-icon-left">
+                    <label class="mb-2" for="title">Title</label>
+                    <div class="position-relative">
+                        <input type="text" class="form-control"
+                               placeholder="Title" id="title" th:value="${assignment.title}">
+                        <div class="form-control-icon">
+                            <i class="bi bi-file-text"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="form-group has-icon-left">
+                    <label class="mb-2" for="description">Description</label>
+                    <div class="position-relative">
+                        <textarea class="form-control" id="description" rows="8"
+                                  placeholder="Description" th:text="${assignment.description}"></textarea>
+                        <div class="form-control-icon">
+                            <i class="bi bi-body-text"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <!--                                add attachment-->
+                <label for="attachment" class="btn btn-outline-primary">
+                    <i class="bi bi-paperclip"></i>
+                    <span id="attachment_name" th:text="${#strings.substring(assignment.attachment, assignment.attachment.lastIndexOf('/'))}">Attachment</span>
+                </label>
+
+                <input type="file" id="attachment" name="attachment"
+                       accept="image/*, .pdf, .doc, .docx, .ppt, .pptx, .txt" class="d-none"
+                       onchange="document.getElementById('attachment_name').innerHTML = this.files[0].name">
+
+                <span class="attachment-name"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-group has-icon-left">
+                        <label class="mb-2" for="points">
+                            Points
+                        </label>
+                        <div class="position-relative mt-2 mb-3">
+                            <input type="number" class="form-control"
+                                   th:value="${assignment.points}"
+                                   placeholder="Points" id="points">
+                            <div class="form-control-icon">
+                                <i class="bi bi-file-text"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="form-group has-icon-left">
+                        <label for="due" class="mb-2">
+                            Due
+                        </label>
+                        <div class="position-relative mt-2 mb-3">
+                            <input type="datetime-local" class="form-control"
+                                   th:value="${assignment.closedDate != null ? assignment.closedDate : ''}"
+                                   placeholder="Due" id="due" th:min="${#strings.replace(#dates.format(#dates.createNow(), 'yyyy-MM-dd HH:mm'), ' ', 'T')}">
+                            <div class="form-control-icon">
+                                <i class="bi bi-calendar2-check"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-check d-flex align-items-center gap-2">
+                        <input type="checkbox" id="no_due" class="form-check-input" th:checked="${assignment.due}">
+                        <label for="no_due" class="form-check-label text-muted">No due date</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" name="teacher_id" id="teacher_id" th:value="${teacher.id}">
+<input type="hidden" name="subject_id" id="subject_id" th:value="${assignment.subject.id}">
+<input type="hidden" name="id" id="id" th:value="${assignment.id}">
+<th:block th:replace="~{/fragments/script/util/baseScript :: baseScript}"/>
+<script th:src="@{/vendors/sweetalert2/sweetalert2.all.min.js}"></script>
+<script th:src="@{/js/teacher/updateAssignment.js}"></script>
+</body>
+</html>

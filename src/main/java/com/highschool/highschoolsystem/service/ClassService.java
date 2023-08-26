@@ -50,8 +50,6 @@ public class ClassService {
     @Autowired
     private TeacherRepository teacherRepository;
     @Autowired
-    private LessonService lessonService;
-    @Autowired
     private ScheduleRepository scheduleRepository;
 
     public ClassResponse save(AddClassRequest request) {

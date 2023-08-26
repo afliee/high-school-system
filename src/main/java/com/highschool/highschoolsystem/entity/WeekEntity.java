@@ -33,7 +33,8 @@ public class WeekEntity extends BaseEntity<String> {
 
     @OneToMany(
             mappedBy = "week",
-            targetEntity = LessonEntity.class
+            targetEntity = LessonEntity.class,
+            cascade = CascadeType.ALL
     )
     private Collection<LessonEntity> lessons;
 }

@@ -28,15 +28,15 @@ public class StudentController {
     @Autowired
     private JwtService jwtService;
     @Autowired
-    private AuthenticationService authenticationService;
-    @Autowired
-    private TokenRepository tokenRepository;
-    @Autowired
     private UserRepository userRepository;
     @Autowired
     private StudentRepository studentRepository;
     @Autowired
     private SubjectService subjectService;
+    @Autowired
+    private StudentService studentService;
+    @Autowired
+    private AssignmentService assignmentService;
 
     @GetMapping({"/home", "/", ""})
     public String index(
@@ -59,10 +59,10 @@ public class StudentController {
         }
 
         var schedule = student.getClassEntity().getSchedule();
-        if (schedule != null || !schedule.isExpired() || !schedule.getSubjects().isEmpty()) {
-            model.addAttribute("subjects", schedule.getSubjects());
-        } else {
+        if (schedule == null) {
             model.addAttribute("subjects", null);
+        } else {
+            model.addAttribute("subjects", schedule.getSubjects());
         }
         model.addAttribute("student", student);
         return "pages/student/index";
@@ -154,8 +154,24 @@ public class StudentController {
         if (subject == null) {
             return "redirect:/?component=chooseLogin";
         }
+
+        var classmates = subjectService.getStudents(subjectId);
+        model.addAttribute("classmates", classmates);
+
+//        upcoming today
+        var upcoming = studentService.getSubmittingTodayByStudent(student.getId());
+        model.addAttribute("upcoming", upcoming);
+
         model.addAttribute("subject", subject);
         model.addAttribute("student", student);
+
+        var assignments = assignmentService.getAssigmentBySubjectId(subjectId);
+        model.addAttribute("assignments", assignments);
+
+        model.addAttribute("breadCrumbs",  List.of(
+                new BreadCrumb("Home", "/student/home", false),
+                new BreadCrumb(subject.getName(), "/student/subject/" + subjectId, true)
+        ));
         return "pages/student/subject";
     }
 

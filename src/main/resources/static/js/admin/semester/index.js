@@ -105,7 +105,7 @@ $(document).ready(function () {
                                         
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                             <li><a class="dropdown-item" href="/auth/admin/semester/update/${semester.id}">Update</a></li>
-                                            <li><a class="dropdown-item text-danger btn-delete" data-id="${semester.id}" href="#">Delete</a></li>
+                                            <li><span class="dropdown-item text-danger btn-delete" data-id="${semester.id}">Delete</span></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -118,6 +118,7 @@ $(document).ready(function () {
                 });
 
                 registerSemesterClick();
+
             },
             error: function (data) {
                 console.log(data.responseJSON.message)
@@ -126,11 +127,56 @@ $(document).ready(function () {
     }
 
     function registerSemesterClick() {
-        const semesterItem = $(".semsester-item");
+        const btnDeletes = $('.btn-delete');
 
-        // semesterItem.on('click', function () {
-        //     const id = $(this).attr("data-id");
-        //     window.location.href = `/auth/admin/semester/update/${id}`;
-        // });
+        btnDeletes.on('click', function () {
+            console.log("click")
+            const btnDelete = $(this);
+
+            const id = btnDelete.data('id');
+            let swal = null;
+
+            $.ajax({
+                url: `/api/v1/semester/delete/${id}`,
+                type: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${TOKEN}`
+                },
+                beforeSend: function () {
+                    swal = Swal.fire({
+                        title: 'Loading...',
+                        html: 'Please wait a second',
+                        didOpen: () => {
+                            Swal.showLoading()
+                        }
+                    })
+                },
+                success: function (data) {
+                    swal.close();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Delete semester successfully!',
+                        text: 'You can add more semester or close this dialog',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    setTimeout(() => {
+                        window.location.href = "/auth/admin/semester";
+                    }, 1500);
+                },
+                error: function (err) {
+                    console.log(err.responseText)
+                    swal.close();
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Something went wrong!',
+                        showConfirmButton: true,
+                        confirmButtonText: 'Try again'
+                    })
+                }
+            })
+        })
     }
 })

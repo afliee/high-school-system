@@ -1,10 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Not Found</title>
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/variable/variables.css}">
+    <link rel="stylesheet" th:href="@{/css/reset.css}">
 </head>
 <body>
-<h1>404</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-center mt-5">
+                <img th:src="@{/images/404.svg}" alt="404" srcset="" style="max-width: 500px" class="img-fluid">
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="text-content d-flex justify-content-center align-items-center flex-column">
+                <h1>404 Error</h1>
+                <p>
+                    The page you are looking for might have been removed had its name changed or is temporarily unavailable.
+                </p>
+
+                <a href="/" class="btn btn-primary">Go To Homepage</a>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

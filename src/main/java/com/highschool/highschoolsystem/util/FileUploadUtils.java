@@ -1,5 +1,6 @@
 package com.highschool.highschoolsystem.util;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
@@ -45,7 +46,6 @@ public class FileUploadUtils {
         }
 
         String uploadPathStr = ASSIGNMENT_UPLOAD_DIR + path;
-        System.out.println(uploadPathStr.length());
         Path uploadPath = Paths.get(uploadPathStr.replaceAll("/", "\\\\").trim());
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
@@ -67,5 +67,36 @@ public class FileUploadUtils {
             }
         }
         return false;
+    }
+
+    public static void removeFile(String path) throws Exception {
+//        remove file
+        String uploadPathStr = ASSIGNMENT_UPLOAD_DIR + path;
+        Path uploadPath = Paths.get(uploadPathStr.replaceAll("/", "\\\\").trim());
+//uploads\assignments\831c1ea3-c06c-4f9d-b2ca-11a3f53813d0\e88e8137-58d2-441c-8db4-ec7f4676a383\MidTerm.pdf
+        try {
+            System.out.println("uploadPath: " + uploadPath);
+            Files.delete(uploadPath);
+//            remove dir if emty with folder name 831c1ea3-c06c-4f9d-b2ca-11a3f53813d0
+//            Files.delete(uploadPath.getParent());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception("Could not remove file: " + path, e);
+        }
+    }
+
+    public static void removeDir(String path) throws Exception {
+//        remove file
+        String uploadPathStr = ASSIGNMENT_UPLOAD_DIR + path.substring(0, path.lastIndexOf("/"));
+        Path uploadPath = Paths.get(uploadPathStr.replaceAll("/", "\\\\").trim());
+
+        try {
+            System.out.println("uploadPath: " + uploadPath);
+            FileUtils.deleteDirectory(uploadPath.getParent().toFile());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception("Could not remove file: " + path, e);
+        }
     }
 }

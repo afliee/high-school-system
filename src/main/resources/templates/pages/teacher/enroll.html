@@ -171,12 +171,13 @@
                                         <i><strong>Due to: </strong></i>
                                         <th:block>
                                             <span th:if="${assignment.isDue()}">
-                                                <span th:text="${assignment.closedDate}"></span>
+                                                <span th:text="${#temporals.format(assignment.closedDate, 'yyyy-MM-dd HH:mm')}"></span>
                                             </span>
 
                                             <span th:unless="${assignment.isDue()}">
                                                 <span>Unlimited date.</span>
                                             </span>
+                                            <span class="text-muted mx-2" th:if="${!#strings.equals(assignment.createdDate, assignment.updatedDate)}" th:text="'(Last updated at ' + ${assignment.updatedDate} + ')'"></span>
                                         </th:block>
                                     </div>
                                     <div
@@ -193,12 +194,28 @@
                                                    style="cursor: pointer"
                                                    th:text="${#strings.substring(assignment.attachment, assignment.attachment.lastIndexOf('/'))}"></a>
                                             </div>
-                                            <a th:href="@{/teacher/grade/{id}(id=${assignment.id})}" class="d-flex justify-content-end">
-                                                <button class="btn btn-outline-primary my-2">
-                                                    <i class="bi bi-three-dots"></i>
-                                                    <span>More</span>
-                                                </button>
-                                            </a>
+                                            <div class="d-flex justify-content-end actions gap-2 align-items-center">
+                                                <a th:href="@{/teacher/grade/{id}(id=${assignment.id})}">
+                                                    <button class="btn btn-outline-primary my-2">
+                                                        <i class="bi bi-three-dots"></i>
+                                                        <span>More</span>
+                                                    </button>
+                                                </a>
+
+                                                <div class="">
+                                                    <a th:href="@{/teacher/enroll/update/{id}(id=${assignment.id})}"
+                                                       role="button" class="btn btn-outline-info"
+                                                       data-bs-toggle="tooltip" title="Edit">
+                                                        <i class="bi bi-pencil-square"></i>
+                                                    </a>
+
+                                                    <button class="btn btn-outline-danger btn-delete" data-bs-toggle="tooltip"
+                                                            th:attr="data-id=${assignment.id}"
+                                                            title="Remove">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -216,5 +233,6 @@
 <script th:src="@{/webjars/fullcalendar/5.11.3/main.min.js}"></script>
 <script th:src="@{/vendors/moment/moment.min.js}"></script>
 <script th:src="@{/js/teacher/timeTable.js}"></script>
+<script th:src="@{/js/teacher/deleteAssignment.js}"></script>
 </body>
 </html>

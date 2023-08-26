@@ -8,6 +8,7 @@ import com.highschool.highschoolsystem.entity.WeekEntity;
 import com.highschool.highschoolsystem.exception.NotFoundException;
 import com.highschool.highschoolsystem.repository.ClassRepository;
 import com.highschool.highschoolsystem.repository.SemesterRepository;
+import com.highschool.highschoolsystem.repository.SubjectRepository;
 import com.highschool.highschoolsystem.repository.WeekRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -29,6 +30,11 @@ public class SemesterService {
     private WeekRepository weekRepository;
     @Autowired
     private ClassRepository classRepository;
+    @Autowired
+    private ClassService classService;
+    @Autowired
+    private SubjectRepository subjectRepository;
+
 
     public SemesterResponse save(SemesterEntity semesterEntity) {
         var semester = semesterRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqual(semesterEntity.getStartDate(), semesterEntity.getStartDate());
@@ -130,11 +136,16 @@ public class SemesterService {
         var semesterEntity = semester.get();
 
         semesterEntity.getClasses().forEach(classEntity -> {
-            classEntity.setSemester(null);
-            classRepository.save(classEntity);
+            classService.delete(classEntity.getId());
         });
 
-
+        semesterEntity.getSchedules().forEach(scheduleEntity -> {
+            var subjects = scheduleEntity.getSubjects();
+            subjects.forEach(subjectEntity -> {
+                subjectEntity.setSchedule(null);
+                subjectRepository.save(subjectEntity);
+            });
+        });
         semesterRepository.delete(semester.get());
     }
 }

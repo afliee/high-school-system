@@ -128,6 +128,7 @@ public class ScheduleService {
 
         subjectRepository.saveAll(subjects);
         scheduleRepository.save(schedule);
+        System.out.println("schedule create success");
     }
 
     public List<String> findAllSubjectInsideLessons(List<LessonEntity> lessons) {
@@ -181,5 +182,34 @@ public class ScheduleService {
 
     public Optional<ScheduleEntity> findById(String id) {
         return scheduleRepository.findById(id);
+    }
+
+    @Transactional
+    public void delete(String id) {
+        System.out.println("schedule id: " + id);
+        var subjects = subjectRepository.findAllBySchedule_Id(id);
+        if (subjects == null ) {
+            System.out.println("subjects null");
+            return;
+        }
+        System.out.println("subjects size: " + subjects.size());
+        subjects.forEach(subject -> {
+            System.out.println("subject id: " + subject.getId());
+            subject.setSchedule(null);
+        });
+
+        subjectRepository.saveAll(subjects);
+        revoke(id);
+    }
+
+    public void revoke(String id) {
+        var schedule = this.findById(id).orElseThrow(
+                () -> new NotFoundException("Schedule not found")
+        );
+
+        schedule.setExpired(true);
+        schedule.setExpiredDate(LocalDate.now());
+
+        scheduleRepository.save(schedule);
     }
 }

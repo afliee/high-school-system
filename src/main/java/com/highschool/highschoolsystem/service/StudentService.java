@@ -1,8 +1,10 @@
 package com.highschool.highschoolsystem.service;
 
 import com.highschool.highschoolsystem.converter.StudentConverter;
+import com.highschool.highschoolsystem.converter.SubmittingConverter;
 import com.highschool.highschoolsystem.dto.request.UpdateStudentRequest;
 import com.highschool.highschoolsystem.dto.response.StudentResponse;
+import com.highschool.highschoolsystem.dto.response.SubmittingResponse;
 import com.highschool.highschoolsystem.entity.StudentEntity;
 import com.highschool.highschoolsystem.exception.NotFoundException;
 import com.highschool.highschoolsystem.repository.StudentRepository;
@@ -11,6 +13,10 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -55,5 +61,20 @@ public class StudentService {
         }
 
         return StudentConverter.toResponse(studentEntity);
+    }
+
+    public List<SubmittingResponse> getSubmittingTodayByStudent(String id) {
+        var student = studentRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Student not found")
+        );
+
+        var now = LocalDateTime.now();
+        return SubmittingConverter.toResponse(student.getSubmittingSet().stream().filter(submitting -> {
+            if (!submitting.getAssignment().isDue()) {
+                return false;
+            }
+            var submittingEndDate = submitting.getAssignment().getClosedDate();
+            return submittingEndDate.isAfter(now.minusDays(1)) && submittingEndDate.isBefore(now.plusDays(1)) && submitting.getFile() == null;
+        }).toList());
     }
 }

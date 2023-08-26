@@ -5,6 +5,7 @@ import com.highschool.highschoolsystem.entity.Submitting;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public class SubmittingConverter {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
@@ -23,6 +24,11 @@ public class SubmittingConverter {
                 .updatedAt(submitting.getTurnedAt())
                 .isTurnedLate(submitting.isTurnedLate())
                 .totalScore(submitting.getAssignment().getPoints())
+                .assignment(AssignmentConverter.toResponse(submitting.getAssignment()))
                 .build();
+    }
+
+    public static List<SubmittingResponse> toResponse(List<Submitting> submittingList) {
+        return submittingList.stream().map(SubmittingConverter::toResponse).toList();
     }
 }
