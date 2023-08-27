@@ -16,6 +16,7 @@ public class AssignmentConverter {
         return AssignmentResponse.builder()
                 .id(assignment.getId())
                 .title(assignment.getTitle())
+                .teacher(assignment.getTeacher().getFullName())
                 .description(assignment.getDescription())
                 .startedDate(String.valueOf(assignment.getStartedDate()))
                 .closedDate(String.valueOf(assignment.getClosedDate()))

@@ -92,9 +92,15 @@
 
                             <th:block th:if="${!upcoming.isEmpty()}">
                                 <div class="card card-body">
-                                    <ul class="list-group list-group-flush">
+                                    <ul class="list-group list-group-flush" style="list-style-type: none">
                                         <li th:each="upcomingItem : ${upcoming}">
-                                            <a href="#" class="text-decoration-none list-group-item">
+                                            <a
+                                                    th:href="'#collapse_' + ${upcomingItem.assignment.id}"
+                                                    class="text-decoration-none list-group-item"
+                                                    data-bs-toggle="collapse"
+                                                    th:data-bs-target="'#collapse_' + ${upcomingItem.assignment.id}"
+                                                    aria-expanded="false"
+                                            >
                                                 <span th:text="${upcomingItem.assignment.title}"></span>
                                                 <span class="badge bg-primary rounded-pill float-end"
                                                       th:text="${upcomingItem.assignment.closedDate}"></span>
@@ -209,7 +215,7 @@
                                         <div class="card my-2 shadow">
                                             <div class="card-body">
                                                 <div class="mb-2">
-                                                    <div class="assignment-header d-flex">
+                                                    <div class="assignment-header d-flex align-items-center mb-3">
                                                         <div class="me-3">
                                                             <div class="avatar avatar-md bg-dark">
                                                                 <div class="avatar-content">
@@ -220,20 +226,46 @@
 
                                                         <h4
                                                                 th:text="${assignment.title}"
-                                                                class="card-title"
+                                                                class="card-title mb-0"
                                                                 data-bs-toggle="collapse"
                                                                 th:data-bs-target="'#collapse_' + ${assignment.id}"
                                                                 aria-expanded="false"
                                                         ></h4>
+
+                                                        <th:block th:if="${assignment.due}">
+                                                            <div class="badge badge-outline-danger text-white d-inline-block mx-3"
+                                                                 th:if="${assignment.closedDate.isBefore(#temporals.createNow())}">
+                                                                <i class="bi bi-tag-fill"></i>
+                                                                <span>Late</span>
+                                                            </div>
+                                                        </th:block>
+
+                                                        <th:block th:if="${submitting.get(assignment.id).status.name().equals('SUBMITTED')}">
+                                                            <div class="badge bg-primary text-white d-inline-block mx-3">
+                                                                <i class="bi bi-tag-fill"></i>
+                                                                <span>Turned in</span>
+                                                            </div>
+                                                        </th:block>
+
+                                                        <th:block th:if="${submitting.get(assignment.id).status.name().equals('GRADED')}">
+                                                            <div class="badge bg-primary text-white d-inline-block mx-3">
+                                                                <i class="bi bi-tag-fill"></i>
+                                                                <span>Graded</span>
+                                                            </div>
+                                                        </th:block>
                                                     </div>
                                                     <i><strong>Due to: </strong></i>
                                                     <th:block>
                                                         <span th:if="${assignment.isDue()}">
-                                                            <span th:text="${assignment.closedDate}"></span>
+                                                            <span th:text="${#temporals.format(assignment.closedDate, 'yyyy-MM-dd HH:mm')}"></span>
                                                         </span>
 
                                                         <span th:unless="${assignment.isDue()}">
                                                             <span>Unlimited date.</span>
+                                                        </span>
+                                                        <span class="text-muted mx-2"
+                                                              th:if="${!#strings.equals(assignment.createdDate, assignment.updatedDate)}"
+                                                              th:text="'(Last updated at ' + ${assignment.updatedDate} + ')'">
                                                         </span>
                                                     </th:block>
                                                 </div>
@@ -245,13 +277,94 @@
                                                         <p th:text="${assignment.description}"></p>
                                                         <!--                                        file review-->
                                                         <hr class="bg-primary" style="height: 2px">
-                                                        <div class="attachment-review">
-                                                            <a th:href="@{/uploads/assignments/{path}(path=${assignment.attachment})}"
-                                                               target="_blank"
-                                                               class="badge bg-primary text-white attachment-review-btn text-decoration-none"
-                                                               style="cursor: pointer"
-                                                               th:text="${#strings.substring(assignment.attachment, assignment.attachment.lastIndexOf('/'))}"></a>
+                                                        <div class="attachment-review d-flex justify-content-between">
+                                                            <a
+                                                                    th:if="${assignment.attachment}"
+                                                                    th:href="@{/uploads/assignments/{path}(path=${assignment.attachment})}"
+                                                                    target="_blank"
+                                                                    class="badge bg-primary text-white attachment-review-btn text-decoration-none"
+                                                                    style="cursor: pointer"
+                                                                    th:text="${#strings.substring(assignment.attachment, assignment.attachment.lastIndexOf('/'))}"></a>
+
+                                                            <div class="score">
+                                                                <div class="score-value">
+                                                                    <span th:text="${submitting.get(assignment.id).score}"></span>
+                                                                    <span class="text-muted mx-2">/</span>
+                                                                    <span th:text="${assignment.points}"></span>
+                                                                </div>
+                                                            </div>
                                                         </div>
+
+<!--                                                        comment-->
+                                                        <div class="mt-2 card card-body">
+                                                            <div class="comment">
+                                                                <div class="comment-header d-flex align-items-center mb-2">
+                                                                    <div class="me-3">
+                                                                        <div class="avatar avatar-md bg-dark">
+                                                                            <div class="avatar-content">
+                                                                                <i class="bi bi-person"></i>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="comment-info">
+                                                                        <div class="comment-name text-primary"
+                                                                             th:text="${submitting.get(assignment.id).assignment.teacher}"></div>
+                                                                        <div class="comment-date text-muted"></div>
+<!--                                                                             th:text="${#temporals.format(submitting.get(assignment.id).c, 'yyyy-MM-dd HH:mm')}"></div>-->
+                                                                    </div>
+                                                                </div>
+                                                                <div class="comment-body">
+                                                                    <div class="comment-content"
+                                                                         th:text="${submitting.get(assignment.id).comment}"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <hr class="bg-primary" style="height: 2px">
+                                                    <div class="buttons mt-3">
+                                                        <th:block th:if="${submitting.get(assignment.id).status.name().equals('NOT_SUBMITTED')}">
+                                                            <div class="my-3">
+                                                                <label th:for="'file_' + ${assignment.id}" class="form-label">Choose your mission
+                                                                    <span style="color: red; font-size: 12px;">(*)</span>
+                                                                </label>
+                                                                <input class="form-control" type="file" th:id="'file_' + ${assignment.id}" required>
+                                                            </div>
+
+                                                            <div class="d-flex justify-content-end">
+                                                                <button class="btn btn-primary btn-submit" th:attr="data-id=${assignment.id}">
+                                                                    <i class="bi bi-upload"></i>
+                                                                    <span>Submit</span>
+                                                                </button>
+                                                            </div>
+                                                        </th:block>
+
+                                                        <th:block th:if="${submitting.get(assignment.id).status.name().equals('SUBMITTED') || submitting.get(assignment.id).status.name().equals('GRADED')}">
+                                                            <div class="my-3">
+                                                                <a
+                                                                        th:if="${submitting.get(assignment.id).file}"
+                                                                        th:href="@{/uploads/assignments/{path}(path=${submitting.get(assignment.id).file})}"
+                                                                        target="_blank"
+                                                                        class="badge bg-primary text-white attachment-review-btn text-decoration-none"
+                                                                        style="cursor: pointer"
+                                                                        th:text="${#strings.substring(submitting.get(assignment.id).file, submitting.get(assignment.id).file.lastIndexOf('/'))}"></a>
+                                                            </div>
+
+                                                            <div class="my-3 re-submit-input">
+                                                                <label th:for="'file_' + ${assignment.id}" class="form-label">Re-submit your mission
+                                                                    <span style="color: red; font-size: 12px;">(*)</span>
+                                                                </label>
+                                                                <input class="form-control" type="file" th:id="'file_' + ${assignment.id}" required>
+                                                            </div>
+                                                            <div class="d-flex justify-content-end gap-2">
+                                                                <button
+                                                                        type="button"
+                                                                        class="btn btn-primary btn-re-submit"
+                                                                        th:attr="data-id=${assignment.id}"
+                                                                >
+                                                                    Re-submit
+                                                                </button>
+                                                            </div>
+                                                        </th:block>
                                                     </div>
                                                 </div>
                                             </div>
@@ -320,6 +433,10 @@
         </div>
     </div>
 </div>
+<input type="hidden" name="id" id="id" th:value="${student.id}">
+<input type="hidden" name="subject_id" id="subject_id" th:value="${subject.id}">
 <th:block th:replace="~{fragments/script/util/baseScript :: baseScript}"/>
+<script th:src="@{/js/student/submitAssignment.js}"></script>
+<script th:src="@{/js/student/reSubmit.js}"></script>
 </body>
 </html>

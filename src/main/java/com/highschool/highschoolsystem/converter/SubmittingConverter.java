@@ -25,6 +25,7 @@ public class SubmittingConverter {
                 .isTurnedLate(submitting.isTurnedLate())
                 .totalScore(submitting.getAssignment().getPoints())
                 .assignment(AssignmentConverter.toResponse(submitting.getAssignment()))
+                .status(submitting.getStatus())
                 .build();
     }
 

@@ -2,10 +2,7 @@ package com.highschool.highschoolsystem.entity;
 
 import com.highschool.highschoolsystem.config.Role;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Collection;
@@ -17,6 +14,7 @@ import java.util.Collection;
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @Builder
+@EqualsAndHashCode(callSuper = true)
 public class TeacherEntity extends BaseEntity<String> {
     @Column(unique = true)
     private String name;

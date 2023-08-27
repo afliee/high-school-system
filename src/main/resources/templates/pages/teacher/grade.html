@@ -72,7 +72,7 @@
                         <!--                    attachment-->
                         <div>
                             <a href="#" th:if="${submit.file == null}">No submit yet.</a>
-                            <a th:if="${submit.file != null}" href="#" th:text="${submit.file}"></a>
+                            <a th:if="${submit.file != null}" href="#" class="text-truncate" th:text="${#strings.substring(submit.file, submit.file.lastIndexOf('/'))}"></a>
                         </div>
                     </div>
                 </div>

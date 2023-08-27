@@ -2,6 +2,8 @@ package com.highschool.highschoolsystem.controller.api;
 
 import com.highschool.highschoolsystem.converter.AssignmentConverter;
 import com.highschool.highschoolsystem.dto.request.CreateAssignmentRequest;
+import com.highschool.highschoolsystem.dto.request.GradingRequest;
+import com.highschool.highschoolsystem.dto.request.SubmitRequest;
 import com.highschool.highschoolsystem.service.AssignmentService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -41,5 +43,32 @@ public class AssignmentApiController {
     ) {
         assignmentService.delete(id);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/submit/{id}")
+    public ResponseEntity<?> submit(
+            @PathVariable("id") String id,
+            @ModelAttribute @Valid SubmitRequest request
+    ) {
+
+        assignmentService.submit(id, request);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/re-submit/{id}")
+    public ResponseEntity<?> reSubmit(
+            @PathVariable("id") String id,
+            @ModelAttribute @Valid SubmitRequest request
+    ) {
+        assignmentService.reSubmit(id, request);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/grade/{submittingId}")
+    public ResponseEntity<?> grade(
+            @PathVariable("submittingId") String submittingId,
+            @RequestBody @Valid GradingRequest request
+    ) {
+        return ResponseEntity.ok().body(assignmentService.grading(submittingId, request));
     }
 }

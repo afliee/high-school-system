@@ -25,13 +25,17 @@ $(document).ready(function () {
                 'Authorization': `Bearer ${TOKEN}`
             },
             success: function (data) {
-                const { id, student, totalScore } = data;
-
+                console.log(data)
+                const {id, student, totalScore} = data;
+                let file = data?.file;
+                if (file) {
+                    file = file.substring(file.lastIndexOf("/") + 1);
+                }
                 submitInfo.empty();
 
                 submitInfo.html(`
                     <div class="card-title d-flex justify-content-end m-2 gap-2">
-                        <button class="btn btn-primary" data-id="${id}" ${data?.file ? '' : 'disabled'}>
+                        <button class="btn btn-primary btn-return" data-id="${id}" ${data?.file ? '' : 'disabled'}>
                             <span>Return</span>
                         </button>
                         <button class="btn-close-collapse">
@@ -44,10 +48,10 @@ $(document).ready(function () {
                             <h5 class="student_fullName">${student.fullName}</h5>
                             <p class="student_name" class="text-primary">${student.name}</p>
                             <span>
-                                ${data?.file ? `<a href="${data.file}" target="_blank" class="badge badge-primary">${data.file}</a>` : "No file"}
+                                ${data?.file ? `<a href="uploads/assignments/${data.file}" target="_blank" class="badge badge-primary bg-primary text-white">${file}</a>` : "No file"}
                             </span>
                             <span>
-                                ${data?.isTurnedLate ? `<span class="badge badge-danger">Late</span>` : ""}
+                                ${data?.isTurnedLate ? `<span class="badge badge-danger ">Late</span>` : ""}
                             </span>
                         </div>
                         <div class="content-right col-md-6 col-12">
@@ -58,14 +62,14 @@ $(document).ready(function () {
                                         </label>
                                         <div class="position-relative mt-2 mb-3">
                                             <input type="number" class="form-control"
-                                                   placeholder="Score" id="score">
+                                                   placeholder="Score" id="score" max="${totalScore}" min="0" required>
                                             <div class="form-control-icon">
                                                 <span>/${totalScore}</span>
                                             </div>
                                         </div>
                             </div>
                             <div class="form-group">
-                                <textarea name="comment" id="commnent" rows="5" placeholder="Comment" class="w-100 form-control"></textarea>
+                                <textarea name="comment" id="comment" rows="5" placeholder="Comment" class="w-100 form-control"></textarea>
                             </div>    
                         </div>
                     </div>
@@ -73,12 +77,13 @@ $(document).ready(function () {
                 // animetion for show
                 submitInfo.show(300);
                 registerCloseCollapseEvent();
+                registerReturnEvent();
             },
             error: function (error) {
                 console.log(error.responseText)
                 submitInfo.empty();
 
-            //     add alert error
+                //     add alert error
                 submitInfo.html(`
                     <div class="alert alert-danger" role="alert">
                         <h4 class="alert-heading">Error!</h4>
@@ -95,5 +100,59 @@ $(document).ready(function () {
         btnCloseCollapse.on('click', function (e) {
             submitInfo.hide(300);
         })
+    }
+
+    function registerReturnEvent() {
+        const btnReturn = $(".btn-return");
+        if (btnReturn.is(":disabled")) {
+            return;
+        }
+
+        btnReturn.on('click', function (e) {
+            const id = $(this).data("id");
+            const data = {
+                score: $("#score").val() * 1 || 0,
+                comment: $("#comment").val()
+            }
+            console.log(data)
+            $.ajax({
+                url: `/api/v1/assignment/grade/${id}`,
+                type: "POST",
+                headers: {
+                    'Authorization': `Bearer ${TOKEN}`
+                },
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                beforeSend: function () {
+                    btnReturn.attr("disabled", true);
+                //     add loading spinner
+
+                },
+                success: function (data) {
+                    console.log(data)
+                    btnReturn.attr("disabled", false);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Return successfully!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => {
+                        location.reload();
+                    });
+                },
+                error: function (error) {
+                    console.log(error.responseText)
+                    btnReturn.attr("disabled", false);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Something went wrong!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            })
+        });
     }
 })

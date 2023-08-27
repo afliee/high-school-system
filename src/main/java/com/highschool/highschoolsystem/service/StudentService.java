@@ -63,7 +63,7 @@ public class StudentService {
         return StudentConverter.toResponse(studentEntity);
     }
 
-    public List<SubmittingResponse> getSubmittingTodayByStudent(String id) {
+    public List<SubmittingResponse> getSubmittingTodayByStudent(String id, String subjectId) {
         var student = studentRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Student not found")
         );
@@ -71,6 +71,10 @@ public class StudentService {
         var now = LocalDateTime.now();
         return SubmittingConverter.toResponse(student.getSubmittingSet().stream().filter(submitting -> {
             if (!submitting.getAssignment().isDue()) {
+                return false;
+            }
+            var subject = submitting.getAssignment().getSubject();
+            if (!subjectId.equals(subject.getId())) {
                 return false;
             }
             var submittingEndDate = submitting.getAssignment().getClosedDate();

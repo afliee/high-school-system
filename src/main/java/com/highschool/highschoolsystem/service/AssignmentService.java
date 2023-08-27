@@ -1,8 +1,13 @@
 package com.highschool.highschoolsystem.service;
 
+import com.highschool.highschoolsystem.config.SubmitStatus;
 import com.highschool.highschoolsystem.converter.AssignmentConverter;
+import com.highschool.highschoolsystem.converter.SubmittingConverter;
 import com.highschool.highschoolsystem.dto.request.CreateAssignmentRequest;
+import com.highschool.highschoolsystem.dto.request.GradingRequest;
+import com.highschool.highschoolsystem.dto.request.SubmitRequest;
 import com.highschool.highschoolsystem.dto.response.AssignmentResponse;
+import com.highschool.highschoolsystem.dto.response.SubmittingResponse;
 import com.highschool.highschoolsystem.entity.AssignmentEntity;
 import com.highschool.highschoolsystem.entity.StudentEntity;
 import com.highschool.highschoolsystem.entity.Submitting;
@@ -15,6 +20,7 @@ import com.highschool.highschoolsystem.util.FileUploadUtils;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -95,6 +101,7 @@ public class AssignmentService {
                 var submitting = Submitting.builder()
                         .student(student)
                         .assignment(assignmentEntity)
+                        .status(SubmitStatus.NOT_SUBMITTED)
                         .build();
                 if (student.getSubmittingSet() == null) {
                     student.setSubmittingSet(new HashSet<>());
@@ -227,5 +234,108 @@ public class AssignmentService {
         });
 
         assignmentRepository.delete(assignment);
+    }
+
+    public void submit(String id, SubmitRequest request) {
+        var assignment = assignmentRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("Assignment not found")
+        );
+
+        var student = studentRepository.findById(request.getStudentId()).orElseThrow(
+                () -> new RuntimeException("Student not found")
+        );
+
+        var submitting = submittingRepository.findByAssignmentIdAndStudentId(id, student.getId()).orElseThrow(
+                () -> new RuntimeException("Submitting not found")
+        );
+
+        var now = LocalDateTime.now();
+        submitting.setTurnedAt(now);
+        if (submitting.getAssignment().getClosedDate() != null) {
+            if (now.isAfter(submitting.getAssignment().getClosedDate())) {
+                submitting.setTurnedLate(true);
+            }
+        }
+
+        if (request.getFile() != null) {
+            String path = assignment.getAttachment().substring(0, assignment.getAttachment().lastIndexOf("/"));
+            String originFileName = request.getFile().getOriginalFilename();
+            String pathFile = path + "/submitting/" + student.getId();
+            try {
+                FileUploadUtils.saveAssignmentFile(pathFile, originFileName, request.getFile());
+                submitting.setFile(pathFile + "/" + originFileName);
+                submitting.setStatus(SubmitStatus.SUBMITTED);
+                submittingRepository.save(submitting);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new RuntimeException("Could not save file: " + originFileName, e);
+            }
+        } else {
+            submitting.setStatus(SubmitStatus.SUBMITTED);
+            submittingRepository.save(submitting);
+        }
+    }
+
+    public void reSubmit(String id, SubmitRequest request) {
+        var assignment = assignmentRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("Assignment not found")
+        );
+
+        var student = studentRepository.findById(request.getStudentId()).orElseThrow(
+                () -> new RuntimeException("Student not found")
+        );
+
+        var submitting = submittingRepository.findByAssignmentIdAndStudentId(id, student.getId()).orElseThrow(
+                () -> new RuntimeException("Submitting not found")
+        );
+
+        var now = LocalDateTime.now();
+        submitting.setTurnedAt(now);
+        if (submitting.getAssignment().getClosedDate() != null) {
+            if (now.isAfter(submitting.getAssignment().getClosedDate())) {
+                submitting.setTurnedLate(true);
+            }
+        }
+
+        if (request.getFile() != null) {
+            String path = assignment.getAttachment().substring(0, assignment.getAttachment().lastIndexOf("/"));
+            String originFileName = request.getFile().getOriginalFilename();
+            String pathFile = path + "/submitting/" + student.getId();
+            try {
+                if (submitting.getFile() != null) {
+                    FileUploadUtils.removeFile(submitting.getFile());
+                }
+                FileUploadUtils.saveAssignmentFile(pathFile, originFileName, request.getFile());
+                submitting.setFile(pathFile + "/" + originFileName);
+                submitting.setStatus(SubmitStatus.SUBMITTED);
+                submittingRepository.save(submitting);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new RuntimeException("Could not save file: " + originFileName, e);
+            }
+        } else {
+            submitting.setStatus(SubmitStatus.SUBMITTED);
+            submittingRepository.save(submitting);
+        }
+    }
+
+    public SubmittingResponse grading(String submittingId, GradingRequest request) {
+        var submitting = submittingRepository.findById(submittingId).orElseThrow(
+                () -> new RuntimeException("Submitting not found")
+        );
+        if (submitting.getStatus() != SubmitStatus.SUBMITTED) {
+            throw new RuntimeException("Submitting not submitted");
+        }
+
+        if (submitting.getScore() > submitting.getAssignment().getPoints()) {
+            throw new RuntimeException("Score must be less than points");
+        }
+        submitting.setScore(request.getScore());
+        submitting.setComment(request.getComment());
+        submitting.setStatus(SubmitStatus.GRADED);
+
+        submittingRepository.save(submitting);
+
+        return SubmittingConverter.toResponse(submitting);
     }
 }

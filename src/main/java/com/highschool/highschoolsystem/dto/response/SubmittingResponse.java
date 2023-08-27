@@ -1,6 +1,7 @@
 package com.highschool.highschoolsystem.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.highschool.highschoolsystem.config.SubmitStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,6 +25,7 @@ public class SubmittingResponse {
 
     private boolean isTurnedLate;
     private double totalScore;
+    private SubmitStatus status;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime createdAt;

@@ -1,6 +1,9 @@
 package com.highschool.highschoolsystem.controller;
 
+import com.highschool.highschoolsystem.converter.SubmittingConverter;
+import com.highschool.highschoolsystem.dto.response.SubmittingResponse;
 import com.highschool.highschoolsystem.entity.StudentEntity;
+import com.highschool.highschoolsystem.entity.Submitting;
 import com.highschool.highschoolsystem.repository.StudentRepository;
 import com.highschool.highschoolsystem.repository.TokenRepository;
 import com.highschool.highschoolsystem.repository.UserRepository;
@@ -18,7 +21,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.util.WebUtils;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/student")
@@ -159,7 +164,7 @@ public class StudentController {
         model.addAttribute("classmates", classmates);
 
 //        upcoming today
-        var upcoming = studentService.getSubmittingTodayByStudent(student.getId());
+        var upcoming = studentService.getSubmittingTodayByStudent(student.getId(), subjectId);
         model.addAttribute("upcoming", upcoming);
 
         model.addAttribute("subject", subject);
@@ -168,6 +173,15 @@ public class StudentController {
         var assignments = assignmentService.getAssigmentBySubjectId(subjectId);
         model.addAttribute("assignments", assignments);
 
+        Map<String, SubmittingResponse> submitting = new HashMap<>();
+
+        student.getSubmittingSet().forEach(submit -> {
+            if (submit.getAssignment().getSubject().getId().equals(subjectId)) {
+                submitting.put(submit.getAssignment().getId(), SubmittingConverter.toResponse(submit));
+            }
+        });
+
+        model.addAttribute("submitting", submitting);
         model.addAttribute("breadCrumbs",  List.of(
                 new BreadCrumb("Home", "/student/home", false),
                 new BreadCrumb(subject.getName(), "/student/subject/" + subjectId, true)

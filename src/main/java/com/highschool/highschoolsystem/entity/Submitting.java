@@ -1,5 +1,6 @@
 package com.highschool.highschoolsystem.entity;
 
+import com.highschool.highschoolsystem.config.SubmitStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -28,6 +29,7 @@ public class Submitting extends BaseEntity<String> {
     private double score;
     private String comment;
     private boolean isTurnedLate;
+    private SubmitStatus status;
 
     @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime turnedAt;

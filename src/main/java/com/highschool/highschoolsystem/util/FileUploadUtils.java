@@ -76,7 +76,7 @@ public class FileUploadUtils {
 //uploads\assignments\831c1ea3-c06c-4f9d-b2ca-11a3f53813d0\e88e8137-58d2-441c-8db4-ec7f4676a383\MidTerm.pdf
         try {
             System.out.println("uploadPath: " + uploadPath);
-            Files.delete(uploadPath);
+            FileUtils.deleteDirectory(uploadPath.getParent().toFile());
 //            remove dir if emty with folder name 831c1ea3-c06c-4f9d-b2ca-11a3f53813d0
 //            Files.delete(uploadPath.getParent());
         } catch (Exception e) {
