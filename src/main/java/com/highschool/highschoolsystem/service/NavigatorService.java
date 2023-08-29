@@ -101,4 +101,8 @@ public class NavigatorService {
 
         return this.mapToResponse(navigator);
     }
+
+    public NavigatorEntity getNavigator(String studentId) {
+        return navigatorRepository.findByStudent_Id(studentId).orElse(null);
+    }
 }

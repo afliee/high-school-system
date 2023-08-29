@@ -35,6 +35,7 @@ public class SecurityConfiguration {
             "/teacher/**",
             "/download/**",
             "/student/**",
+            "/attendance/**",
             "/forgot-password",
             "/auth/admin/**",
             "/navigator/**",

@@ -43,12 +43,7 @@ public class StudentEntity extends BaseEntity<String> implements Serializable {
     @JoinColumn(name = "class_id")
     private ClassEntity classEntity;
 
-    @ManyToMany(targetEntity = AttendanceEntity.class)
-    @JoinTable(
-            name = "attendance_detail",
-            joinColumns = @JoinColumn(name = "student_id"),
-            inverseJoinColumns = @JoinColumn(name = "attendance_id")
-    )
+    @ManyToMany(targetEntity = AttendanceEntity.class, mappedBy = "students")
     private Collection<AttendanceEntity> attendances;
 
     @ManyToMany(targetEntity = FaultEntity.class)

@@ -51,6 +51,10 @@ public class ClassService {
     private TeacherRepository teacherRepository;
     @Autowired
     private ScheduleRepository scheduleRepository;
+    @Autowired
+    private AttendanceRepository attendanceRepository;
+    @Autowired
+    private SubmittingService submittingService;
 
     public ClassResponse save(AddClassRequest request) {
         try {
@@ -183,10 +187,26 @@ public class ClassService {
                 () -> new NotFoundException("User not found")
         );
 
-        var token = tokenRepository.findByUserId(user.getId()).orElse(null);
-        if (token != null) {
-            tokenRepository.delete(token);
+        var token = tokenRepository.findAllByUserId(user.getId());
+        if (!token.isEmpty()) {
+            tokenRepository.deleteAll(token);
         }
+
+        var student = studentRepository.findById(studentId).orElseThrow(
+                () -> new NotFoundException("Student not found")
+        );
+
+        var attendances = student.getAttendances();
+        if (attendances != null) {
+            for (AttendanceEntity attendance : attendances) {
+                attendance.getStudents().removeIf(studentEntity -> studentEntity.getId().equals(studentId));
+                attendance.setPresent(attendance.getPresent() - 1);
+                attendanceRepository.save(attendance);
+            }
+        }
+
+        submittingService.deleteAllByStudentId(studentId);
+
         userRepository.deleteByUserId(studentId);
         studentRepository.deleteById(studentId);
         var classEntity = classRepository.findById(id).orElseThrow(
@@ -215,6 +235,18 @@ public class ClassService {
             if (token != null) {
                 tokenRepository.delete(token);
             }
+
+            var attendances = student.getAttendances();
+            if (attendances != null) {
+                for (AttendanceEntity attendance : attendances) {
+                    attendance.getStudents().removeIf(studentEntity -> studentEntity.getId().equals(student.getId()));
+                    attendance.setPresent(attendance.getPresent() - 1);
+                    attendanceRepository.save(attendance);
+                }
+            }
+
+            submittingService.deleteAllByStudentId(student.getId());
+
             userRepository.deleteByUserId(student.getId());
             studentRepository.deleteById(student.getId());
         }

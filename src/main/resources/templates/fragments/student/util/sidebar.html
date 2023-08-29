@@ -28,7 +28,15 @@
                         <span>Time Table</span>
                     </a>
                 </li>
-                <li th:class="'sidebar-item ' + ${#strings.equals(active, 'navigator') ? 'active' : ''}">
+
+                <li th:class="'sidebar-item ' + ${#strings.equals(active, 'self-attendance') ? 'active' : ''}">
+                    <a th:href="@{/student/self-attendance}" class='sidebar-link'>
+                        <i class="bi bi-grid-fill"></i>
+                        <span>Self Attendance</span>
+                    </a>
+                </li>
+
+                <li th:class="'sidebar-item ' + ${#strings.equals(active, 'navigator') ? 'active ' : ' '} +  ${navigator?.status != null ? 'has-sub' : ''}">
                     <th:block th:if="${navigator?.status == null}">
                         <a th:href="@{/student/navigator-registration}" class='sidebar-link'>
                             <i class="bi bi-grid-fill"></i>
@@ -37,10 +45,19 @@
                     </th:block>
 
                     <th:block th:if="${navigator?.status != null}">
-                        <a th:href="@{/student/navigator-registration}" class='sidebar-link'>
+                        <a href="#" class='sidebar-link '>
                             <i class="bi bi-grid-fill"></i>
                             <span>Navigator</span>
                         </a>
+
+                        <ul class="submenu">
+                            <li th:class="'submenu-item ' + ${#strings.equals(active, 'attendance') ? 'active' : ''}">
+                                <a th:href="@{/attendance}" class="submenu-link">
+                                    <i class="bi bi-calendar-check"></i>
+                                    <span>Attendance</span>
+                                </a>
+                            </li>
+                        </ul>
                     </th:block>
                 </li>
 

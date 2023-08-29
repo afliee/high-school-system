@@ -3,6 +3,8 @@ package com.highschool.highschoolsystem.converter;
 import com.highschool.highschoolsystem.dto.response.StudentResponse;
 import com.highschool.highschoolsystem.entity.StudentEntity;
 
+import java.util.List;
+
 public class StudentConverter {
     public static StudentResponse toResponse(StudentEntity studentEntity) {
         return StudentResponse.builder()
@@ -15,5 +17,9 @@ public class StudentConverter {
                 .cardId(studentEntity.getCardId())
                 .enteredDate(studentEntity.getEnteredDate())
                 .build();
+    }
+
+    public static List<StudentResponse> toResponse(List<StudentEntity> studentEntities) {
+        return studentEntities.stream().map(StudentConverter::toResponse).toList();
     }
 }

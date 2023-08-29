@@ -2,6 +2,7 @@ package com.highschool.highschoolsystem.controller;
 
 import com.highschool.highschoolsystem.converter.SubmittingConverter;
 import com.highschool.highschoolsystem.dto.response.SubmittingResponse;
+import com.highschool.highschoolsystem.entity.AttendanceEntity;
 import com.highschool.highschoolsystem.entity.StudentEntity;
 import com.highschool.highschoolsystem.entity.Submitting;
 import com.highschool.highschoolsystem.repository.StudentRepository;
@@ -21,9 +22,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.util.WebUtils;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/student")
@@ -182,7 +185,7 @@ public class StudentController {
         });
 
         model.addAttribute("submitting", submitting);
-        model.addAttribute("breadCrumbs",  List.of(
+        model.addAttribute("breadCrumbs", List.of(
                 new BreadCrumb("Home", "/student/home", false),
                 new BreadCrumb(subject.getName(), "/student/subject/" + subjectId, true)
         ));
@@ -249,6 +252,44 @@ public class StudentController {
 
         model.addAttribute("breadCrumbs", breadcrums);
         return "pages/student/change-password";
+    }
+
+    @GetMapping("/self-attendance")
+    public String selfAttendance(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Model model
+    ) {
+        String requireStudent = requireStudent(WebUtils.getCookie(request, "token"));
+        if (requireStudent.startsWith("redirect")) {
+            return requireStudent;
+        }
+
+        var student = studentRepository.findById(requireStudent).orElse(null);
+        if (student == null) {
+            return "redirect:/?component=chooseLogin";
+        }
+
+        var navigator = navigatorService.findNavigatorAlreadyRegistered(WebUtils.getCookie(request, "token").getValue());
+        if (navigator != null) {
+            model.addAttribute("navigator", navigator);
+        }
+        model.addAttribute("student", student);
+
+        Map<LocalDate, List<AttendanceEntity>> attendances = student.getAttendances().stream().collect(
+                Collectors.groupingBy(AttendanceEntity::getCreatedDate, Collectors.toList())
+        );
+
+        model.addAttribute("attendances", attendances);
+
+
+        var breadcrumbs = List.of(
+                new BreadCrumb("Home", "/student/home", false),
+                new BreadCrumb("Self Attendance", "/student/self-attendance", true)
+        );
+
+        model.addAttribute("breadCrumbs", breadcrumbs);
+        return "pages/student/self-attendance";
     }
 
     private String requireStudent(Cookie cookie) {
