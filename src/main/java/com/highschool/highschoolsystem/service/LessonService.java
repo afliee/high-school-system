@@ -245,4 +245,20 @@ public class LessonService {
         var lessons = lessonRepository.findAllBySubjectIdAndWeekSemesterId(subjectId, semesterId);
         return LessonConverter.toResponse(lessons);
     }
+
+    public List<LessonEntity> getLessonToday(int limit) {
+//        var today = LocalDateTime.now();
+        var before2Today = LocalDateTime.now().minusDays(2);
+        var after2Today = LocalDateTime.now().plusDays(2);
+        var semester = semesterService.findCurrentSemesterEntity();
+
+        if (semester == null) {
+            return List.of();
+        }
+
+        if (limit == -1) {
+            return lessonRepository.findAllByWeekSemesterIdAndStartDateGreaterThanEqualAndEndDateLessThanEqual(semester.getId(), before2Today, after2Today);
+        }
+        return lessonRepository.findAllByWeekSemesterIdAndStartDateGreaterThanEqualAndEndDateLessThanEqual(semester.getId(), before2Today, after2Today).stream().limit(limit).toList();
+    }
 }

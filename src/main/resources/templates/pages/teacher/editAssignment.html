@@ -57,7 +57,7 @@
                 <!--                                add attachment-->
                 <label for="attachment" class="btn btn-outline-primary">
                     <i class="bi bi-paperclip"></i>
-                    <span id="attachment_name" th:text="${#strings.substring(assignment.attachment, assignment.attachment.lastIndexOf('/'))}">Attachment</span>
+                    <span id="attachment_name" th:text="${assignment.attachment != null ? #strings.substring(assignment.attachment, assignment.attachment.lastIndexOf('/')): 'No Attachment'}">Attachment</span>
                 </label>
 
                 <input type="file" id="attachment" name="attachment"

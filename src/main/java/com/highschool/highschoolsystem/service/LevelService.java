@@ -3,6 +3,8 @@ package com.highschool.highschoolsystem.service;
 import com.highschool.highschoolsystem.converter.LevelConverter;
 import com.highschool.highschoolsystem.dto.request.LevelRequest;
 import com.highschool.highschoolsystem.dto.response.LevelResponse;
+import com.highschool.highschoolsystem.entity.BaseEntity;
+import com.highschool.highschoolsystem.entity.LevelEntity;
 import com.highschool.highschoolsystem.repository.LevelRepository;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -39,5 +41,12 @@ public class LevelService {
         });
 
         return LevelConverter.toResponse(levelRepository.save(LevelConverter.toEntity(levelRequest)));
+    }
+
+    public List<String> getAllLevelId() {
+        return levelRepository.findAll().stream().map(BaseEntity::getId).toList();
+    }
+    public List<LevelEntity> getAllLevel() {
+        return levelRepository.findAll().stream().toList();
     }
 }

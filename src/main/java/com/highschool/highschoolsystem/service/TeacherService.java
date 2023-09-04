@@ -20,4 +20,5 @@ public interface TeacherService extends GeneralService<TeacherEntity> {
     Iterable<TeacherResponse> findByName(String query);
     Optional<TeacherEntity> findByUsername(String username);
     String requireTeacherToken(Cookie token);
+    long count();
 }

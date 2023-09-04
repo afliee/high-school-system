@@ -1,13 +1,11 @@
 package com.highschool.highschoolsystem.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
@@ -17,6 +15,7 @@ import java.util.Collection;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
+@EqualsAndHashCode(callSuper = false, exclude = {"students", "attendances", "schedule", "semester", "level", "chairman"})
 public class ClassEntity extends BaseEntity<String> implements Serializable {
     private String name;
 
@@ -38,19 +37,19 @@ public class ClassEntity extends BaseEntity<String> implements Serializable {
             mappedBy = "classEntity",
             targetEntity = StudentEntity.class
     )
-    private Collection<StudentEntity> students;
+    private Collection<StudentEntity> students = new ArrayList<>();
 
     @OneToMany(
             mappedBy = "classEntity",
             targetEntity = AttendanceEntity.class
     )
-    private Collection<AttendanceEntity> attendances;
+    private Collection<AttendanceEntity> attendances = new ArrayList<>();
 
-    @OneToMany(
-            mappedBy = "classEntity",
-            targetEntity = FaultEntity.class
-    )
-    private Collection<FaultEntity> faults;
+//    @OneToMany(
+//            mappedBy = "classEntity",
+//            targetEntity = FaultEntity.class
+//    )
+//    private Collection<FaultEntity> faults = new ArrayList<>();
 
 //    @OneToMany(
 //            mappedBy = "classEntity",

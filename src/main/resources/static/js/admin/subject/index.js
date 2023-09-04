@@ -122,6 +122,7 @@ $(document).ready(function () {
         paginationTemplate.fadeOut(300, function () {
             const paginationHtml = generatePaginationOptions(currentPage + 1, totalPages, MAX_SUBJECTS_PER_PAGE);
             paginationTemplate.html(paginationHtml);
+            registerPaginationEvent();
             paginationTemplate.fadeIn(150);
         })
     }
@@ -201,6 +202,17 @@ $(document).ready(function () {
         subjects.on('click', function (e) {
             const subjectId = $(this).data('id');
             window.location.href = `/auth/admin/subjects/${subjectId}`;
+        })
+    }
+
+    function registerPaginationEvent() {
+        const pagination = paginationTemplate.find('.page-item');
+        pagination.on('click', function (e) {
+            const page = $(this).data('page');
+
+            if (page) {
+                getSubjects({page: page - 1});
+            }
         })
     }
 })

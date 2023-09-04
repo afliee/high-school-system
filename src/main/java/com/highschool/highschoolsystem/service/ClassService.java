@@ -49,12 +49,16 @@ public class ClassService {
     private TokenRepository tokenRepository;
     @Autowired
     private TeacherRepository teacherRepository;
+//    @Autowired
+//    private ScheduleRepository scheduleRepository;
     @Autowired
-    private ScheduleRepository scheduleRepository;
+    private ScheduleService scheduleService;
     @Autowired
     private AttendanceRepository attendanceRepository;
     @Autowired
     private SubmittingService submittingService;
+    @Autowired
+    private FaultRepository faultRepository;
 
     public ClassResponse save(AddClassRequest request) {
         try {
@@ -181,6 +185,17 @@ public class ClassService {
         }
     }
 
+    /*
+    * [TODO] delete student
+    *   - delete user
+    *  - delete student
+    * - delete token
+    * - delete attendance
+    * - delete submitting
+    * - delete fault
+    * - delete class
+    * */
+
     @Transactional
     public void delete(String id, String studentId) {
         var user = userRepository.findByUserId(studentId).orElseThrow(
@@ -206,6 +221,8 @@ public class ClassService {
         }
 
         submittingService.deleteAllByStudentId(studentId);
+
+        faultRepository.deleteAllByStudentId(studentId);
 
         userRepository.deleteByUserId(studentId);
         studentRepository.deleteById(studentId);
@@ -246,6 +263,7 @@ public class ClassService {
             }
 
             submittingService.deleteAllByStudentId(student.getId());
+            faultRepository.deleteAllByStudentId(student.getId());
 
             userRepository.deleteByUserId(student.getId());
             studentRepository.deleteById(student.getId());
@@ -253,10 +271,12 @@ public class ClassService {
 
         var schedule = classEntity.getSchedule();
         if (schedule != null) {
+
             var lessons = schedule.getLessons();
-
-
-            scheduleRepository.delete(schedule);
+            if (!schedule.getSubjects().isEmpty()) {
+                scheduleService.delete(schedule.getId());
+            }
+                //            scheduleRepository.delete(schedule);
         }
         classRepository.deleteById(classId);
     }
@@ -289,5 +309,15 @@ public class ClassService {
         return classRepository.findByChairmanId(teacherId).orElseThrow(
                 () -> new NotFoundException("Class not found")
         );
+    }
+
+    public long count() {
+        return classRepository.count();
+    }
+
+    public List<ClassEntity> findClassCurrentSemesterAndLevel(String level) {
+        var now = LocalDate.now();
+
+        return classRepository.findAllByLevelIdAndCurrentSemester(level, now);
     }
 }

@@ -15,22 +15,28 @@ public class AttendanceConverter {
 //        student absent
         var studentsAbsent = studentsInClass.stream()
                 .filter(student -> !attendance.getStudents().contains(student))
-                .map(student -> {
-                    var studentResponse = StudentConverter.toResponse(student);
-                    studentResponse.setAbsent(true);
-                    return studentResponse;
-                })
                 .toList();
 
-        var students = StudentConverter.toResponse(attendance.getStudents().stream().toList());
-        students.addAll(studentsAbsent);
+
+        var students = studentsInClass.stream().map(student -> {
+            var studentResponse = StudentConverter.toResponse(student);
+            if (!attendance.getStudents().contains(student)) {
+                studentResponse.setAbsent(true);
+            }
+
+            return studentResponse;
+        });
+//        add absent to list
+
+//        students.addAll(studentsAbsent);
 
 //        add student and student absent to list
         return AttendanceResponse.builder()
                 .navigator(attendance.getNavigator().getStudent().getFullName())
                 .classEntity(ClassConverter.toResponse(attendance.getClassEntity()))
-                .students(students)
+                .students(students.toList())
                 .present(attendance.getPresent())
+                .updatedDate(attendance.getUpdatedDate().toString())
                 .build();
     }
 }

@@ -13,8 +13,9 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 public class FileUploadUtils {
     private static final String IMAGE_PHOTO_UPLOAD_DIR = System.getProperty("user.dir") + "/src/main/uploads/images/user-photos/";
     private static final String ASSIGNMENT_UPLOAD_DIR = System.getProperty("user.dir") + "/src/main/uploads/assignments/";
-//    accept file type pdf, doc, docx, ppt, pptx, xls, xlsx, jpg, png, jpeg
+//    accept file type pdf, doc, docx, ppt, pptx, xls, xlsx, jpg, png, jpeg, txt
     private static final String[] ASSIGNMENT_TYPE_ACCEPT = {
+            "text/plain",
             "application/pdf",
             "application/msword",
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -97,6 +98,14 @@ public class FileUploadUtils {
         } catch (Exception e) {
             e.printStackTrace();
             throw new Exception("Could not remove file: " + path, e);
+        }
+    }
+
+    public static void createDir(String path) throws Exception {
+        String uploadPathStr = ASSIGNMENT_UPLOAD_DIR + path;
+        Path uploadPath = Paths.get(uploadPathStr.replaceAll("/", "\\\\").trim());
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
         }
     }
 }

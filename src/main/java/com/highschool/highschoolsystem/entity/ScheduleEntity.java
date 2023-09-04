@@ -39,7 +39,7 @@ public class ScheduleEntity extends BaseEntity<String> {
     )
     private Set<LessonEntity> lessons = new HashSet<>();
 
-    @OneToOne(targetEntity = ClassEntity.class)
+    @OneToOne(targetEntity = ClassEntity.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "class_id")
     private ClassEntity classEntity;
 

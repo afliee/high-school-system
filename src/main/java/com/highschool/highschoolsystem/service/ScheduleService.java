@@ -207,6 +207,7 @@ public class ScheduleService {
                 () -> new NotFoundException("Schedule not found")
         );
 
+        schedule.setClassEntity(null);
         schedule.setExpired(true);
         schedule.setExpiredDate(LocalDate.now());
 

@@ -1,5 +1,6 @@
 package com.highschool.highschoolsystem.controller;
 
+import com.highschool.highschoolsystem.config.FaultType;
 import com.highschool.highschoolsystem.exception.NotFoundException;
 import com.highschool.highschoolsystem.service.*;
 import com.highschool.highschoolsystem.util.BreadCrumb;
@@ -29,6 +30,7 @@ public class TeacherController {
     private final StudentService studentService;
     private final SubjectService subjectService;
     private final AssignmentService assignmentService;
+    private final FaultService faultService;
 
     @GetMapping({"/home", "/", ""})
     public String index(
@@ -256,6 +258,72 @@ public class TeacherController {
         model.addAttribute("filter", filter);
         return "pages/teacher/grade";
     }
+
+    @GetMapping("/fault/check")
+    public String faultCheck(
+            @RequestParam(name = "studentId", defaultValue = "" , required = true) String studentId,
+            @RequestParam(name = "subjectId", defaultValue = "" , required = true) String subjectId,
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Model model
+    )  {
+        var tokenCookie = WebUtils.getCookie(request, "token");
+
+        String isTeacher = teacherService.requireTeacherToken(tokenCookie);
+        if (isTeacher != null) return isTeacher;
+
+        assert tokenCookie != null;
+        var username = jwtService.extractUsername(tokenCookie.getValue());
+        var teacher = teacherService.findByUsername(username).orElseThrow(
+                () -> new NotFoundException("Teacher not found")
+        );
+        var student = studentService.findOne(studentId);
+        var faults = faultService.findFaultByStudentIdAndSubjectIdGroupByDate(studentId, subjectId);
+
+        var breadCrumbs = generateBreadCrumbs();
+        breadCrumbs.add(new BreadCrumb(student.getFullName(), "/teacher/fault/check?studentId=" + studentId, true));
+        model.addAttribute("breadCrumbs", breadCrumbs);
+        model.addAttribute("teacher", teacher);
+        model.addAttribute("student", student);
+        model.addAttribute("subjectId", subjectId);
+        model.addAttribute("faults", faults);
+
+        return "pages/teacher/check_fault";
+    }
+
+    @GetMapping("/fault")
+    public String fault(
+            @RequestParam(name = "studentId", defaultValue = "" , required = true) String studentId,
+            @RequestParam(name = "subjectId", defaultValue = "" , required = true) String subjectId,
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Model model
+    ) {
+        var tokenCookie = WebUtils.getCookie(request, "token");
+
+        String isTeacher = teacherService.requireTeacherToken(tokenCookie);
+        if (isTeacher != null) return isTeacher;
+
+        assert tokenCookie != null;
+        var username = jwtService.extractUsername(tokenCookie.getValue());
+        var teacher = teacherService.findByUsername(username).orElseThrow(
+                () -> new NotFoundException("Teacher not found")
+        );
+        var student = studentService.findOne(studentId);
+
+
+        model.addAttribute("breadCrumbs", List.of(
+                new BreadCrumb("Home", "/teacher/home", false),
+                new BreadCrumb("Teacher", "/teacher/enroll/" + subjectId, false),
+                new BreadCrumb(student.getFullName(), "/teacher/fault?studentId=" + studentId, false)
+        ));
+        model.addAttribute("teacher", teacher);
+        model.addAttribute("student", student);
+        model.addAttribute("subjectId", subjectId);
+        model.addAttribute("faults", FaultType.values());
+        return "pages/teacher/create_fault";
+    }
+
 
     private List<BreadCrumb> generateBreadCrumbs() {
         var breadCrumbs = new ArrayList<BreadCrumb>();

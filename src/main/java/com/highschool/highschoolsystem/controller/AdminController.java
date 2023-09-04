@@ -26,6 +26,7 @@ import java.util.logging.Logger;
 @Tag(name = "Admin", description = "Admin views for CRUD")
 public class AdminController {
     Logger logger = Logger.getLogger(AdminController.class.getName());
+    private static final int LIMIT_LESSON_PAGE = 5;
 
     @Autowired
     private AdminService adminService;
@@ -43,11 +44,14 @@ public class AdminController {
     private LevelService levelService;
     @Autowired
     private LessonService lessonService;
+    @Autowired
+    private StatisticService statisticService;
 
     @GetMapping({"/", "", "/dashboard"})
     public String index(
             HttpServletRequest request,
-            HttpServletRequest response
+            HttpServletRequest response,
+            Model model
     ) {
 
         String redirect = adminService.requireAdminLogin(request);
@@ -55,7 +59,13 @@ public class AdminController {
         if (redirect != null) {
             return redirect;
         }
-
+        var test = statisticService.getLessonToday(LIMIT_LESSON_PAGE);
+        System.out.println("lessons: " + test.size());
+        model.addAttribute("header", statisticService.getStatisticHeader());
+        model.addAttribute("attendance", statisticService.getAttendanceStatistic());
+        model.addAttribute("academic", statisticService.getAcademicPerformanceStatistic());
+        model.addAttribute("schedule", statisticService.getLessonToday(LIMIT_LESSON_PAGE));
+        model.addAttribute("limit", LIMIT_LESSON_PAGE);
         return "pages/admin/dashboard";
     }
 

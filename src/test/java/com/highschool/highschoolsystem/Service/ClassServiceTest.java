@@ -9,6 +9,7 @@ import com.highschool.highschoolsystem.entity.TeacherEntity;
 import com.highschool.highschoolsystem.repository.*;
 import com.highschool.highschoolsystem.service.ClassService;
 import com.highschool.highschoolsystem.service.LessonService;
+import com.highschool.highschoolsystem.service.ScheduleService;
 import com.highschool.highschoolsystem.service.SubmittingService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,8 +49,10 @@ public class ClassServiceTest {
     @Mock
     private LessonService lessonService;
 
+//    @Mock
+//    private ScheduleRepository scheduleRepository;
     @Mock
-    private ScheduleRepository scheduleRepository;
+    private ScheduleService scheduleService;
 
     @Mock AddClassRequest addClassRequest;
 
@@ -58,11 +61,13 @@ public class ClassServiceTest {
     private AttendanceRepository attendanceRepository;
     @Mock
     private SubmittingService submittingService;
+    @Mock
+    private FaultRepository faultRepository;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        classService = new ClassService(classRepository, levelRepository, studentRepository, semesterRepository, userRepository, passwordEncoder, tokenRepository, teacherRepository, scheduleRepository, attendanceRepository, submittingService);
+        classService = new ClassService(classRepository, levelRepository, studentRepository, semesterRepository, userRepository, passwordEncoder, tokenRepository, teacherRepository, scheduleService, attendanceRepository, submittingService, faultRepository);
     }
 
     @Test

@@ -13,7 +13,7 @@ $(document).ready(function () {
             text: "You want to delete this class?\n All students in this class will be deleted!",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#d33',
+            confirmButtonColor: '#32CD32',
             cancelButtonColor: '#3085d6',
             confirmButtonText: 'Yes, delete it!'
         }).then(result => {
@@ -111,7 +111,7 @@ $(document).ready(function () {
                         <button type="button" class="btn btn-primary btn-show" data-id="${student.id}" >View</button>
                     </td>
                     <td>
-                        <button class="btn btn-danger btn-delete" data-id="${student.id}" data-class-id="${res.id}">Delete</button>
+                        <button class="btn btn-danger btn-delete-student" data-id="${student.id}" data-class-id="${res.id}">Delete</button>
                     </td>
                 </tr>
             `
@@ -278,7 +278,7 @@ $(document).ready(function () {
     }
 
     function registerDeleteStudentEvent() {
-        const btnDeletes = $('.btn-delete');
+        const btnDeletes = $('.btn-delete-student');
         btnDeletes.click(function () {
             const studentId = $(this).data('id');
             const classId = $(this).data('class-id');

@@ -167,6 +167,11 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
+    public long count() {
+        return teacherRepository.count();
+    }
+
+    @Override
     public TeacherEntity add(TeacherEntity teacherEntity) {
         return null;
     }

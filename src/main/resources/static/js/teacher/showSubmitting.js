@@ -48,7 +48,7 @@ $(document).ready(function () {
                             <h5 class="student_fullName">${student.fullName}</h5>
                             <p class="student_name" class="text-primary">${student.name}</p>
                             <span>
-                                ${data?.file ? `<a href="uploads/assignments/${data.file}" target="_blank" class="badge badge-primary bg-primary text-white">${file}</a>` : "No file"}
+                                ${data?.file ? `<a href="/uploads/assignments/${data.file}" target="_blank" class="badge badge-primary bg-primary text-white">${file}</a>` : "No file"}
                             </span>
                             <span>
                                 ${data?.isTurnedLate ? `<span class="badge badge-danger ">Late</span>` : ""}

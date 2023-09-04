@@ -81,4 +81,8 @@ public class StudentService {
             return submittingEndDate.isAfter(now.minusDays(1)) && submittingEndDate.isBefore(now.plusDays(1)) && submitting.getFile() == null;
         }).toList());
     }
+
+    public long countStudent() {
+        return studentRepository.count();
+    }
 }

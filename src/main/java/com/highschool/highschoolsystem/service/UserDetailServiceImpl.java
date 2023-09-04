@@ -67,4 +67,8 @@ public class UserDetailServiceImpl implements UserDetailsService {
         throw new UsernameNotFoundException("User not found with username: " + username);
     }
 
+
+    public long count() {
+        return teacherRepository.count() + studentRepository.count() + adminRepository.count();
+    }
 }

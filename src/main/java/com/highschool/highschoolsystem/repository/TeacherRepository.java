@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
 public interface TeacherRepository extends JpaRepository<TeacherEntity, String> {
         Optional<TeacherEntity> findByName(String name);
         Optional<TeacherEntity> findByFullNameContainsIgnoreCase(String query);

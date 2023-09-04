@@ -25,7 +25,8 @@ public class AttendanceEntity extends BaseEntity<String> {
     private int present;
 
     @ManyToMany(
-            targetEntity = StudentEntity.class
+            targetEntity = StudentEntity.class,
+            cascade = CascadeType.ALL
     )
     @JoinTable(
             name = "attendance_detail",

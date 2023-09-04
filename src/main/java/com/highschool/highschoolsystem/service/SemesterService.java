@@ -84,7 +84,12 @@ public class SemesterService {
         }
 
         return SemesterConverter.toResponse(semester.get());
+    }
 
+    public SemesterEntity findCurrentSemesterEntity() {
+        var currentDay = LocalDate.now();
+
+        return semesterRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqual(currentDay, currentDay).orElse(null);
     }
 
     public SemesterResponse findById(String semesterId) {

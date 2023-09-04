@@ -4,6 +4,7 @@ import com.highschool.highschoolsystem.converter.SubjectConverter;
 import com.highschool.highschoolsystem.dto.request.SubjectRequest;
 import com.highschool.highschoolsystem.dto.response.SubjectGroupByResponse;
 import com.highschool.highschoolsystem.dto.response.SubjectResponse;
+import com.highschool.highschoolsystem.entity.ClassEntity;
 import com.highschool.highschoolsystem.entity.StudentEntity;
 import com.highschool.highschoolsystem.entity.SubjectEntity;
 import com.highschool.highschoolsystem.exception.NotFoundException;
@@ -206,5 +207,23 @@ public class SubjectService {
         }
 
         return schedule.getClassEntity().getStudents().stream().toList();
+    }
+
+    public long count() {
+        return subjectRepository.count();
+    }
+
+    public boolean hasSubject(ClassEntity clazz, String subjectId) {
+        var schedule = clazz.getSchedule();
+        if (schedule == null || schedule.getSubjects() == null) {
+            return false;
+        }
+
+        for (SubjectEntity subject : schedule.getSubjects()) {
+            if (subject.getId().equals(subjectId)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{/fragments/heading/teacherHeading :: teacherHeading(title = 'Teacher Dashboard')}"/>
+<body>
+<div class="container-fluid">
+    <th:block th:replace="~{/fragments/teacher/util/sidebar :: sidebar(active = '', teacher = ${teacher})}"/>
+    <div id="main">
+        <th:block th:insert="~{/fragments/teacher/util/navbar :: navbar(teacher = ${teacher})}"/>
+        <nav style="--bs-breadcrumb-divider: url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'8\' height=\'8\'%3E%3Cpath d=\'M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z\' fill=\'currentColor\'/%3E%3C/svg%3E');"
+             aria-label="breadcrumb"
+             class="d-flex align-items-center my-3 justify-content-between"
+        >
+            <ol class="breadcrumb">
+                <li th:each="breadcrumb : ${breadCrumbs}"
+                    th:class="'breadcrumb-item ' + ${breadcrumb.isActive ? 'active' : ''}">
+                    <a th:href="${breadcrumb.url}" th:text="${breadcrumb.name}"
+                       th:class="'text-decoration-none ' + ${breadcrumb.isActive ? 'active' : ''}"></a>
+                </li>
+            </ol>
+        </nav>
+        <div class="row mt-5">
+            <div class="page-heading">
+                <h3 class="page-title-headings">
+                    Create Fault
+                </h3>
+            </div>
+            <div class="col-md-6 col-12">
+                <div class="form-group has-icon-left">
+                    <label class="mb-2" for="student_name">Student</label>
+                    <div class="position-relative">
+                        <input type="text" class="disabled form-control" id="student_name" readonly th:value="${student.name}">
+                        <div class="form-control-icon">
+                            <i class="bi bi-person"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-12">
+                <div class="form-group has-icon-left">
+                    <label class="mb-2" for="full_name">Student FullName</label>
+                    <div class="position-relative">
+                        <input type="text" class="disabled form-control" id="full_name" readonly th:value="${student.fullName}">
+                        <div class="form-control-icon">
+                            <i class="bi bi-person"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-mk-6 col-12">
+                <div class="form-group">
+                    <label for="select_fault" class="mb-2">Select Faults</label>
+                    <div class="rs-select2--md form-control">
+                        <select class="js-select2 form-control" id="select_fault" name="property[]" multiple="multiple">
+                            <option disabled="disabled">Select Faults</option>
+                            <option th:each="fault : ${faults}" th:value="${fault.name}" th:text="${fault.faultDescription}"></option>
+                        </select>
+                        <div class="dropDownSelect2"></div>
+                    </div>
+
+                    <div class="other_fault mt-3">
+                        <div class="form-group has-icon-left">
+                            <label for="other_fault" class="mb-2">Other Faults</label>
+                            <div class="position-relative ">
+                                <input type="text" class="form-control" id="other_fault" name="other_fault" placeholder="Other Faults">
+                                <div class="form-control-icon">
+                                    <i class="bi bi-person"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-primary btn-save">Save A Record</button>
+        </div>
+    </div>
+</div>
+<input type="hidden" name="id" id="id" th:value="${student.id}">
+<input type="hidden" name="subject_id" id="subject_id" th:value="${subjectId}">
+
+<th:block th:replace="~{/fragments/script/util/baseScript :: baseScript}"/>
+<script th:src="@{/vendors/select2/select2.min.js}"></script>
+<script !src="">
+    $(document).ready(function() {
+        try {
+
+            $(".js-select2").each(function () {
+                $(this).select2({
+                    minimumResultsForSearch: 20,
+                    dropdownParent: $(this).next('.dropDownSelect2')
+                });
+            });
+
+        } catch (error) {
+            console.log(error);
+        }
+
+
+        const faultSelect = $('#select_fault');
+
+        $('.other_fault').hide();
+        faultSelect.on('change', function() {
+            const value = $(this).val();
+            console.log(value)
+            if (value.includes('OTHER')) {
+                $('.other_fault').show();
+            } else {
+                $('.other_fault').hide();
+            }
+        });
+    });
+</script>
+<script th:src="@{/js/teacher/createFault.js}"></script>
+</body>
+</html>

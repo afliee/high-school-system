@@ -6,9 +6,269 @@
     <th:block th:insert="~{fragments/admin/dashboard/sidebar :: sidebar(active = 'dashboard')}"/>
     <div id="main">
         <th:block th:insert="~{fragments/admin/dashboard/navbar :: navbar}"/>
+        <div class="page-heading mt-3">
+            <h3 class="page-title-headings fw-semibold">
+                <span>Statistics</span>
+            </h3>
+            <th:block th:if="${header.get('currentSemester') == null}">
+                <h6 class="font-weight-light text-muted">(No semester is active)</h6>
+            </th:block>
+
+            <th:block th:if="${header.get('currentSemester') != null}">
+                <h6 class="font-weight-light text-muted"
+                    th:text="'This apply for current semester: ' + ${header.get('currentSemester')?.name}"></h6>
+                <div>
+                    <!--                    i tag with clock-->
+                    <i class="bi bi-clock-fill"></i>
+                    <span class="font-weight-light text-muted"
+                          th:text="'Time Avaiable: ' + ${header.get('currentSemester')?.startDate} + ' / ' + ${header.get('currentSemester')?.endDate}"></span>
+                </div>
+            </th:block>
+        </div>
+
+        <div class="page-content">
+            <!--            number count statistic-->
+            <section class="row">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-6 col-lg-3 col-md-6 my-2">
+                            <div class="card ">
+                                <div class="card-body px-3 py-4-5">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="stats-icon purple">
+                                                <i class="iconly-boldShow"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <h6 class="text-muted font-semibold">Teachers</h6>
+                                            <h6 class="font-extrabold mb-0" th:text="${header.get('totalTeachers')}">
+                                                112.000</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-lg-3 col-md-6 my-2">
+                            <div class="card ">
+                                <div class="card-body px-3 py-4-5">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="stats-icon blue">
+                                                <i class="iconly-boldProfile"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <h6 class="text-muted font-semibold">Students</h6>
+                                            <h6 class="font-extrabold mb-0" th:text="${header.get('totalStudents')}">
+                                                183.000</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-lg-3 col-md-6 my-2">
+                            <div class="card">
+                                <div class="card-body px-3 py-4-5">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="stats-icon green">
+                                                <i class="iconly-boldAdd-User"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <h6 class="text-muted font-semibold">Classes</h6>
+                                            <h6 class="font-extrabold mb-0" th:text="${header.get('totalClasses')}">
+                                                80.000</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-lg-3 col-md-6 my-2">
+                            <div class="card">
+                                <div class="card-body px-3 py-4-5">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="stats-icon red">
+                                                <i class="iconly-boldBookmark"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <h6 class="text-muted font-semibold">Subject Saved</h6>
+                                            <h6 class="font-extrabold mb-0" th:text="${header.get('totalSubjects')}">
+                                                112</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr class="bg-primary my-2" style="height: 2px">
+                <div class="col-12 mt-3">
+                    <!--                    chart statistic-->
+                    <h4 class="page-title-headings fw-semibold">
+                        <span>Academic and Attendance Chart</span>
+                    </h4>
+                    <div class="row d-flex justify-content-between">
+                        <div class="col-6" >
+                            <div id="academicChart" class="row"></div>
+                            <!--                        <canvas id="academicChart" height="250" style="width: 100%"></canvas>-->
+                        </div>
+                        <div class="col-6">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h6 class="font-weight-light text-muted">Recent Events</h6>
+                                    <div class="card card-body rounded-2 shadow">
+                                        <th:block th:if="${schedule == null || schedule.size() == 0}">
+<!--                                            alert info-->
+                                            <div class="alert alert-info alert-dismissible fade show">
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                        aria-label="Close"></button>
+                                                <strong>Info!</strong> There is no event in this semester.
+                                            </div>
+                                        </th:block>
+
+                                        <th:block th:if="${schedule.size() != 0}" th:each="lesson : ${schedule}">
+                                            <div class="border-bottom rounded-2 row pb-2 py-3 shadow">
+                                                <div class="col-md-7 col-12">
+                                                    <h5 class="text-title-small" th:text="${lesson.subject.name}"></h5>
+                                                    <div>
+                                                        <span th:text="${lesson.subject.teacher.name}" class="text-truncate mb-2" data-bs-toggle="tooltip" th:title="${lesson.subject.teacher.email}"></span>
+                                                        <span th:text="${lesson.subject.teacher.email}" class="text-truncate text-muted" data-bs-toggle="tooltip" th:title="${lesson.subject.teacher.email}"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex justify-content-between align-items-center col-md-5 col-12">
+                                                    <div class="">
+                                                        <div class="mb-2">
+                                                            <i class="bi bi-align-start"></i>
+                                                            <span th:text="${#temporals.format(lesson.startDate, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                                                        </div>
+                                                        <div>
+                                                            <i class="bi bi-align-end"></i>
+                                                            <span th:text="${#temporals.format(lesson.endDate, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </th:block>
+
+                                        <th:block th:if="${schedule.size() > limit}">
+                                            <a href="#" class="btn btn-primary">View All</a>
+                                        </th:block>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <canvas id="attendanceChart" style="width: 100%"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
     </div>
 </div>
 
 <th:block th:insert="~{fragments/script/admin/dashboardScript :: dashboardScript}"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script th:inline="javascript">
+    /* this script render pie char for attendance*/
+    $(document).ready(function () {
+        const data = /*[[${attendance}]]*/ null;
+        const labels = Object.keys(data);
+        const values = Object.values(data);
+        console.log("value", values ? values : "null")
+        console.log("data", data ? data : "null")
+        const ctx = document.getElementById('attendanceChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        data: values,
+                        backgroundColor: [
+                            'rgb(255, 99, 132)',
+                            'rgb(54, 162, 235)',
+                            'rgb(255, 205, 86)'
+                        ],
+                        hoverOffset: 4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Attendance Chart'
+                    }
+                }
+            }
+        })
+
+    })
+</script>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        const data = /*[[${academic}]]*/ null;
+        console.log("academic", data ? data : "null")
+        const labels = Object.keys(data);
+        const values = Object.values(data);
+        console.log("value", values ? values : "null")
+
+        const academicChart = $("#academicChart")
+        $.each(data, function (key, value) {
+            const label = Object.keys(value);
+            const data = Object.values(value);
+            if (label.length === 0 || data.length === 0) {
+                return;
+            }
+
+            const canvasElement = document.createElement('canvas');
+            canvasElement.setAttribute("class", "col-6");
+            academicChart.append(canvasElement);
+
+            const ctx = canvasElement.getContext('2d');
+
+            const chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: label,
+                    datasets: [
+                        {
+                            label: key,
+                            data: data,
+                            backgroundColor: [
+                                'rgb(255, 99, 132)',
+                                'rgb(54, 162, 235)',
+                                'rgb(255, 205, 86)'
+                            ],
+                            hoverOffset: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                        title: {
+                            display: true,
+                            text: key
+                        }
+                    }
+                }
+            })
+        })
+    })
+</script>
 </body>
 </html>

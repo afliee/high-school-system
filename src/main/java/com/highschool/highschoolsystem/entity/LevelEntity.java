@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
@@ -27,11 +28,11 @@ public class LevelEntity extends BaseEntity<String> {
             mappedBy = "level",
             targetEntity = ClassEntity.class
     )
-    private Collection<ClassEntity> classes;
+    private Collection<ClassEntity> classes = new ArrayList<>();
 
     @OneToMany(
             mappedBy = "level",
             targetEntity = SubjectEntity.class
     )
-    private Collection<SubjectEntity> subjects;
+    private Collection<SubjectEntity> subjects = new ArrayList<>();
 }

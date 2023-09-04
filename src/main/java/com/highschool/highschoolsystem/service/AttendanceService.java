@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,6 +27,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AttendanceService {
+    public static final String TAG = "AttendanceService";
     @Autowired
     private AttendanceRepository attendanceRepository;
     @Autowired
@@ -86,11 +86,33 @@ public class AttendanceService {
                 .build();
         attendanceRepository.save(attendance);
 
-        students.forEach(student -> {
-            student.getAttendances().add(attendance);
-            studentRepository.save(student);
-        });
+//        students.forEach(student -> {
+//            student.getAttendances().add(attendance);
+//            studentRepository.save(student);
+//        });
     }
+
+
+    @Transactional
+    public AttendanceEntity update(String id, AttendanceRequest request) {
+        var attendance = attendanceRepository.findById(id).orElseThrow(() -> new NotFoundException("attendance not found"));
+
+        var studentIds = request.getStudentIds();
+        var classId = request.getClassId();
+
+        var classEntity = classService.findById(classId);
+        var students = studentIds.stream().map(studentId -> studentRepository.findById(studentId).orElseThrow(() -> new NotFoundException("student not found"))).toList();
+
+        attendance.setStudents(students);
+        attendance.setPresent(students.size());
+
+        System.out.println(TAG + " | update: " + attendance.getStudents().size());
+
+//        System.out.println(TAG + " | success: " + attendance.getStudents().size());
+        return attendance;
+
+    }
+
 
     public AttendanceResponse getAttendance(String id) {
         return attendanceRepository.findById(id).map(AttendanceConverter::toResponse).orElseThrow(() -> new NotFoundException("attendance not found"));

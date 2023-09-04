@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -44,15 +45,10 @@ public class StudentEntity extends BaseEntity<String> implements Serializable {
     private ClassEntity classEntity;
 
     @ManyToMany(targetEntity = AttendanceEntity.class, mappedBy = "students")
-    private Collection<AttendanceEntity> attendances;
+    private Collection<AttendanceEntity> attendances = new ArrayList<>();
 
-    @ManyToMany(targetEntity = FaultEntity.class)
-    @JoinTable(
-            name = "fault_detail",
-            joinColumns = @JoinColumn(name = "student_id"),
-            inverseJoinColumns = @JoinColumn(name = "fault_id")
-    )
-    private Collection<FaultEntity> faults;
+    @OneToMany(mappedBy = "student", targetEntity = FaultEntity.class)
+    private Set<FaultEntity> faults = new HashSet<>();
 
     @OneToMany(mappedBy = "student", targetEntity = Submitting.class)
     private Set<Submitting> submittingSet = new HashSet<>();

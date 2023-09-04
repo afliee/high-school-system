@@ -80,11 +80,12 @@ public class AssignmentService {
         assignment.teacher(teacher);
 
 //        save file assignment
-        String fileName = request.getAttachment().getOriginalFilename();
-        String randomName = UUID.randomUUID().toString();
-        String path = """
-                %s/%s""".formatted(randomName, subject.getId());
+
         if (request.getAttachment() != null) {
+            String fileName = request.getAttachment().getOriginalFilename();
+            String randomName = UUID.randomUUID().toString();
+            String path = """
+                    %s/%s""".formatted(randomName, subject.getId());
             try {
                 FileUploadUtils.saveAssignmentFile(path, fileName, request.getAttachment());
                 assignment.attachment(path + "/" + fileName);
@@ -110,7 +111,7 @@ public class AssignmentService {
                     student.getSubmittingSet().add(submitting);
                 }
 
-                if (assignmentEntity.getSubmitting() == null) {
+                if (assignmentEntity.getSubmitting() == null || assignmentEntity.getSubmitting().isEmpty()) {
                     assignmentEntity.setSubmitting(new HashSet<>());
                     assignmentEntity.getSubmitting().add(submitting);
                 } else {
@@ -121,7 +122,7 @@ public class AssignmentService {
                 studentRepository.save(student);
             });
         }
-        System.out.println("assignment: " + assignmentEntity.getSubmitting().size());
+//        System.out.println("assignment: " + assignmentEntity.getSubmitting().size());
         assignmentRepository.save(assignmentEntity);
     }
 
@@ -183,6 +184,7 @@ public class AssignmentService {
         var statedDate = LocalDateTime.parse(request.getStartedDate(), formatter);
         assignment.setStartedDate(statedDate);
         if (isDue) {
+            System.out.println("closed date: " + request.getClosedDate());
             var dueDate = LocalDateTime.parse(request.getClosedDate(), formatter);
 
             assignment.setClosedDate(dueDate);
@@ -200,15 +202,22 @@ public class AssignmentService {
                 }
             }
 
-            String fileName = request.getAttachment().getOriginalFilename();
-            String oldFileName = assignment.getAttachment().substring(assignment.getAttachment().lastIndexOf("/") + 1);
-            String path = assignment.getAttachment().substring(0, assignment.getAttachment().lastIndexOf("/"));
+
             try {
+                String fileName = request.getAttachment().getOriginalFilename();
+                String path = "";
+                if (assignment.getAttachment() != null) {
+                    path = assignment.getAttachment().substring(0, assignment.getAttachment().lastIndexOf("/"));
+                } else {
+                    String randomName = UUID.randomUUID().toString();
+                    path = """
+                            %s/%s""".formatted(randomName, subject.getId());
+                }
                 FileUploadUtils.saveAssignmentFile(path, fileName, request.getAttachment());
                 assignment.setAttachment(path + "/" + fileName);
             } catch (Exception e) {
                 e.printStackTrace();
-                throw new RuntimeException("Could not save file: " + fileName, e);
+                throw new RuntimeException("Could not save file", e);
             }
         }
 
@@ -258,7 +267,21 @@ public class AssignmentService {
         }
 
         if (request.getFile() != null) {
-            String path = assignment.getAttachment().substring(0, assignment.getAttachment().lastIndexOf("/"));
+//            String path = assignment.getAttachment().substring(0, assignment.getAttachment().lastIndexOf("/"));
+            String path = "";
+            if (assignment.getAttachment() == null) {
+                String randomName = UUID.randomUUID().toString();
+                path = """
+                        %s/%s""".formatted(randomName, assignment.getSubject().getId());
+
+                try {
+                    FileUploadUtils.createDir(path);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                path = assignment.getAttachment().substring(0, assignment.getAttachment().lastIndexOf("/"));
+            }
             String originFileName = request.getFile().getOriginalFilename();
             String pathFile = path + "/submitting/" + student.getId();
             try {

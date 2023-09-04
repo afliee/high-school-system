@@ -1,29 +1,36 @@
 package com.highschool.highschoolsystem.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "fault")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
+@EqualsAndHashCode(callSuper = false, exclude = {"faultDetails", "student"})
 @EntityListeners(AuditingEntityListener.class)
 public class FaultEntity extends BaseEntity<String> {
     private String createdAt;
 
-    @ManyToOne(targetEntity = ClassEntity.class)
-    @JoinColumn(name = "class_id")
-    private ClassEntity classEntity;
+    @ManyToOne(targetEntity = StudentEntity.class)
+    @JoinColumn(name = "student_id")
+    private StudentEntity student;
 
-    @ManyToMany(
-            mappedBy = "faults",
-            targetEntity = StudentEntity.class
+    private String subject;
+
+    @OneToMany(
+            mappedBy = "fault",
+            cascade = CascadeType.ALL,
+            targetEntity = FaultDetailEntity.class
     )
-    private Collection<StudentEntity> students;
+    private Set<FaultDetailEntity> faultDetails = new HashSet<>();
+
 }

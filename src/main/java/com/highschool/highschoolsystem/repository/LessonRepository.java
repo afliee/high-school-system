@@ -7,14 +7,18 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 public interface LessonRepository extends JpaRepository<LessonEntity, String> {
     Page<?> findAllBySubjectId(String subjectId, Pageable pageable);
+
     List<LessonEntity> findAllBySubjectId(String subjectId);
+
     List<LessonEntity> findAllBySubjectIdIn(List<String> subjectIds);
+
     Set<LessonEntity> findAllByIdIn(List<String> lessonIds);
 
     List<LessonEntity> findAllByWeekSemesterIdAndSubjectId(String semesterId, String subjectId);
@@ -53,8 +57,13 @@ public interface LessonRepository extends JpaRepository<LessonEntity, String> {
     Optional<LessonEntity> findByDayIdAndShiftIdAndSubjectIdAndWeekSemesterId(String dayId, String shiftId, String subjectId, String semesterId);
 
     List<LessonEntity> findAllBySubjectIdAndWeekSemesterId(String subjectId, String semesterId);
+
     List<LessonEntity> findAllByDayIdAndShiftIdAndSubjectIdAndWeekSemesterId(String dayId, String shiftId, String subjectId, String semesterId);
+
+    List<LessonEntity> findAllByWeekSemesterIdAndStartDateGreaterThanEqualAndEndDateLessThanEqual(String semesterId, LocalDateTime startDate, LocalDateTime endDate);
+
     void deleteAllBySubjectId(String subjectId);
-//    delete all lesson by list subjectId
+
+    //    delete all lesson by list subjectId
     void deleteAllBySubjectIdIn(List<String> subjectId);
 }
