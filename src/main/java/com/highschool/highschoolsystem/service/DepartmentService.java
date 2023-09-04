@@ -72,6 +72,4 @@ public class DepartmentService {
 
         return DepartmentConverter.toDetailResponse(department);
     }
-
-
 }

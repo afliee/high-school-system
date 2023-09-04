@@ -21,16 +21,5 @@ public class DepartmentResponse implements Serializable {
     private String foundedDate;
     private List<TeacherResponse> teachers;
     private List<SubjectResponse> subjects;
-// [
-//  //    {
-////      name: "Math",
-////      color: "rgb(255, 99, 132)",
-////    },
-////    {
-////      name: "English",
-////      color: "rgb(54, 162, 235)",
-////    },
-// ]
     private List<SubjectResponse> subjectColors;
-
 }

@@ -1,4 +1,4 @@
-package com.highschool.highschoolsystem.Service;
+package com.highschool.highschoolsystem.service;
 
 import com.highschool.highschoolsystem.auth.AuthenticationResponse;
 import com.highschool.highschoolsystem.auth.RegistrationRequest;

@@ -56,12 +56,12 @@ public class SubjectEntity extends BaseEntity<String> {
     )
     private Set<AssignmentEntity> assignments = new HashSet<>();
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof SubjectEntity) {
-            SubjectEntity subjectEntity = (SubjectEntity) obj;
-            return subjectEntity.getId().equals(this.getId());
-        }
-        return false;
-    }
+//    @Override
+//    public boolean equals(Object obj) {
+//        if (obj instanceof SubjectEntity) {
+//            SubjectEntity subjectEntity = (SubjectEntity) obj;
+//            return subjectEntity.getId().equals(this.getId());
+//        }
+//        return false;
+//    }
 }
