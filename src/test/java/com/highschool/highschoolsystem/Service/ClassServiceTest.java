@@ -5,6 +5,7 @@ import com.highschool.highschoolsystem.dto.request.AddClassRequest;
 import com.highschool.highschoolsystem.dto.response.ClassResponse;
 import com.highschool.highschoolsystem.dto.response.StudentResponse;
 import com.highschool.highschoolsystem.entity.*;
+import com.highschool.highschoolsystem.exception.NotFoundException;
 import com.highschool.highschoolsystem.repository.*;
 import com.highschool.highschoolsystem.service.ClassService;
 import com.highschool.highschoolsystem.service.LessonService;
@@ -22,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class ClassServiceTest {
@@ -178,5 +180,67 @@ public class ClassServiceTest {
 
         verify(classRepository, times(1)).findById(classEntity.getId());
     }
+
+    @Test
+    void get_WhenClassNotFound_ShouldThrowNotFoundException() {
+        when(classRepository.findById("1")).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> classService.get("1", 1, 1));
+    }
+
+    @Test
+    void delete_WhenUserNotFound_ShouldThorwNotFoundException() {
+        when(userRepository.findByUserId("1")).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> classService.delete("1", "1"));
+    }
+
+    @Test
+    void delete_WhenClassNotFound_ShouldThrowNotFoundException() {
+        when(classRepository.findById("1")).thenReturn(Optional.empty());
+        when(userRepository.findByUserId("1")).thenReturn(Optional.of(UserEntity.builder().build()));
+
+        assertThrows(NotFoundException.class, () -> classService.delete("1", "1"));
+    }
+
+    @Test
+    void deleteClass_WhenClassNotFound_ShouldThrowNotFoundException() {
+        when(classRepository.findById("1")).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> classService.delete("1"));
+    }
+
+    @Test
+    void deleteClass_WhenStudentNotFound_ShouldThrowNotFoundException() {
+        when(classRepository.findById("1")).thenReturn(Optional.of(ClassEntity.builder().students(Collections.singletonList(StudentEntity.builder().build())).build()));
+        when(studentRepository.findById("1")).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> classService.delete("1"));
+    }
+
+    @Test
+    void setChairMan_WhenClassNotFound_ShouldThrowNotFoundException() {
+        when(classRepository.findById("1")).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> classService.setChairman("1", "1"));
+    }
+
+    @Test
+    void setChairMan_WhenTeacherNotFound() {
+        ClassEntity classEntity = ClassEntity.builder().build();
+
+        when(classRepository.findById("1")).thenReturn(Optional.of(classEntity));
+        when(teacherRepository.findById("1")).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> classService.setChairman("1", "1"));
+    }
+
+    @Test
+    void findById_WhenClassNotFound_ShouldThrowNotFoundException() {
+        when(classRepository.findById("1")).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> classService.findById("1"));
+    }
+
 }
 

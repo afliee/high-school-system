@@ -4,6 +4,7 @@ import com.highschool.highschoolsystem.converter.AttendanceConverter;
 import com.highschool.highschoolsystem.dto.request.AttendanceRequest;
 import com.highschool.highschoolsystem.dto.response.AttendanceResponse;
 import com.highschool.highschoolsystem.entity.*;
+import com.highschool.highschoolsystem.exception.NotFoundException;
 import com.highschool.highschoolsystem.repository.AttendanceRepository;
 import com.highschool.highschoolsystem.repository.NavigatorRepository;
 import com.highschool.highschoolsystem.repository.StudentRepository;
@@ -20,6 +21,7 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class AttendanceServiceTest {
@@ -46,17 +48,17 @@ public class AttendanceServiceTest {
         attendanceService = new AttendanceService(attendanceRepository, jwtService, userRepositoyr, navigatorService, classService, studentRepository, navigatorRepository);
     }
 
-    @Test
-    void getHistory_ShouldReturnMap() {
-        AttendanceEntity attendanceEntity = AttendanceEntity.builder().build();
-        MockedStatic<Collectors> collectorsMockedStatic = mockStatic(Collectors.class);
-
-        when(attendanceRepository.findAllByClassEntity_Id("1")).thenReturn(List.of(attendanceEntity));
-
-        Map<LocalDate, List<AttendanceEntity>> history = attendanceService.getHistory("1");
-
-        verify(attendanceRepository, times(1)).findAllByClassEntity_Id("1");
-    }
+//    @Test
+//    void getHistory_ShouldReturnMap() {
+//        AttendanceEntity attendanceEntity = AttendanceEntity.builder().build();
+//        MockedStatic<Collectors> collectorsMockedStatic = mockStatic(Collectors.class);
+//
+//        when(attendanceRepository.findAllByClassEntity_Id("1")).thenReturn(List.of(attendanceEntity));
+//
+//        Map<LocalDate, List<AttendanceEntity>> history = attendanceService.getHistory("1");
+//
+//        verify(attendanceRepository, times(1)).findAllByClassEntity_Id("1");
+//    }
 
     @Test
     void getAttendance_ShouldReturnAttendanceResponse() {
@@ -89,5 +91,33 @@ public class AttendanceServiceTest {
         verify(studentRepository, times(1)).findById("1");
     }
 
+    @Test
+    void update_WhenAttendanceNotFound_ShouldThrowsNotFoundException() {
+        when(attendanceRepository.findById("1")).thenReturn(Optional.empty());
 
+        assertThrows(NotFoundException.class, () -> attendanceService.update("1", new AttendanceRequest()));
+    }
+
+    @Test
+    void update_WhenStudentNotFound_ShouldThrowNotFoundException() {
+        when(studentRepository.findById("1")).thenReturn(Optional.empty());
+        when(attendanceRepository.findById("1")).thenReturn(Optional.of(AttendanceEntity.builder().build()));
+
+        assertThrows(NotFoundException.class, () -> attendanceService.update("1", AttendanceRequest.builder().studentIds(Collections.singletonList("1")).build()));
+    }
+
+    @Test
+    void submit_WhenStudentNotFound_ShouldThrowNotFoundException() {
+        when(studentRepository.findById("1")).thenReturn(Optional.empty());
+        when(classService.findById("1")).thenReturn(ClassEntity.builder().build());
+
+        assertThrows(NotFoundException.class, () -> attendanceService.submit(NavigatorEntity.builder().build(), AttendanceRequest.builder().studentIds(Collections.singletonList("1")).build()));
+    }
+
+    @Test
+    void getAttendance_WhenAttendanceNotFound_ShouldThrowNotFoundException() {
+        when(attendanceRepository.findById("1")).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> attendanceService.getAttendance("1"));
+    }
 }

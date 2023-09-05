@@ -6,6 +6,7 @@ import com.highschool.highschoolsystem.entity.DepartmentEntity;
 import com.highschool.highschoolsystem.entity.LevelEntity;
 import com.highschool.highschoolsystem.entity.SubjectEntity;
 import com.highschool.highschoolsystem.entity.TeacherEntity;
+import com.highschool.highschoolsystem.exception.NotFoundException;
 import com.highschool.highschoolsystem.repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import javax.security.auth.Subject;
 import java.time.LocalDate;
 import java.util.*;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class SubjectServiceTest {
@@ -37,9 +39,6 @@ public class SubjectServiceTest {
 
     @Mock
     private ScheduleRepository scheduleRepository;
-
-    @Mock
-    private LevelEntity levelEntity;
 
     private SubjectService subjectService;
 
@@ -80,7 +79,7 @@ public class SubjectServiceTest {
         TeacherEntity teacherEntity = TeacherEntity.builder().build();
         teacherEntity.setCreatedDate(LocalDate.now());
         DepartmentEntity departmentEntity = new DepartmentEntity();
-        SubjectEntity subjectEntity = SubjectConverter.toEntity(subjectRequest, teacherEntity, departmentEntity, levelEntity);
+        SubjectEntity subjectEntity = SubjectConverter.toEntity(subjectRequest, teacherEntity, departmentEntity, LevelEntity.builder().build());
 
         when(teacherRepository.findById(subjectRequest.getTeacherId())).thenReturn(Optional.of(teacherEntity));
         when(departmentRepository.findById(subjectRequest.getDepartmentId())).thenReturn(Optional.of(departmentEntity));
@@ -158,5 +157,63 @@ public class SubjectServiceTest {
         subjectService.findAllByIdIn(Collections.singletonList("1"));
 
         verify(subjectRepository, times(1)).findAllByIdIn(Collections.singletonList("1"));
+    }
+
+    @Test
+    void create_WhenLevelNotFound_ShouldThrowNotFoundException() {
+        SubjectRequest subjectRequest = SubjectRequest.builder().levelId("1").build();
+
+        when(levelRepository.findById(subjectRequest.getLevelId())).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> subjectService.create(subjectRequest));
+    }
+
+    @Test
+    void create_WhenTeacherNotFound_ShouldThrowNotFoundException() {
+        SubjectRequest subjectRequest = SubjectRequest.builder().levelId("1").teacherId("1").build();
+
+        when(levelRepository.findById(subjectRequest.getLevelId())).thenReturn(Optional.of(LevelEntity.builder().build()));
+        when(teacherRepository.findById(subjectRequest.getTeacherId())).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> subjectService.create(subjectRequest));
+    }
+
+    @Test
+    void create_WhenDepartmentNotFound_ShouldThrowNotFoundException() {
+        SubjectRequest subjectRequest = SubjectRequest.builder().levelId("1").teacherId("1").departmentId("1").build();
+
+        when(levelRepository.findById(subjectRequest.getLevelId())).thenReturn(Optional.of(LevelEntity.builder().build()));
+        when(teacherRepository.findById(subjectRequest.getTeacherId())).thenReturn(Optional.of(TeacherEntity.builder().build()));
+        when(departmentRepository.findById(subjectRequest.getDepartmentId())).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> subjectService.create(subjectRequest));
+    }
+
+    @Test
+    void findById_SubjectNotFound_ShouldThrowNotFoundException() {
+        when(subjectRepository.findById("1")).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> subjectService.findById("1"));
+    }
+
+    @Test
+    void delete_WhenSubjectNotFound_ShouldThrowNotFoundException() {
+        when(subjectRepository.findById("1")).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> subjectService.delete("1"));
+    }
+
+    @Test
+    void get_WhenSubjectNotFound_ShouldThrowNotFoundException() {
+        when(subjectRepository.findById("1")).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> subjectService.get("1"));
+    }
+
+    @Test
+    void getStudents_WhenSubjectNotFound_ShouldThrowNotFoundException() {
+        when(subjectRepository.findById("1")).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> subjectService.getStudents("1"));
     }
 }

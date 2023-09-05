@@ -1,10 +1,13 @@
 package com.highschool.highschoolsystem.service;
 
 import com.highschool.highschoolsystem.config.RegisterStatus;
+import com.highschool.highschoolsystem.dto.request.DoCheckRequest;
 import com.highschool.highschoolsystem.dto.request.NavigatorRegisterRequest;
 import com.highschool.highschoolsystem.dto.response.NavigatorRegisterResponse;
 import com.highschool.highschoolsystem.entity.NavigatorEntity;
 import com.highschool.highschoolsystem.entity.StudentEntity;
+import com.highschool.highschoolsystem.exception.NotFoundException;
+import com.highschool.highschoolsystem.exception.UserExistException;
 import com.highschool.highschoolsystem.repository.NavigatorRepository;
 import com.highschool.highschoolsystem.repository.StudentRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +21,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class NavigatorServiceTest {
@@ -87,4 +91,38 @@ public class NavigatorServiceTest {
 
         verify(navigatorRepository, times(1)).findAll(pageRequest);
     }
+
+    @Test
+    void register_WhenNavigatorAlreadyExists_ShouldThrowException() {
+        NavigatorRegisterRequest navigatorRegisterRequest = NavigatorRegisterRequest.builder().build();
+        NavigatorEntity navigatorEntity = NavigatorEntity.builder().student(StudentEntity.builder().fullName("test").build()).build();
+        when(navigatorRepository.findByStudent_Id(navigatorRegisterRequest.getId())).thenReturn(java.util.Optional.of(navigatorEntity));
+
+        assertThrows(UserExistException.class, () -> navigatorService.register(navigatorRegisterRequest));
+    }
+
+    @Test
+    void register_WhenStudentNotFound_ShouldThrowException() {
+        NavigatorRegisterRequest navigatorRegisterRequest = NavigatorRegisterRequest.builder().build();
+        when(studentRepository.findById(navigatorRegisterRequest.getId())).thenReturn(java.util.Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> navigatorService.register(navigatorRegisterRequest));
+    }
+
+    @Test
+    void findNavigatorAlreadyRegistered_WhenUserNotFound_ShouldThrowException() {
+        when(jwtService.extractUsername("1")).thenReturn(null);
+
+        assertThrows(NotFoundException.class, () -> navigatorService.findNavigatorAlreadyRegistered("1"));
+    }
+
+    @Test
+    void doCheck_WhenNavigatorNotFound_ShouldThrowNotFoundException() {
+        DoCheckRequest doCheckRequest = DoCheckRequest.builder().build();
+        when(navigatorRepository.findById("1")).thenReturn(java.util.Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> navigatorService.doCheck(doCheckRequest, "1"));
+    }
+
+
 }

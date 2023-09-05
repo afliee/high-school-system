@@ -4,10 +4,13 @@ import com.highschool.highschoolsystem.converter.SemesterConverter;
 import com.highschool.highschoolsystem.dto.request.SemesterRequest;
 import com.highschool.highschoolsystem.dto.response.SemesterResponse;
 import com.highschool.highschoolsystem.entity.*;
+import com.highschool.highschoolsystem.exception.NotFoundException;
 import com.highschool.highschoolsystem.repository.ClassRepository;
 import com.highschool.highschoolsystem.repository.SemesterRepository;
 import com.highschool.highschoolsystem.repository.SubjectRepository;
 import com.highschool.highschoolsystem.repository.WeekRepository;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -19,6 +22,7 @@ import java.util.*;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class SemesterServiceTest {
@@ -38,17 +42,22 @@ public class SemesterServiceTest {
 
     @Mock
     private SubjectRepository subjectRepository;
+    MockedStatic<SemesterConverter> semesterConverterMockedStatic;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        semesterConverterMockedStatic = mockStatic(SemesterConverter.class);
         semesterService = new SemesterService(semesterRepository, weekRepository, classRepository, classService, subjectRepository);
+    }
+    @AfterEach
+    void tearDown() {
+        semesterConverterMockedStatic.close();
     }
 
     @Test
     void save_ValidAddSemesterRequest_ShouldReturnTheSemesterResponse() {
         SemesterEntity semesterEntity = SemesterEntity.builder().startDate(LocalDate.now()).endDate(LocalDate.now()).build();
-        MockedStatic<SemesterConverter> semesterConverterMockedStatic = mockStatic(SemesterConverter.class);
         ArrayList<WeekEntity> weekEntities = new ArrayList<>();
         weekEntities.add(WeekEntity.builder()
                         .name("Week 1")
@@ -74,7 +83,6 @@ public class SemesterServiceTest {
     @Test
     void findAll_ShouldReturnAllSemester() {
         SemesterEntity semesterEntity = new SemesterEntity();
-        MockedStatic<SemesterConverter> semesterConverterMockedStatic = mockStatic(SemesterConverter.class);
         semesterConverterMockedStatic.when(() -> SemesterConverter.toResponse(semesterEntity)).thenReturn(new SemesterResponse());
 
         when(semesterRepository.findAllByOrderByStartDateDesc()).thenReturn(List.of(semesterEntity));
@@ -88,7 +96,6 @@ public class SemesterServiceTest {
     void findById_ShouldReturnSemesterResponse() {
         SemesterEntity semesterEntity = SemesterEntity.builder().build();
         semesterEntity.setId("1");
-        MockedStatic<SemesterConverter> semesterConverterMockedStatic = mockStatic(SemesterConverter.class);
         semesterConverterMockedStatic.when(() -> SemesterConverter.toResponse(semesterEntity)).thenReturn(SemesterResponse.builder().id("1").build());
 
         when(semesterRepository.findById(semesterEntity.getId())).thenReturn(java.util.Optional.of(semesterEntity));
@@ -130,7 +137,6 @@ public class SemesterServiceTest {
     void update_ShouldReturnSemesterResposne() {
         SemesterEntity semesterEntity = SemesterEntity.builder().build();
         SemesterRequest semesterRequest = SemesterRequest.builder().build();
-        MockedStatic<SemesterConverter> semesterConverterMockedStatic = mockStatic(SemesterConverter.class);
         semesterConverterMockedStatic.when(() -> SemesterConverter.toResponse(semesterEntity)).thenReturn(new SemesterResponse());
         when(semesterRepository.save(semesterEntity)).thenReturn(semesterEntity);
         when(semesterRepository.findById(semesterEntity.getId())).thenReturn(Optional.of(semesterEntity));
@@ -140,5 +146,74 @@ public class SemesterServiceTest {
         verify(semesterRepository, times(1)).findById(semesterEntity.getId());
         verify(semesterRepository, times(1)).save(semesterEntity);
     }
+
+    @Test
+    void testSave_SemesterAlreadyExists_ThrowsRuntimeException() {
+        // Mock the behavior of the semesterRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqual() method
+        LocalDate startDate = LocalDate.of(2022, 1, 1);
+        LocalDate endDate = LocalDate.of(2022, 6, 30);
+        SemesterEntity existingSemester = new SemesterEntity();
+        existingSemester.setStartDate(startDate);
+        existingSemester.setEndDate(endDate);
+
+        when(semesterRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqual(startDate, startDate)).thenReturn(Optional.of(existingSemester));
+
+        // Create a new semester request
+        SemesterEntity semesterEntity = new SemesterEntity();
+        semesterEntity.setStartDate(startDate);
+        semesterEntity.setEndDate(endDate);
+
+        // Call the save() method of the semesterService and verify that it throws a RuntimeException
+        assertThrows(RuntimeException.class, () -> semesterService.save(semesterEntity));
+    }
+
+    @Test
+    void testFindCurrentSemester_NoSemesterFound_ThrowsNotFoundException() {
+        // Mock the behavior of the semesterRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqual() method
+        LocalDate currentDay = LocalDate.now();
+
+        when(semesterRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqual(currentDay, currentDay)).thenReturn(Optional.empty());
+
+        // Call the findCurrentSemester() method of the semesterService and verify that it throws a NotFoundException
+        assertThrows(NotFoundException.class, () -> semesterService.findCurrentSemester());
+    }
+
+    @Test
+    void testFindById_SemesterNotFound_ThrowsNotFoundException() {
+        // Mock the behavior of the semesterRepository.findById() method
+        String semesterId = "1";
+
+        when(semesterRepository.findById(semesterId)).thenReturn(Optional.empty());
+
+        // Call the findById() method of the semesterService and verify that it throws a NotFoundException
+        assertThrows(NotFoundException.class, () -> semesterService.findById(semesterId));
+    }
+
+    @Test
+    void testUpdate_SemesterNotFound_ThrowsNotFoundException() {
+        // Mock the behavior of the semesterRepository.findById() method
+        String semesterId = "1";
+        SemesterRequest request = new SemesterRequest();
+        request.setName("New Semester");
+        request.setStartDate(LocalDate.of(2023, 1, 1));
+        request.setEndDate(LocalDate.of(2023, 6, 30));
+
+        when(semesterRepository.findById(semesterId)).thenReturn(Optional.empty());
+
+        // Call the update() method of the semesterService and verify that it throws a NotFoundException
+        assertThrows(NotFoundException.class, () -> semesterService.update(semesterId, request));
+    }
+
+    @Test
+    void testDelete_SemesterNotFound_ThrowsNotFoundException() {
+        // Mock the behavior of the semesterRepository.findById() method
+        String semesterId = "1";
+
+        when(semesterRepository.findById(semesterId)).thenReturn(Optional.empty());
+
+        // Call the delete() method of the semesterService and verify that it throws a NotFoundException
+        assertThrows(NotFoundException.class, () -> semesterService.delete(semesterId));
+    }
+
 }
 

@@ -5,6 +5,7 @@ import com.highschool.highschoolsystem.dto.request.SchedulingRequest;
 import com.highschool.highschoolsystem.dto.response.DepartmentResponse;
 import com.highschool.highschoolsystem.dto.response.SubjectResponse;
 import com.highschool.highschoolsystem.entity.*;
+import com.highschool.highschoolsystem.exception.NotFoundException;
 import com.highschool.highschoolsystem.repository.LessonRepository;
 import com.highschool.highschoolsystem.repository.LevelRepository;
 import com.highschool.highschoolsystem.repository.ScheduleRepository;
@@ -16,9 +17,11 @@ import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
 
 import java.nio.channels.OverlappingFileLockException;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.logging.Level;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class ScheduleServiceTest {
@@ -119,4 +122,34 @@ public class ScheduleServiceTest {
 
         verify(scheduleRepository, times(1)).findById(scheduleEntity.getId());
     }
+
+    @Test
+    void getSubjectGroupByLevel_WhenLevelNotFound() {
+        when(levelRepository.findById("1")).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> scheduleService.getSubjectGroupedByLevel("1"));
+    }
+
+    @Test
+    void getSubjectAvaible_WhenScheduleNotFound_ShouldThrowNotFoundException() {
+        when(scheduleRepository.findAllByClassEntity_Id("1")).thenReturn(Collections.emptyList());
+
+        assertThrows(NotFoundException.class, () -> scheduleService.getSubjectAvailable("1"));
+    }
+    
+    @Test
+    void getScheduleDetail() {
+        when(scheduleRepository.findAllByClassEntity_IdAndSemester_Id("1", "1")).thenReturn(List.of());
+
+        assertThrows(NotFoundException.class, () -> scheduleService.getScheduleDetail("1", "1", LocalDate.now(), LocalDate.now()));
+    }
+
+    @Test
+    void revoke_WhenScheduleNotFound_ShouldThrowNotFoundException() {
+        when(scheduleRepository.findById("1")).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> scheduleService.revoke("1"));
+    }
+
+
 }

@@ -15,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.MockMvcAutoConfig
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class LevelServiceTest {
@@ -54,4 +55,22 @@ public class LevelServiceTest {
        verify(levelRepository, times(1)).save(levelEntity);
        verify(levelRepository, times(1)).findByLevelNumber(levelRequest.getLevelNumber());
    }
+
+   @Test
+    void create_WhenLevelNumberAlreadyExists_ShouldThrowException() {
+       LevelRequest levelRequest = LevelRequest.builder().levelNumber(0).build();
+       LevelEntity levelEntity = LevelEntity.builder().levelNumber(0).build();
+       when(levelRepository.findByLevelNumber(levelRequest.getLevelNumber())).thenReturn(Optional.of(levelEntity));
+
+       assertThrows(RuntimeException.class, () -> levelService.create(levelRequest));
+   }
+
+   @Test
+    void create_WhenLevelNumberIsNegative_ShouldThrowException() {
+       LevelRequest levelRequest = LevelRequest.builder().levelNumber(-1).build();
+       when(levelRepository.findByLevelNumber(levelRequest.getLevelNumber())).thenReturn(Optional.empty());
+
+       assertThrows(RuntimeException.class, () -> levelService.create(levelRequest));
+   }
+
 }
