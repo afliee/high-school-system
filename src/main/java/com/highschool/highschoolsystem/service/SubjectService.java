@@ -170,6 +170,7 @@ public class SubjectService {
     public Optional<SubjectEntity> findByIdEntity(String id) {
         return subjectRepository.findById(id);
     }
+
     public SubjectResponse delete(String id) {
         var subject = subjectRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Subject not found")
@@ -195,6 +196,7 @@ public class SubjectService {
     public List<SubjectEntity> findAllByIdIn(List<String> subjectIds) {
         return subjectRepository.findAllByIdIn(subjectIds);
     }
+
     public List<StudentEntity> getStudents(String subjectId) {
         var subject = subjectRepository.findById(subjectId).orElseThrow(
                 () -> new NotFoundException("Subject not found")
@@ -219,7 +221,9 @@ public class SubjectService {
             return false;
         }
 
-        for (SubjectEntity subject : schedule.getSubjects()) {
+        var subjects = subjectRepository.findAllBySchedule_Id(schedule.getId());
+        for (SubjectEntity subject : subjects) {
+            System.out.println("Subject id: " + subject.getId());
             if (subject.getId().equals(subjectId)) {
                 return true;
             }

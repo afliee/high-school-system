@@ -6,6 +6,7 @@ import com.highschool.highschoolsystem.entity.AttendanceEntity;
 import com.highschool.highschoolsystem.entity.StudentEntity;
 import com.highschool.highschoolsystem.entity.Submitting;
 import com.highschool.highschoolsystem.repository.StudentRepository;
+import com.highschool.highschoolsystem.repository.SubjectRepository;
 import com.highschool.highschoolsystem.repository.TokenRepository;
 import com.highschool.highschoolsystem.repository.UserRepository;
 import com.highschool.highschoolsystem.service.*;
@@ -45,6 +46,12 @@ public class StudentController {
     private StudentService studentService;
     @Autowired
     private AssignmentService assignmentService;
+    @Autowired
+    private SubjectRepository subjectRepository;
+    @Autowired
+    private SemesterService semesterService;
+    @Autowired
+    private ScheduleService scheduleService;
 
     @GetMapping({"/home", "/", ""})
     public String index(
@@ -70,7 +77,7 @@ public class StudentController {
         if (schedule == null) {
             model.addAttribute("subjects", null);
         } else {
-            model.addAttribute("subjects", schedule.getSubjects());
+            model.addAttribute("subjects", subjectRepository.findAllBySchedule_Id(schedule.getId()));
         }
         model.addAttribute("student", student);
         return "pages/student/index";

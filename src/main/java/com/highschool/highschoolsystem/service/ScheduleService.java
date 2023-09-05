@@ -172,6 +172,9 @@ public class ScheduleService {
         var schedule = scheduleRepository.findAllByClassEntity_IdAndSemester_Id(classId, semesterId).stream().filter(scheduleEntity -> !scheduleEntity.isExpired()).findFirst().orElseThrow(
                 () -> new NotFoundException("Schedule not found")
         );
+        if (start.isAfter(end)) {
+            throw new RuntimeException("Start date must be before end date");
+        }
 
         var lessons = schedule.getLessons().stream().filter(lesson -> {
             return lesson.getStartDate().isAfter(start.atStartOfDay()) && lesson.getEndDate().isBefore(end.atStartOfDay());

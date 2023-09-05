@@ -4,6 +4,7 @@ import com.highschool.highschoolsystem.config.FaultType;
 import com.highschool.highschoolsystem.dto.request.FaultRequest;
 import com.highschool.highschoolsystem.entity.FaultDetailEntity;
 import com.highschool.highschoolsystem.entity.FaultEntity;
+import com.highschool.highschoolsystem.exception.NotFoundException;
 import com.highschool.highschoolsystem.repository.FaultDetailRepository;
 import com.highschool.highschoolsystem.repository.FaultRepository;
 import jakarta.transaction.Transactional;
@@ -98,6 +99,32 @@ public class FaultService {
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Error while finding fault");
+        }
+    }
+
+    /*
+    * [TODO] Delete a fault detail of a fault
+    * */
+    public void delete(String faultDetailId) {
+        try {
+            var faultDetail = faultDetailRepository.findById(faultDetailId)
+                    .orElseThrow(() -> new NotFoundException("Fault detail not found"));
+
+
+            // Delete fault detail
+            System.out.println("Deleting fault detail: " + faultDetailId);
+            faultDetailRepository.deleteById(faultDetailId);
+
+            // Delete fault if it has no fault detail
+            var fault = faultDetail.getFault();
+            if (fault.getFaultDetails().isEmpty()) {
+                System.out.println("Deleting fault: " + fault.getId());
+                faultRepository.deleteById(fault.getId());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error while deleting fault");
         }
     }
 }

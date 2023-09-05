@@ -17,11 +17,13 @@ import com.highschool.highschoolsystem.repository.ClassRepository;
 import com.highschool.highschoolsystem.repository.StudentRepository;
 import com.highschool.highschoolsystem.repository.SubmittingRepository;
 import com.highschool.highschoolsystem.util.FileUploadUtils;
+import com.highschool.highschoolsystem.util.mail.EmailDetails;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -31,6 +33,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,6 +56,8 @@ public class AssignmentService {
     private StudentRepository studentRepository;
     @Autowired
     private SubmittingRepository submittingRepository;
+    @Autowired
+    private EmailService emailService;
 
     @Transactional
     public void create(CreateAssignmentRequest request) {
@@ -124,6 +129,22 @@ public class AssignmentService {
         }
 //        System.out.println("assignment: " + assignmentEntity.getSubmitting().size());
         assignmentRepository.save(assignmentEntity);
+
+        CompletableFuture.runAsync(() -> {
+            assignmentEntity.getSubmitting().forEach(submit -> {
+                var student = submit.getStudent();
+                if (student == null) {
+                    return;
+                }
+
+                var emailDetails = EmailDetails.builder()
+                        .subject(teacher.getFullName() + "has given your mission: \" " + assignmentEntity.getTitle() + "\"")
+                        .to(student.getEmail())
+                        .build();
+
+                emailService.sendAssignmentEmail(emailDetails, assignmentEntity);
+            });
+        });
     }
 
     public Map<LocalDate, List<AssignmentEntity>> getAssigmentBySubjectId(String subjectId) {
@@ -143,13 +164,13 @@ public class AssignmentService {
 
     public AssignmentEntity findById(String id) {
         return assignmentRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("Assignment not found")
+                () -> new NotFoundException("Assignment not found")
         );
     }
 
     public List<StudentEntity> getStudentsTurnedIn(String assignmentId) {
         var assignment = assignmentRepository.findById(assignmentId).orElseThrow(
-                () -> new RuntimeException("Assignment not found")
+                () -> new NotFoundException("Assignment not found")
         );
         var submitting = assignment.getSubmitting();
         if (submitting == null) return null;
@@ -158,7 +179,7 @@ public class AssignmentService {
 
     public List<StudentEntity> getStudentsUnTurnedIn(String assignmentId) {
         var assignment = assignmentRepository.findById(assignmentId).orElseThrow(
-                () -> new RuntimeException("Assignment not found")
+                () -> new NotFoundException("Assignment not found")
         );
         var submitting = assignment.getSubmitting();
         if (submitting == null) return null;
@@ -167,7 +188,7 @@ public class AssignmentService {
 
     public AssignmentResponse update(String id, CreateAssignmentRequest request) {
         var assignment = assignmentRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("Assignment not found")
+                () -> new NotFoundException("Assignment not found")
         );
         boolean isDue = request.getIsDue().equals("true");
         var teacher = teacherService.findById(request.getTeacherId());
@@ -226,7 +247,7 @@ public class AssignmentService {
 
     public void delete(String id) {
         var assignment = assignmentRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("Assignment not found")
+                () -> new NotFoundException("Assignment not found")
         );
         if (assignment.getAttachment() != null) {
             try {
@@ -247,15 +268,15 @@ public class AssignmentService {
 
     public void submit(String id, SubmitRequest request) {
         var assignment = assignmentRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("Assignment not found")
+                () -> new NotFoundException("Assignment not found")
         );
 
         var student = studentRepository.findById(request.getStudentId()).orElseThrow(
-                () -> new RuntimeException("Student not found")
+                () -> new NotFoundException("Student not found")
         );
 
         var submitting = submittingRepository.findByAssignmentIdAndStudentId(id, student.getId()).orElseThrow(
-                () -> new RuntimeException("Submitting not found")
+                () -> new NotFoundException("Submitting not found")
         );
 
         var now = LocalDateTime.now();
@@ -301,15 +322,15 @@ public class AssignmentService {
 
     public void reSubmit(String id, SubmitRequest request) {
         var assignment = assignmentRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("Assignment not found")
+                () -> new NotFoundException("Assignment not found")
         );
 
         var student = studentRepository.findById(request.getStudentId()).orElseThrow(
-                () -> new RuntimeException("Student not found")
+                () -> new NotFoundException("Student not found")
         );
 
         var submitting = submittingRepository.findByAssignmentIdAndStudentId(id, student.getId()).orElseThrow(
-                () -> new RuntimeException("Submitting not found")
+                () -> new NotFoundException("Submitting not found")
         );
 
         var now = LocalDateTime.now();
@@ -344,7 +365,7 @@ public class AssignmentService {
 
     public SubmittingResponse grading(String submittingId, GradingRequest request) {
         var submitting = submittingRepository.findById(submittingId).orElseThrow(
-                () -> new RuntimeException("Submitting not found")
+                () -> new NotFoundException("Submitting not found")
         );
         if (submitting.getStatus() != SubmitStatus.SUBMITTED) {
             throw new RuntimeException("Submitting not submitted");

@@ -30,12 +30,51 @@
                     <h3 class="text-primary mb-3 mt-3" th:text="${instance.key}"></h3>
                     <hr class="mb-3 bg-primary" style="height: 2px">
 
-                    <th:block th:each="fault : ${instance.value}">
-                        <th:block th:each="faultDetail : ${fault.faultDetails}">
-                            <p th:text="${faultDetail.faultType}"></p>
-                            <p th:text="${faultDetail.faultDescription}"></p>
+                    <table class="table-responsive table-hover table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Avatar</th>
+                            <th>Student Name</th>
+                            <th>Student FullName</th>
+                            <th>Created At</th>
+                            <th>Description</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <th:block th:each="fault : ${instance.value}">
+                            <tr>
+                                <td>
+                                    <img th:src="@{${student.avatar}}" class="avatar" width="50" alt="avatar">
+                                </td>
+                                <td th:text="${student.name}"></td>
+                                <td th:text="${student.fullName}"></td>
+                                <td th:text="${#temporals.format(fault.createdDate, 'dd/MM/yyyy')}"></td>
+                                <td>
+                                    <div th:if="${fault.faultDetails == 0}">
+                                        <span class="badge badge-info bg-info">
+                                            <i class="bi bi-tag-fill"></i>
+                                            <span>
+                                                Your Good
+                                            </span>
+                                        </span>
+                                    </div>
+
+                                    <div class="d-inline-block faultDetails" th:if="${fault.faultDetails.size() != 0}" th:each="faultDetail : ${fault.faultDetails}">
+                                        <span class="badge badge-info bg-info faultDetail">
+                                            <i class="bi bi-tag-fill"></i>
+                                            <span th:text="${faultDetail.faultDescription}"></span>
+<!--                                            x button-->
+                                            <button type="button" class="btn-close btn-close-white btn-delete"
+                                                    th:attr="data-id=${faultDetail.id}"
+                                            >&times;</button>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
                         </th:block>
-                    </th:block>
+                        </tbody>
+                    </table>
+
                 </th:block>
             </th:block>
         </div>
@@ -46,5 +85,6 @@
 
 <th:block th:replace="~{/fragments/script/util/baseScript :: baseScript}"/>
 <script th:src="@{/vendors/select2/select2.min.js}"></script>
+<script th:src="@{/js/teacher/deleteFaultDetail.js}"></script>
 </body>
 </html>

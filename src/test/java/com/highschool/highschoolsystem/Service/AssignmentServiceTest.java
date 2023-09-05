@@ -44,13 +44,15 @@ public class AssignmentServiceTest {
     private SubmittingRepository submittingRepository;
     @Mock
     private MultipartFile attachment;
+    @Mock
+    private EmailService emailService;
 
     private AssignmentService assignmentService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        assignmentService = new AssignmentService(teacherService, classService, subjectService, assignmentRepository, classRepository, studentRepository, submittingRepository);
+        assignmentService = new AssignmentService(teacherService, classService, subjectService, assignmentRepository, classRepository, studentRepository, submittingRepository, emailService);
     }
 
     @Test

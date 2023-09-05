@@ -8,6 +8,7 @@ import com.highschool.highschoolsystem.repository.ScheduleRepository;
 import com.highschool.highschoolsystem.service.ScheduleService;
 import com.highschool.highschoolsystem.service.SubjectService;
 import jakarta.validation.Valid;
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -68,8 +69,8 @@ public class ScheduleApiController {
     public ResponseEntity<?> scheduleDetail(
             @RequestParam(name = "classId", defaultValue = "") String classId,
             @RequestParam(name = "semesterId", defaultValue = "") String semesterId,
-            @RequestParam(name = "start", defaultValue = "") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
-            @RequestParam(name = "end", defaultValue = "") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end
+            @RequestParam(name = "start", defaultValue = "") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @NonNull LocalDate start,
+            @RequestParam(name = "end", defaultValue = "") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @NonNull LocalDate end
     ) {
         var scheduleDetail = scheduleService.getScheduleDetail(classId, semesterId, start, end);
         return new ResponseEntity<>(scheduleDetail, HttpStatus.OK);

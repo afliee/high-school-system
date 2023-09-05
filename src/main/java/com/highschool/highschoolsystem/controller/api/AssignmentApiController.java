@@ -1,6 +1,5 @@
 package com.highschool.highschoolsystem.controller.api;
 
-import com.highschool.highschoolsystem.converter.AssignmentConverter;
 import com.highschool.highschoolsystem.dto.request.CreateAssignmentRequest;
 import com.highschool.highschoolsystem.dto.request.GradingRequest;
 import com.highschool.highschoolsystem.dto.request.SubmitRequest;
