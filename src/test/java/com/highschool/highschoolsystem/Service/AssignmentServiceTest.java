@@ -1,4 +1,4 @@
-package com.highschool.highschoolsystem.Service;
+package com.highschool.highschoolsystem.service;
 
 import com.highschool.highschoolsystem.config.SubmitStatus;
 import com.highschool.highschoolsystem.converter.SubmittingConverter;

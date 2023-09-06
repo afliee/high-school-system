@@ -40,12 +40,16 @@ public class SubjectServiceTest {
     @Mock
     private ScheduleRepository scheduleRepository;
 
+    @Mock
+    private AssignmentService assignmentService;
+
     private SubjectService subjectService;
+
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        subjectService = new SubjectService(subjectRepository, teacherRepository, departmentRepository, levelRepository, lessonRepository, scheduleRepository);
+        subjectService = new SubjectService(subjectRepository, teacherRepository, departmentRepository, levelRepository, lessonRepository, scheduleRepository, assignmentService);
     }
 
     @Test

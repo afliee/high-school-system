@@ -72,7 +72,7 @@ public class AdminController {
     @GetMapping("/login")
     public String login(
             HttpServletRequest request,
-            HttpServletRequest response
+            HttpServletResponse response
     ) {
         return "pages/auth/adminSignin";
     }

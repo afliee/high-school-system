@@ -2,7 +2,6 @@ package com.highschool.highschoolsystem.service;
 
 import com.highschool.highschoolsystem.converter.SubjectConverter;
 import com.highschool.highschoolsystem.dto.request.SubjectRequest;
-import com.highschool.highschoolsystem.dto.response.SubjectGroupByResponse;
 import com.highschool.highschoolsystem.dto.response.SubjectResponse;
 import com.highschool.highschoolsystem.entity.ClassEntity;
 import com.highschool.highschoolsystem.entity.StudentEntity;
