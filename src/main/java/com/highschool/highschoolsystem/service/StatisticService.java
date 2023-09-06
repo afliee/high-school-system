@@ -32,7 +32,8 @@ public class StatisticService {
     private LevelService levelService;
     @Autowired
     private LessonService lessonService;
-
+    @Autowired
+    private AssignmentService assignmentService;
     public Map<String, Object> getStatisticHeader() {
         return Map.of(
                 "totalStudents", studentService.countStudent(),
@@ -94,6 +95,8 @@ public class StatisticService {
         levels.forEach(level -> {
             Map<String, Double> classResult = new HashMap<>();
             var subjects = level.getSubjects();
+
+            System.out.println("subjects size: " + subjects.size());
             if (subjects.isEmpty()) {
                 return;
             }
@@ -104,12 +107,14 @@ public class StatisticService {
             double averageStudentSubmitted = 0;
 
             subjects.forEach(subject -> {
-                var assignments = subject.getAssignments();
+                var assignments = assignmentService.findAllBySubjectId(subject.getId());
                 var students = subjectService.getStudents(subject.getId());
+                System.out.println(subject.getName() + " students size: " + students.size());
                 if (students.isEmpty()) {
                     return;
                 }
 
+                System.out.println(subject.getName() + " assignments size: " + assignments.size());
                 if (assignments.isEmpty()) {
                     return;
                 }
