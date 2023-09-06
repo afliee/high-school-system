@@ -1,10 +1,7 @@
 package com.highschool.highschoolsystem.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Collection;
@@ -13,11 +10,13 @@ import java.util.Set;
 
 @Entity
 @Table(name = "subject")
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
+@EqualsAndHashCode(callSuper = false, exclude = {"level", "schedule", "teacher"})
 public class SubjectEntity extends BaseEntity<String> {
     private String name;
     private String description;

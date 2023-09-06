@@ -1,0 +1,87 @@
+<div
+        xmlns:th="http://www.thymeleaf.org"
+        th:fragment="content">
+    <div class="container-fluid mt-3">
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group w-100 row">
+                    <label for="department-name"></label>
+                    <div class="col-3"></div>
+                    <input type="text" class="form-control col text-center text-center p-2 text-title"
+                           style="font-size: 2.5rem; border: none; outline: none" id="department-name"
+                           name="department-name"
+                           placeholder="Department Name"
+                           th:value="${department.name}" readonly
+                    >
+                    <div class="col-3"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form">
+                <div class="col-12">
+                    <div class="form-group has-icon-left input-group-lg">
+                        <div class="position-relative">
+                            <input type="text"
+                                   id="name"
+                                   class="form-control form-control-lg"
+                                   placeholder="Subject's name"
+                                   required
+                            />
+                            <div class="form-control-icon">
+                                <i class="fa-regular fa-address-book"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-group has-icon-left input-group-lg">
+                        <div class="position-relative">
+                            <select class="form-select form-control form-control-lg" name="teacher" id="teacher">
+                                <!--                                <option value="" selected disabled>Choose a teacher</option>-->
+                            </select>
+                            <div class="form-control-icon">
+                                <i class="fa-solid fa-info"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-group has-icon-left input-group-lg">
+                        <div class="position-relative">
+                            <select class="form-select form-control form-control-lg" name="level" id="level">
+                                <!--                                <option value="" selected disabled>Choose a teacher</option>-->
+                            </select>
+                            <div class="form-control-icon">
+                                <i class="fa-solid fa-info"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 my-3">
+                    <small class="text-muted">Description</small>
+                    <div class="card">
+                        <div class="card-body p-3">
+                            <div class="description">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-group input-group-lg">
+                        <div class="position-relative">
+                            <textarea class="form-control form-control-lg" id="editor" name="editor" rows="10"
+                                      cols="80">
+                            </textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 flex-column d-flex">
+                    <button class="btn btn-primary btn-lg" id="updateSubject">Update Subject</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

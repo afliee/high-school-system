@@ -18,6 +18,7 @@ import com.highschool.highschoolsystem.repository.StudentRepository;
 import com.highschool.highschoolsystem.repository.SubmittingRepository;
 import com.highschool.highschoolsystem.util.FileUploadUtils;
 import com.highschool.highschoolsystem.util.mail.EmailDetails;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -140,6 +141,7 @@ public class AssignmentService {
                 var emailDetails = EmailDetails.builder()
                         .subject(teacher.getFullName() + "has given your mission: \" " + assignmentEntity.getTitle() + "\"")
                         .to(student.getEmail())
+                        .pathToAttachment(assignmentEntity.getAttachment())
                         .build();
 
                 emailService.sendAssignmentEmail(emailDetails, assignmentEntity);
@@ -367,9 +369,6 @@ public class AssignmentService {
         var submitting = submittingRepository.findById(submittingId).orElseThrow(
                 () -> new NotFoundException("Submitting not found")
         );
-        if (submitting.getStatus() != SubmitStatus.SUBMITTED) {
-            throw new RuntimeException("Submitting not submitted");
-        }
 
         if (submitting.getScore() > submitting.getAssignment().getPoints()) {
             throw new RuntimeException("Score must be less than points");
@@ -380,6 +379,19 @@ public class AssignmentService {
 
         submittingRepository.save(submitting);
 
+        CompletableFuture.runAsync(() -> {
+            var emailDetails = EmailDetails.builder()
+                    .subject("Your assignment has been graded")
+                    .to(submitting.getStudent().getEmail())
+                    .build();
+
+            emailService.sendAssignmentGradingEmail(emailDetails, submitting);
+        });
+
         return SubmittingConverter.toResponse(submitting);
+    }
+
+    public List<AssignmentEntity> findAllBySubjectId(String subjectId) {
+        return assignmentRepository.findAllBySubjectId(subjectId);
     }
 }

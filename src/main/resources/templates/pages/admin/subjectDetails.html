@@ -16,5 +16,13 @@
 
 <th:block th:insert="~{fragments/script/admin/dashboardScript :: dashboardScript}"/>
 <th:block th:insert="~{fragments/script/admin/subject/subjectDetailScript :: subjectDetailScript}"/>
+<script>
+    $(document).ready(function () {
+        const btnEdit = $('.btn-edit');
+        btnEdit.on('click', function () {
+            window.location.href = `/auth/admin/subjects/update/${$('#subjectId').val()}`;
+        })
+    })
+</script>
 </body>
 </html>

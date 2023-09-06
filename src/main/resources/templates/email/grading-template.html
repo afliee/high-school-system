@@ -7,7 +7,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="color-scheme" content="light dark"/>
     <meta name="supported-color-schemes" content="light dark"/>
-    <title th:text="${teacher.fullName} + 'has give your mission: ' + ${title}"></title>
+    <title th:text="${teacher.fullName} + ' has graded for you: ' + ${title}"></title>
     <style type="text/css" rel="stylesheet" media="all">
         /* Base ------------------------------ */
 
@@ -474,8 +474,8 @@
                                 <td class="content-cell">
                                     <div class="f-fallback">
                                         <h1 th:text="'Hi ' + ${name}"></h1>
-                                        <p>Teacher <b th:text="${teacher.fullName}"></b> has give your mission: <b
-                                                    th:text="${title}"></b></p>
+                                        <p>Teacher <b th:text="${teacher.fullName}"></b> has graded for you: <b
+                                                th:text="${title}"></b></p>
                                         <p>
 
                                         </p>
@@ -491,7 +491,14 @@
                                                            role="presentation">
                                                         <tr>
                                                             <td align="center">
-                                                                <p th:text="${description}"></p>
+                                                                <span th:text="${score}"></span>
+                                                                <span class="mx-2 text-muted">/</span>
+                                                                <span th:text="${totalPoint}"></span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td align="center">
+                                                                <span th:text="'Message : ' + ${comment}"></span>
                                                             </td>
                                                         </tr>
                                                     </table>

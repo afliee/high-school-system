@@ -35,6 +35,8 @@ public class SubjectService {
     private LessonRepository lessonRepository;
     @Autowired
     private ScheduleRepository scheduleRepository;
+    @Autowired
+    private AssignmentService assignmentService;
 
     public Page<?> getAll(int page, int size, String sort, String sortBy, String filter) {
 //        ?page=0&size=10&sort=ASC&sortBy=id&filter=name:chemical;teacherName:HuynhTruong;departmentId:0
@@ -116,15 +118,15 @@ public class SubjectService {
 
     public SubjectResponse create(SubjectRequest subjectRequest) {
         var level = levelRepository.findById(subjectRequest.getLevelId()).orElseThrow(
-                () -> new RuntimeException("Level not found")
+                () -> new NotFoundException("Level not found")
         );
 
         var teacher = teacherRepository.findById(subjectRequest.getTeacherId()).orElseThrow(
-                () -> new RuntimeException("Teacher not found")
+                () -> new NotFoundException("Teacher not found")
         );
 
         var department = departmentRepository.findById(subjectRequest.getDepartmentId()).orElseThrow(
-                () -> new RuntimeException("Department not found")
+                () -> new NotFoundException("Department not found")
         );
 
         var subject = subjectRepository.save(
@@ -142,18 +144,22 @@ public class SubjectService {
 
     public SubjectResponse update(String subjectId, SubjectRequest subjectRequest) {
         var subject = subjectRepository.findById(subjectId).orElseThrow(
-                () -> new RuntimeException("Subject not found")
+                () -> new NotFoundException("Subject not found")
         );
 
         var teacher = teacherRepository.findById(subjectRequest.getTeacherId()).orElseThrow(
-                () -> new RuntimeException("Teacher not found")
+                () -> new NotFoundException("Teacher not found")
         );
 
         var department = departmentRepository.findById(subjectRequest.getDepartmentId()).orElseThrow(
-                () -> new RuntimeException("Department not found")
+                () -> new NotFoundException("Department not found")
         );
 
-        SubjectConverter.from(subject, subjectRequest, teacher, department);
+        var level = levelRepository.findById(subjectRequest.getLevelId()).orElseThrow(
+                () -> new NotFoundException("Level not found")
+        );
+
+        SubjectConverter.from(subject, subjectRequest, teacher, department, level);
         subjectRepository.save(subject);
 
         return SubjectConverter.toResponse(subject);
@@ -161,7 +167,7 @@ public class SubjectService {
 
     public SubjectResponse findById(String id) {
         var subject = subjectRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("Subject not found")
+                () -> new NotFoundException("Subject not found")
         );
 
         return SubjectConverter.toResponse(subject);
@@ -180,6 +186,27 @@ public class SubjectService {
                 department -> department.getSubjects().remove(subject)
         );
 
+
+        var lessons = lessonRepository.findAllBySubjectId(id);
+        if (subject.getSchedule() != null) {
+            var schedule = scheduleRepository.findById(subject.getSchedule().getId()).orElseThrow(
+                    () -> new NotFoundException("Schedule not found")
+            );
+
+            lessons.forEach(schedule.getLessons()::remove);
+            lessonRepository.deleteAll(lessons);
+            scheduleRepository.save(schedule);
+        } else {
+            lessonRepository.deleteAll(lessons);
+        }
+
+        var assignments = assignmentService.findAllBySubjectId(id);
+        if (!assignments.isEmpty()) {
+            assignments.forEach(assignment -> {
+                assignmentService.delete(assignment.getId());
+            });
+
+        }
         subjectRepository.delete(subject);
 
         return SubjectConverter.toResponse(subject);

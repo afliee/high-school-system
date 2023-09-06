@@ -12,7 +12,7 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class FileUploadUtils {
     private static final String IMAGE_PHOTO_UPLOAD_DIR = System.getProperty("user.dir") + "/src/main/uploads/images/user-photos/";
-    private static final String ASSIGNMENT_UPLOAD_DIR = System.getProperty("user.dir") + "/src/main/uploads/assignments/";
+    public static final String ASSIGNMENT_UPLOAD_DIR = System.getProperty("user.dir") + "/src/main/uploads/assignments/";
 //    accept file type pdf, doc, docx, ppt, pptx, xls, xlsx, jpg, png, jpeg, txt
     private static final String[] ASSIGNMENT_TYPE_ACCEPT = {
             "text/plain",

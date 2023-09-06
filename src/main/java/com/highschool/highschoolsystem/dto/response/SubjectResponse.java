@@ -25,4 +25,5 @@ public class SubjectResponse {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate createdAt;
     private DepartmentResponse departmentDetail;
+    private String levelId;
 }

@@ -65,14 +65,14 @@ public class ClassService {
             MultipartFile students = request.getStudents();
 
             LevelEntity levelEntity = levelRepository.findById(request.getLevelId()).orElseThrow(
-                    () -> new RuntimeException("Level not found")
+                    () -> new NotFoundException("Level not found")
             );
             SemesterEntity semesterEntity = semesterRepository.findById(request.getSemesterId()).orElseThrow(
-                    () -> new RuntimeException("Semester not found")
+                    () -> new NotFoundException("Semester not found")
             );
 
             var chairman = teacherRepository.findById(request.getChairman()).orElseThrow(
-                    () -> new RuntimeException("Teacher not found")
+                    () -> new NotFoundException("Teacher not found")
             );
 
             List<StudentEntity> studentEntities = ExcelUtil.extractStudents(students.getInputStream(), passwordEncoder);

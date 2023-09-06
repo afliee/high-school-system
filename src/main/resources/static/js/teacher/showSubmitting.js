@@ -62,14 +62,14 @@ $(document).ready(function () {
                                         </label>
                                         <div class="position-relative mt-2 mb-3">
                                             <input type="number" class="form-control"
-                                                   placeholder="Score" id="score" max="${totalScore}" min="0" required>
+                                                   placeholder="Score" id="score" max="${totalScore}" min="0" required value="${data?.score ? data.score : ''}">
                                             <div class="form-control-icon">
                                                 <span>/${totalScore}</span>
                                             </div>
                                         </div>
                             </div>
                             <div class="form-group">
-                                <textarea name="comment" id="comment" rows="5" placeholder="Comment" class="w-100 form-control"></textarea>
+                                <textarea name="comment" id="comment" rows="5" placeholder="Comment" class="w-100 form-control">${data?.comment ? data.comment : ''}</textarea>
                             </div>    
                         </div>
                     </div>

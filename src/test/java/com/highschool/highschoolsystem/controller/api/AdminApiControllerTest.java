@@ -1,4 +1,4 @@
-package com.highschool.highschoolsystem.controller.api;
+package com.highschool.highschoolsystem.Controller.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.highschool.highschoolsystem.auth.RegistrationRequest;

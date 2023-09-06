@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:insert="~{fragments/heading/dashboardHeading :: dashboardHeading(title = 'Subjects')}"/>
+<body>
+<div class="container-fluid">
+    <th:block th:insert="~{fragments/admin/dashboard/sidebar :: sidebar(active = 'subjects')}"/>
+    <div id="main">
+        <th:block th:insert="~{fragments/admin/dashboard/navbar :: navbar}"/>
+        <nav style="--bs-breadcrumb-divider: url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'8\' height=\'8\'%3E%3Cpath d=\'M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z\' fill=\'currentColor\'/%3E%3C/svg%3E');"
+             aria-label="breadcrumb"
+             class="d-flex align-items-center my-3 justify-content-between"
+        >
+            <ol class="breadcrumb">
+                <li th:each="breadcrumb : ${breadCrumbs}"
+                    th:class="'breadcrumb-item ' + ${breadcrumb.isActive ? 'active' : ''}">
+                    <a th:href="${breadcrumb.url}" th:text="${breadcrumb.name}"
+                       th:class="'text-decoration-none ' + ${breadcrumb.isActive ? 'active' : ''}"></a>
+                </li>
+            </ol>
+        </nav>
+        <th:block th:replace="~{fragments/admin/subject/update_subject_content :: content(subject = ${subject}, department= ${subject.departmentDetail})}"/>
+        <input type="hidden" name="departmentId" id="departmentId" th:value="${subject?.departmentDetail.id}">
+        <input type="hidden" name="subjectId" id="subjectId" th:value="${subject.id}">
+        <input type="hidden" name="teacher_id" id="teacher_id" th:value="${subject.teacher.id}">
+        <input type="hidden" name="level_id" id="level_id" th:value="${subject?.levelId}">
+    </div>
+</div>
+
+<th:block th:insert="~{fragments/script/admin/dashboardScript :: dashboardScript}"/>
+<th:block th:insert="~{fragments/script/admin/subject/updateSubjectScript :: updateSubjectScript}"/>
+<!--<th:block th:insert="~{fragments/script/admin/department/departmentScript :: departmentScript}"/>-->
+</body>
+</html>

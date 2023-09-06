@@ -98,7 +98,13 @@ $(document).ready(function () {
                 <div class="col-md-4 col-sm-6 col-xs-12 my-3" >
                     <div class="card subject" style="border-right-color: ${subject.color}" data-id="${subject.id}">
                         <div class="card-body">
-                            <h3 class="name text-title text-truncate">${subject.name}</h3>
+                            <div class="d-flex justify-content-between">
+                                <h3 class="name text-title text-truncate" data-bs-toggle="tooltip" title="${subject.name}">${subject.name}</h3>
+                                <button 
+                                    class="btn btn-danger btn-sm btn-delete d-inline-block"
+                                    data-id="${subject.id}"
+                                >&times;</button>
+                            </div>
                              <div class="info my-3 d-flex flex-column gap-2">
                                 <span class="text-truncate" data-bs-toggle="tooltip" title="${subject.teacher.name}"><i><span class="fw-semibold">Teached By</span>: ${subject.teacher.fullName}</i></span>
                                 <span><i><span class="fw-semibold">Created at</span></i>: ${createdAt}</span>
@@ -115,6 +121,7 @@ $(document).ready(function () {
         });
         subjectsTemplate.fadeOut(300, function () {
             subjectsTemplate.html(html);
+            registerDeleteSubjectEvent();
             registerSubjectClicked();
             subjectsTemplate.fadeIn(150);
         });
@@ -125,6 +132,7 @@ $(document).ready(function () {
             registerPaginationEvent();
             paginationTemplate.fadeIn(150);
         })
+
     }
 
     function renderDepartmentOptions({content: departments, totalPages, number: currentPage}) {
@@ -201,6 +209,12 @@ $(document).ready(function () {
 
         subjects.on('click', function (e) {
             const subjectId = $(this).data('id');
+            e.preventDefault();
+            e.stopPropagation();
+            if ($(e.target).hasClass('btn-delete')) {
+                return;
+            }
+
             window.location.href = `/auth/admin/subjects/${subjectId}`;
         })
     }
@@ -214,5 +228,66 @@ $(document).ready(function () {
                 getSubjects({page: page - 1});
             }
         })
+    }
+
+    function registerDeleteSubjectEvent() {
+        const btnDelete = subjectsTemplate.find('.subject .btn-delete');
+
+        btnDelete.on('click', function (e) {
+            const id = $(this).data('id');
+            let swal = null;
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton:true,
+                showConfirmButton:true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then(result => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `/api/v1/subject/delete/${id}`,
+                        type: 'DELETE',
+                        headers: {
+                            'Authorization': `Bearer ${TOKEN}`
+                        },
+                        beforeSend: function () {
+                            swal = Swal.fire({
+                                title: 'Deleting...',
+                                didOpen: () => {
+                                    Swal.showLoading()
+                                }
+                            });
+                        },
+                        success: function (data) {
+                            console.log(data);
+                            swal.close();
+                            Swal.fire({
+                                title: 'Deleted!',
+                                text: 'Subject has been deleted.',
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(() => {
+                                window.location.reload();
+                            })
+                        },
+                        error: function (e) {
+                            swal.close();
+                            console.log(e.responseText);
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Subject has not been deleted.',
+                                icon: 'error',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                        }
+                    })
+                }
+            })
+        });
     }
 })

@@ -1,5 +1,6 @@
-package com.highschool.highschoolsystem.controller.api;
+package com.highschool.highschoolsystem.Controller.api;
 
+import com.highschool.highschoolsystem.controller.api.AssignmentApiController;
 import com.highschool.highschoolsystem.dto.request.CreateAssignmentRequest;
 import com.highschool.highschoolsystem.dto.request.GradingRequest;
 import com.highschool.highschoolsystem.dto.request.SubmitRequest;

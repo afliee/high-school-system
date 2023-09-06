@@ -1,6 +1,7 @@
 package com.highschool.highschoolsystem.service;
 
 import com.highschool.highschoolsystem.entity.AssignmentEntity;
+import com.highschool.highschoolsystem.entity.Submitting;
 import com.highschool.highschoolsystem.util.mail.EmailDetails;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,7 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
 @AllArgsConstructor
 public class AssignmentEmailService {
     public static final String EMAIL_TEMPLATE = "email/assignment-template";
+    private static final String GRADING_TEMPLATE = "email/grading-template";
     public static final String TEMPLATE_PREFIX = "/templates/";
     public static final String TEMPLATE_SUFFIX = ".html";
     public static final String UTF_8 = "UTF-8";
@@ -64,7 +66,23 @@ public class AssignmentEmailService {
         context.setVariable("title", assignmentEntity.getTitle());
         context.setVariable("url", assignmentEntity.getAttachment());
         context.setVariable("subject", emailDetails.getSubject());
+        context.setVariable("description", assignmentEntity.getDescription());
 
         return getTemplateEngine().process(EMAIL_TEMPLATE, context);
+    }
+
+    public String getContent(EmailDetails emailDetails, Submitting submitting) {
+        Context context = new Context();
+
+        context.setVariable("name", emailDetails.getTo());
+        context.setVariable("teacher", submitting.getAssignment().getTeacher());
+        context.setVariable("title", submitting.getAssignment().getTitle());
+        context.setVariable("url", submitting.getAssignment().getAttachment());
+        context.setVariable("subject", emailDetails.getSubject());
+        context.setVariable("comment", submitting.getComment());
+        context.setVariable("score", submitting.getScore());
+        context.setVariable("totalPoint", submitting.getAssignment().getPoints());
+
+        return getTemplateEngine().process(GRADING_TEMPLATE, context);
     }
 }

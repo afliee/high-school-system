@@ -32,7 +32,9 @@ public class SubjectConverter {
                 .teacher(TeacherConverter.toResponse(subjectEntity.getTeacher()))
                 .department(subjectEntity.getDepartment().getName())
                 .color(subjectEntity.getColor())
+                .description(subjectEntity.getDescription())
                 .createdAt(subjectEntity.getCreatedDate())
+                .levelId(subjectEntity.getLevel().getId())
                 .departmentDetail(
                         DepartmentResponse.builder()
                                 .id(subjectEntity.getDepartment().getId())
@@ -69,10 +71,11 @@ public class SubjectConverter {
                 .build();
     }
 
-    public static SubjectEntity from(SubjectEntity subject, SubjectRequest request, TeacherEntity teacher, DepartmentEntity department) {
+    public static SubjectEntity from(SubjectEntity subject, SubjectRequest request, TeacherEntity teacher, DepartmentEntity department, LevelEntity level) {
         subject.setName(request.getName());
         subject.setDescription(request.getDescription());
         subject.setTeacher(teacher);
+        subject.setLevel(level);
         subject.setDepartment(department);
         return subject;
     }

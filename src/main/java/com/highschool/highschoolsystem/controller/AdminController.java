@@ -116,6 +116,30 @@ public class AdminController {
         return "pages/admin/classDetails";
     }
 
+    @GetMapping("/subjects/update/{subjectId}")
+    public String subject(
+            HttpServletRequest request,
+            @PathVariable String subjectId,
+            Model model
+    ) {
+        String redirect = adminService.requireAdminLogin(request);
+
+        if (redirect != null) {
+            return redirect;
+        }
+
+        var subject = subjectService.findById(subjectId);
+        model.addAttribute("subject", subject);
+        model.addAttribute("breadCrumbs", List.of(
+                new BreadCrumb("Subjects", "/auth/admin/subjects", false),
+                new BreadCrumb(subject.getName(), "/auth/admin/subjects/" + subjectId, true)
+        ));
+
+//        model.addAttribute("subjectId", subjectId);
+
+        return "pages/admin/subject/update_subject";
+    }
+
     @GetMapping("/subjects")
     public String subjects(
             HttpServletRequest request,
