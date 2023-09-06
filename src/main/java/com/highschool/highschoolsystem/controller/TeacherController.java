@@ -57,7 +57,7 @@ public class TeacherController {
         );
 
         model.addAttribute("teacher", teacher);
-        return "pages/teacher/index";
+        return "redirect:/teacher/form-teacher";
     }
 
     @GetMapping("/form-teacher")

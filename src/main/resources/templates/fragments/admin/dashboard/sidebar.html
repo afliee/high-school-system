@@ -47,12 +47,6 @@
                                 <span>Navigator</span>
                             </a>
                         </li>
-                        <li th:class="'submenu-item ' + ${#strings.equals(sub, 'student') ? 'active' : ''}">
-                            <a th:href="@{'/auth/admin/members?filter=student&page=1'}" class="submenu-link">
-                                <i class="fa-solid fa-user-graduate"></i>
-                                <span>Students</span>
-                            </a>
-                        </li>
                     </ul>
                 </li>
                 <li class="sidebar-title">Level Management</li>

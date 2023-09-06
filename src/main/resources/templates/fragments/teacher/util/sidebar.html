@@ -12,15 +12,6 @@
         </div>
         <div class="sidebar-menu">
             <ul class="menu">
-                <li class="sidebar-title">Menu</li>
-
-                <li th:class="'sidebar-item ' + ${#strings.equals(active, 'index') ? 'active' : ''}">
-                    <a th:href="@{/student/navigator-registration}" class='sidebar-link'>
-                        <i class="bi bi-grid-fill"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
-
                 <li class="sidebar-title">Class Monitor</li>
                 <li th:class="'sidebar-item '  + ${#strings.equals(active, 'form-teacher') ? 'active' : ''}">
                     <a th:href="@{/teacher/form-teacher}" class='sidebar-link'>
