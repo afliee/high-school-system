@@ -50,7 +50,7 @@ public class AdminController {
     @GetMapping({"/", "", "/dashboard"})
     public String index(
             HttpServletRequest request,
-            HttpServletRequest response,
+            HttpServletResponse response,
             Model model
     ) {
 

@@ -60,7 +60,7 @@ class AdminControllerTest {
         when(adminService.requireAdminLogin(request)).thenReturn("redirect:/login");
 
         // Act
-        String viewName = adminController.index(request, request, model);
+        String viewName = adminController.index(request, response, model);
 
         // Assert
         assertEquals("redirect:/login", viewName);
